@@ -73,11 +73,51 @@ export function StudentWebmail() {
   const [activeFolder, setActiveFolder] = useState<Folder>("inbox");
   const [searchQuery, setSearchQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
-  const [composeOpen, setComposeOpen] = useState(false);
+  const [composeOpen, setComposeOpen] = useState(() => {
+    try {
+      const draft = localStorage.getItem("cmpi-draft");
+      if (draft) {
+        const parsed = JSON.parse(draft);
+        if (parsed.body) {
+          localStorage.removeItem("cmpi-draft");
+          draftRestoredRef.current = true;
+          return true;
+        }
+      }
+    } catch { /* ignore */ }
+    return false;
+  });
   const [composeMode, setComposeMode] = useState<"new" | "reply" | "replyAll" | "forward">("new");
-  const [composeTo, setComposeTo] = useState("");
-  const [composeSubject, setComposeSubject] = useState("");
-  const [composeBody, setComposeBody] = useState("");
+  const [composeTo, setComposeTo] = useState(() => {
+    try {
+      const draft = localStorage.getItem("cmpi-draft");
+      if (draft) {
+        const parsed = JSON.parse(draft);
+        if (parsed.body) return parsed.to || "";
+      }
+    } catch { /* ignore */ }
+    return "";
+  });
+  const [composeSubject, setComposeSubject] = useState(() => {
+    try {
+      const draft = localStorage.getItem("cmpi-draft");
+      if (draft) {
+        const parsed = JSON.parse(draft);
+        if (parsed.body) return parsed.subject || "";
+      }
+    } catch { /* ignore */ }
+    return "";
+  });
+  const [composeBody, setComposeBody] = useState(() => {
+    try {
+      const draft = localStorage.getItem("cmpi-draft");
+      if (draft) {
+        const parsed = JSON.parse(draft);
+        if (parsed.body) return parsed.body;
+      }
+    } catch { /* ignore */ }
+    return "";
+  });
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [emailLabels, setEmailLabels] = useState<Record<string, Label>>({});
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -86,6 +126,7 @@ export function StudentWebmail() {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const composeBodyRef = useRef<HTMLTextAreaElement>(null);
   const draftTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const draftRestoredRef = useRef(false);
 
   const contacts = useMemo(() => allContacts.filter((c) => c.email !== userEmail), [userEmail]);
 
@@ -219,19 +260,13 @@ export function StudentWebmail() {
   }, [composeTo, contacts]);
 
   useEffect(() => {
-    const draft = localStorage.getItem("cmpi-draft");
-    if (draft) {
-      try {
-        const parsed = JSON.parse(draft);
-        if (parsed.body) {
-          setComposeTo(parsed.to || "");
-          setComposeSubject(parsed.subject || "");
-          setComposeBody(parsed.body);
-          setComposeOpen(true);
-          localStorage.removeItem("cmpi-draft");
-          addToast("Draft restored", "info");
-        }
-      } catch { /* ignore */ }
+    try { localStorage.removeItem("cmpi-draft"); } catch { /* ignore */ }
+  }, []);
+
+  useEffect(() => {
+    if (draftRestoredRef.current) {
+      addToast("Draft restored", "info");
+      draftRestoredRef.current = false;
     }
   }, [addToast]);
 

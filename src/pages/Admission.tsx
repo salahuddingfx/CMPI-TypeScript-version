@@ -10,6 +10,7 @@ const departments = ["Civil Technology", "Computer Science & Technology", "Elect
 export function Admission() {
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
+  const [appId] = useState(() => `CMPI-ADM-${Date.now().toString().slice(-6)}`);
   const [form, setForm] = useState({ name: "", email: "", phone: "", department: "", sscGpa: "", fatherName: "", motherName: "", address: "", bloodGroup: "" });
 
   const update = (field: string, value: string) => setForm((prev) => ({ ...prev, [field]: value }));
@@ -32,7 +33,7 @@ export function Admission() {
             </div>
             <h2 className="text-2xl font-bold text-green-700 dark:text-green-400">Application Submitted!</h2>
             <p className="mt-3 text-sm text-green-600 dark:text-green-500">Your application has been received. You will receive a confirmation email at <span className="font-semibold">{form.email}</span>.</p>
-            <p className="mt-2 text-sm text-green-600 dark:text-green-500">Application ID: <span className="font-mono font-bold">CMPI-ADM-{Date.now().toString().slice(-6)}</span></p>
+            <p className="mt-2 text-sm text-green-600 dark:text-green-500">Application ID: <span className="font-mono font-bold">{appId}</span></p>
             <Button className="mt-6" onClick={() => { setSubmitted(false); setStep(1); setForm({ name: "", email: "", phone: "", department: "", sscGpa: "", fatherName: "", motherName: "", address: "", bloodGroup: "" }); }}>Submit Another Application</Button>
           </div>
         ) : (

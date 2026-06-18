@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -77,14 +77,15 @@ const heroSlides = [
 
 function useTypewriter(text: string) {
   const [display, setDisplay] = useState("");
+  const indexRef = useRef(0);
 
   useEffect(() => {
+    indexRef.current = 0;
     setDisplay("");
-    let index = 0;
     const timer = window.setInterval(() => {
-      index += 1;
-      setDisplay(text.slice(0, index));
-      if (index >= text.length) {
+      indexRef.current += 1;
+      setDisplay(text.slice(0, indexRef.current));
+      if (indexRef.current >= text.length) {
         window.clearInterval(timer);
       }
     }, 34);

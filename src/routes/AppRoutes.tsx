@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import { MainLayout } from "@/layouts/MainLayout";
+import { StudentLayout } from "@/layouts/StudentLayout";
 import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
 import { Home } from "@/pages/Home";
 import { About } from "@/pages/About";
@@ -29,9 +30,20 @@ import { Login } from "@/pages/Login";
 import { Register } from "@/pages/Register";
 import { ForgotPassword } from "@/pages/ForgotPassword";
 import { Dashboard } from "@/pages/Dashboard";
+import { DashboardOverview } from "@/pages/dashboard/DashboardOverview";
+import { StudentCourses } from "@/pages/dashboard/StudentCourses";
+import { StudentResults } from "@/pages/dashboard/StudentResults";
+import { StudentBills } from "@/pages/dashboard/StudentBills";
+import { StudentProfile } from "@/pages/dashboard/StudentProfile";
 
 function LazyPage({ children }: { children: React.ReactNode }) {
   return <Suspense fallback={<LoadingSkeleton />}>{children}</Suspense>;
+}
+
+function getStoredUser() {
+  if (typeof window === "undefined") return null;
+  const raw = localStorage.getItem("cmpi-user");
+  return raw ? JSON.parse(raw) : null;
 }
 
 export function AppRoutes() {
@@ -63,9 +75,24 @@ export function AppRoutes() {
         <Route path="login" element={<LazyPage><Login /></LazyPage>} />
         <Route path="register" element={<LazyPage><Register /></LazyPage>} />
         <Route path="forgot-password" element={<LazyPage><ForgotPassword /></LazyPage>} />
-        <Route path="dashboard" element={<LazyPage><Dashboard /></LazyPage>} />
-        <Route path="*" element={<LazyPage><NotFound /></LazyPage>} />
       </Route>
+
+      <Route path="/dashboard" element={<StudentLayout />}>
+        <Route
+          index
+          element={
+            <LazyPage>
+              <Dashboard />
+            </LazyPage>
+          }
+        />
+        <Route path="courses" element={<LazyPage><StudentCourses /></LazyPage>} />
+        <Route path="results" element={<LazyPage><StudentResults /></LazyPage>} />
+        <Route path="bills" element={<LazyPage><StudentBills /></LazyPage>} />
+        <Route path="profile" element={<LazyPage><StudentProfile /></LazyPage>} />
+      </Route>
+
+      <Route path="*" element={<LazyPage><NotFound /></LazyPage>} />
     </Routes>
   );
 }

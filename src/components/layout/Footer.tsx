@@ -72,10 +72,10 @@ export function Footer() {
                 <Phone className="h-5 w-5 shrink-0 text-secondary" />
                 {institute.phone}
               </p>
-              <a href={`mailto:${institute.email}`} className="flex items-center gap-3 hover:underline">
-                <Mail className="h-5 w-5 shrink-0 text-secondary" />
-                {institute.email}
-              </a>
+            <a href={`mailto:${institute.email}`} className="flex items-center gap-3">
+              <Mail className="h-5 w-5 shrink-0 text-secondary" />
+              {institute.email}
+            </a>
             </div>
 
             <div className="mt-6 flex flex-wrap items-center gap-3">
@@ -97,7 +97,7 @@ export function Footer() {
             <ul className="mt-5 space-y-3 text-sm">
               {quickLinks.map((link) => (
                 <li key={link.href}>
-                  <Link className="text-white/75 transition hover:text-secondary hover:underline" to={link.href}>
+                  <Link className="text-white/75 transition hover:text-secondary" to={link.href}>
                     {link.title}
                   </Link>
                 </li>
@@ -110,7 +110,7 @@ export function Footer() {
             <ul className="mt-5 space-y-3 text-sm">
               {academicLinks.map((link) => (
                 <li key={link.href}>
-                  <Link className="text-white/75 transition hover:text-secondary hover:underline" to={link.href}>
+                  <Link className="text-white/75 transition hover:text-secondary" to={link.href}>
                     {link.title}
                   </Link>
                 </li>
@@ -123,22 +123,12 @@ export function Footer() {
             <ul className="mt-5 space-y-3 text-sm">
               {policyLinks.map((link) => (
                 <li key={link.href}>
-                  <Link className="text-white/75 transition hover:text-secondary hover:underline" to={link.href}>
+                  <Link className="text-white/75 transition hover:text-secondary" to={link.href}>
                     {link.title}
                   </Link>
                 </li>
               ))}
             </ul>
-
-            <div className="mt-8 rounded-sm border border-white/10 bg-white/5 p-5">
-              <p className="text-sm font-bold text-white">Stay updated</p>
-              <p className="mt-2 text-xs leading-6 text-white/70">
-                Follow official notices, admissions, and events from CMPI.
-              </p>
-              <Button asChild size="sm" variant="secondary" className="mt-4 w-full">
-                <Link to="/notices">View Notices</Link>
-              </Button>
-            </div>
           </div>
         </div>
 
@@ -147,19 +137,19 @@ export function Footer() {
             © {new Date().getFullYear()} {institute.name}. All rights reserved.
           </p>
           <div className="flex flex-wrap justify-center gap-4 text-sm md:justify-end">
-            <Link className="text-white/60 transition hover:text-secondary hover:underline" to="/privacy-policy">
+            <Link className="text-white/60 transition hover:text-secondary" to="/privacy-policy">
               Privacy
             </Link>
-            <Link className="text-white/60 transition hover:text-secondary hover:underline" to="/terms-and-conditions">
+            <Link className="text-white/60 transition hover:text-secondary" to="/terms-and-conditions">
               Terms
             </Link>
-            <Link className="text-white/60 transition hover:text-secondary hover:underline" to="/cookie-policy">
+            <Link className="text-white/60 transition hover:text-secondary" to="/cookie-policy">
               Cookies
             </Link>
-            <Link className="text-white/60 transition hover:text-secondary hover:underline" to="/sitemap">
+            <Link className="text-white/60 transition hover:text-secondary" to="/sitemap">
               Sitemap
             </Link>
-            <Link className="text-white/60 transition hover:text-secondary hover:underline" to="/accessibility">
+            <Link className="text-white/60 transition hover:text-secondary" to="/accessibility">
               Accessibility
             </Link>
           </div>

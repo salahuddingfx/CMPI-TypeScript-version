@@ -1,12 +1,9 @@
 import {
-  Facebook,
-  Instagram,
-  Linkedin,
+  Globe,
   Mail,
   MapPin,
   Phone,
-  Twitter,
-  Youtube
+  Youtube,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -39,11 +36,11 @@ const policyLinks = [
 ];
 
 const socialLinks = [
-  { label: "YouTube", href: "#", icon: Youtube },
-  { label: "Facebook", href: "#", icon: Facebook },
-  { label: "Instagram", href: "#", icon: Instagram },
-  { label: "LinkedIn", href: "#", icon: Linkedin },
-  { label: "Twitter", href: "#", icon: Twitter },
+  { label: "YouTube", href: "#" },
+  { label: "Facebook", href: "#" },
+  { label: "Instagram", href: "#" },
+  { label: "LinkedIn", href: "#" },
+  { label: "Twitter", href: "#" },
 ];
 
 export function Footer() {
@@ -76,22 +73,26 @@ export function Footer() {
                 <Phone className="h-5 w-5 shrink-0 text-secondary" />
                 {institute.phone}
               </p>
-              <Link className="flex items-center gap-3 hover:underline" to="mailto:{institute.email}">
+              <a href={`mailto:${institute.email}`} className="flex items-center gap-3 hover:underline">
                 <Mail className="h-5 w-5 shrink-0 text-secondary" />
                 {institute.email}
-              </Link>
+              </a>
             </div>
 
             <div className="mt-6 flex flex-wrap items-center gap-3">
               {socialLinks.map((link) => (
-                <Link
+                <a
                   key={link.label}
                   href={link.href}
                   className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/75 transition hover:bg-secondary hover:text-primary"
                   aria-label={link.label}
                 >
-                  <link.icon className="h-4 w-4" />
-                </Link>
+                  {link.label === "YouTube" && <Youtube className="h-4 w-4" />}
+                  {link.label === "Facebook" && <Globe className="h-4 w-4" />}
+                  {link.label === "Instagram" && <Globe className="h-4 w-4" />}
+                  {link.label === "LinkedIn" && <Globe className="h-4 w-4" />}
+                  {link.label === "Twitter" && <Globe className="h-4 w-4" />}
+                </a>
               ))}
             </div>
           </div>
@@ -162,6 +163,9 @@ export function Footer() {
             </Link>
             <Link className="text-white/60 transition hover:text-secondary hover:underline" to="/sitemap">
               Sitemap
+            </Link>
+            <Link className="text-white/60 transition hover:text-secondary hover:underline" to="/accessibility">
+              Accessibility
             </Link>
           </div>
         </div>

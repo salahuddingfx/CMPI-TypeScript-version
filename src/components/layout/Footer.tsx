@@ -99,6 +99,10 @@ const socialIconMap = {
   Instagram: icons.instagram,
   LinkedIn: icons.linkedin,
   Twitter: icons.twitter,
+} as const;
+
+const socialIconMapAll: Record<string, React.ReactNode> = {
+  ...socialIconMap,
 };
 
 export function Footer() {

@@ -53,7 +53,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b bg-background/85 backdrop-blur">
-        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:rounded-sm focus:bg-primary focus:px-4 focus:py-2 focus:text-white">
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:rounded-sm focus:bg-primary focus:px-4 focus:py-2 focus:text-white">
         Skip to content
       </a>
       <div className="container flex min-h-16 items-center justify-between gap-4">
@@ -69,10 +69,18 @@ export function Header() {
           {navItems.map((item) => (
             <NavLinkItem key={item.href} item={item} />
           ))}
+          <div className="ml-2 flex items-center gap-2">
+            <Button asChild variant="outline" size="sm">
+              <Link to="/login">Sign In</Link>
+            </Button>
+            <Button asChild size="sm">
+              <Link to="/register">Sign Up</Link>
+            </Button>
+          </div>
         </nav>
 
         <div className="flex items-center gap-2">
-          <Button type="button" variant="outline" size="icon" aria-label="Open search" onClick={() => setSearchOpen(true)}>
+          <Button type="button" variant="outline" size="icon" aria-label="Open search" onClick={() => setSearchOpen(true)} className="hidden lg:flex">
             <Search className="h-5 w-5" />
           </Button>
           <ThemeToggle />
@@ -108,6 +116,14 @@ export function Header() {
                   )}
                 </div>
               ))}
+              <div className="mt-4 flex flex-col gap-2 border-t pt-4">
+                <Button asChild variant="outline" className="w-full">
+                  <Link to="/login" onClick={() => setMobileOpen(false)}>Sign In</Link>
+                </Button>
+                <Button asChild className="w-full">
+                  <Link to="/register" onClick={() => setMobileOpen(false)}>Sign Up</Link>
+                </Button>
+              </div>
             </div>
           </motion.nav>
         )}

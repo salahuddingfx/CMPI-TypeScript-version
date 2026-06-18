@@ -6,11 +6,11 @@ import { SEO } from "@/components/common/SEO";
 import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
-import { useInstituteData } from "@/hooks/useInstituteData";
+import { useInstituteContext } from "@/contexts/InstituteDataContext";
 
 export function NoticeDetails() {
   const { id } = useParams();
-  const { data, loading, error } = useInstituteData();
+  const { data, loading, error } = useInstituteContext();
 
   if (loading) return <LoadingSkeleton />;
   if (error || !data) return <PageTransition className="container section-pad"><div className="rounded-sm border border-destructive/30 bg-destructive/10 p-6 text-destructive">Unable to load notice details.</div></PageTransition>;

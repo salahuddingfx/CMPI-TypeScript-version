@@ -1,9 +1,3 @@
-import {
-  Globe,
-  Mail,
-  MapPin,
-  Phone,
-} from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { institute } from "@/utils/constants";
@@ -42,6 +36,26 @@ const socialLinks = [
   { label: "Twitter", href: "#" },
 ];
 
+const icons = {
+  map: (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 shrink-0 text-secondary">
+      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+      <circle cx="12" cy="10" r="3" />
+    </svg>
+  ),
+  phone: (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 shrink-0 text-secondary">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92Z" />
+    </svg>
+  ),
+  mail: (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 shrink-0 text-secondary">
+      <rect width="20" height="16" x="2" y="4" rx="2" />
+      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+    </svg>
+  ),
+};
+
 export function Footer() {
   return (
     <footer className="relative mt-20 overflow-hidden border-t border-white/10 bg-cmpe-gray">
@@ -65,17 +79,17 @@ export function Footer() {
 
             <div className="mt-5 space-y-3 text-sm text-white/80">
               <p className="flex items-start gap-3">
-                <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-secondary" />
+                {icons.map}
                 {institute.address}
               </p>
               <p className="flex items-center gap-3">
-                <Phone className="h-5 w-5 shrink-0 text-secondary" />
+                {icons.phone}
                 {institute.phone}
               </p>
-            <a href={`mailto:${institute.email}`} className="flex items-center gap-3">
-              <Mail className="h-5 w-5 shrink-0 text-secondary" />
-              {institute.email}
-            </a>
+              <a href={`mailto:${institute.email}`} className="flex items-center gap-3">
+                {icons.mail}
+                {institute.email}
+              </a>
             </div>
 
             <div className="mt-6 flex flex-wrap items-center gap-3">
@@ -86,7 +100,11 @@ export function Footer() {
                   className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/75 transition hover:bg-secondary hover:text-primary"
                   aria-label={link.label}
                 >
-                  <Globe className="h-4 w-4" />
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="2" x2="22" y1="12" y2="12" />
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                  </svg>
                 </a>
               ))}
             </div>
@@ -129,6 +147,16 @@ export function Footer() {
                 </li>
               ))}
             </ul>
+
+            <div className="mt-8 rounded-sm border border-white/10 bg-white/5 p-5">
+              <p className="text-sm font-bold text-white">Stay updated</p>
+              <p className="mt-2 text-xs leading-6 text-white/70">
+                Follow official notices, admissions, and events from CMPI.
+              </p>
+              <Button asChild size="sm" variant="secondary" className="mt-4 w-full">
+                <Link to="/notices">View Notices</Link>
+              </Button>
+            </div>
           </div>
         </div>
 

@@ -72,7 +72,7 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Button type="button" variant="outline" size="icon" aria-label="Open search" onClick={() => setSearchOpen(true)} className="hidden lg:flex">
+          <Button type="button" variant="outline" size="icon" aria-label="Open search" onClick={() => setSearchOpen(true)}>
             <Search className="h-5 w-5" />
           </Button>
           <ThemeToggle />

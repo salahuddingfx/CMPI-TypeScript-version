@@ -13,8 +13,9 @@ interface CTASectionProps {
 
 export function CTASection({ title, description, primaryLabel, secondaryLabel, primaryHref, secondaryHref }: CTASectionProps) {
   return (
-    <section className="container section-pad">
-      <div className="gradient-panel">
+    <section className="section-pad">
+      <div className="container">
+        <div className="gradient-panel">
         <div className="relative z-10 mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">{title}</h2>
           <p className="mt-4 text-base leading-7 text-white/85 sm:text-lg">{description}</p>

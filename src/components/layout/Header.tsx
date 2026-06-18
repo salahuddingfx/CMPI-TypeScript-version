@@ -10,23 +10,13 @@ import { institute } from "@/utils/constants";
 
 const navItems = [
   { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
-  {
-    label: "Academics",
-    href: "/academics",
-    mega: [
-      { label: "Civil Technology", href: "/academics/civil-technology" },
-      { label: "Computer Science & Technology", href: "/academics/computer-science-technology" },
-      { label: "Electrical Technology", href: "/academics/electrical-technology" },
-    ],
-  },
-  { label: "Faculty", href: "/faculty" },
+  { label: "Academics", href: "/academics", mega: [
+    { label: "Civil Technology", href: "/academics/civil-technology" },
+    { label: "Computer Science & Technology", href: "/academics/computer-science-technology" },
+    { label: "Electrical Technology", href: "/academics/electrical-technology" },
+  ]},
   { label: "Notice Board", href: "/notices" },
-  { label: "Events", href: "/events" },
-  { label: "Gallery", href: "/gallery" },
-  { label: "Blog", href: "/blog" },
   { label: "Admission", href: "/admission" },
-  { label: "Student Corner", href: "/student-corner" },
   { label: "Contact", href: "/contact" },
 ];
 

@@ -33,6 +33,7 @@ export function CTASection({ title, description, primaryLabel, secondaryLabel, p
             )}
           </div>
         </div>
+        </div>
       </div>
     </section>
   );

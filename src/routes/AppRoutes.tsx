@@ -18,6 +18,12 @@ import { Admission } from "@/pages/Admission";
 import { StudentCorner } from "@/pages/StudentCorner";
 import { Contact } from "@/pages/Contact";
 import { NotFound } from "@/pages/NotFound";
+import { PrivacyPolicy } from "@/pages/PrivacyPolicy";
+import { TermsAndConditions } from "@/pages/TermsAndConditions";
+import { CookiePolicy } from "@/pages/CookiePolicy";
+import { RefundPolicy } from "@/pages/RefundPolicy";
+import { Disclaimer } from "@/pages/Disclaimer";
+import { Accessibility } from "@/pages/Accessibility";
 
 function LazyPage({ children }: { children: React.ReactNode }) {
   return <Suspense fallback={<LoadingSkeleton />}>{children}</Suspense>;

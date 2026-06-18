@@ -125,8 +125,6 @@ export function Home() {
     );
   }
 
-  const slide = heroSlides[current];
-
   return (
     <PageTransition>
       <SEO

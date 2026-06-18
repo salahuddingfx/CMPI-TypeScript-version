@@ -48,6 +48,12 @@ export function AppRoutes() {
         <Route path="admission" element={<LazyPage><Admission /></LazyPage>} />
         <Route path="student-corner" element={<LazyPage><StudentCorner /></LazyPage>} />
         <Route path="contact" element={<LazyPage><Contact /></LazyPage>} />
+        <Route path="privacy-policy" element={<LazyPage><PrivacyPolicy /></LazyPage>} />
+        <Route path="terms-and-conditions" element={<LazyPage><TermsAndConditions /></LazyPage>} />
+        <Route path="cookie-policy" element={<LazyPage><CookiePolicy /></LazyPage>} />
+        <Route path="refund-policy" element={<LazyPage><RefundPolicy /></LazyPage>} />
+        <Route path="disclaimer" element={<LazyPage><Disclaimer /></LazyPage>} />
+        <Route path="accessibility" element={<LazyPage><Accessibility /></LazyPage>} />
         <Route path="*" element={<LazyPage><NotFound /></LazyPage>} />
       </Route>
     </Routes>

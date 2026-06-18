@@ -24,6 +24,7 @@ import { CookiePolicy } from "@/pages/CookiePolicy";
 import { RefundPolicy } from "@/pages/RefundPolicy";
 import { Disclaimer } from "@/pages/Disclaimer";
 import { Accessibility } from "@/pages/Accessibility";
+import { Sitemap } from "@/pages/Sitemap";
 
 function LazyPage({ children }: { children: React.ReactNode }) {
   return <Suspense fallback={<LoadingSkeleton />}>{children}</Suspense>;
@@ -54,6 +55,7 @@ export function AppRoutes() {
         <Route path="refund-policy" element={<LazyPage><RefundPolicy /></LazyPage>} />
         <Route path="disclaimer" element={<LazyPage><Disclaimer /></LazyPage>} />
         <Route path="accessibility" element={<LazyPage><Accessibility /></LazyPage>} />
+        <Route path="sitemap" element={<LazyPage><Sitemap /></LazyPage>} />
         <Route path="*" element={<LazyPage><NotFound /></LazyPage>} />
       </Route>
     </Routes>

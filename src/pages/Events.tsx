@@ -4,13 +4,13 @@ import { SEO } from "@/components/common/SEO";
 import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
-import { useInstituteData } from "@/hooks/useInstituteData";
+import { useInstituteContext } from "@/contexts/InstituteDataContext";
 
 type EventStatus = InstituteEventStatus | "All";
 type InstituteEventStatus = "Upcoming" | "Past";
 
 export function Events() {
-  const { data, loading, error } = useInstituteData();
+  const { data, loading, error } = useInstituteContext();
   const [status, setStatus] = useState<EventStatus>("All");
 
   const filteredEvents = useMemo(() => {

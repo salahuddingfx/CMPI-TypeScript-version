@@ -81,16 +81,21 @@ function useTypewriter(text: string) {
 
   useEffect(() => {
     indexRef.current = 0;
-    setDisplay("");
+    let cancelled = false;
     const timer = window.setInterval(() => {
       indexRef.current += 1;
-      setDisplay(text.slice(0, indexRef.current));
+      if (!cancelled) {
+        setDisplay(text.slice(0, indexRef.current));
+      }
       if (indexRef.current >= text.length) {
         window.clearInterval(timer);
       }
     }, 34);
 
-    return () => window.clearInterval(timer);
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
   }, [text]);
 
   return display;

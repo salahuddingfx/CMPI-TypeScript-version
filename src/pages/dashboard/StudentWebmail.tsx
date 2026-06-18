@@ -5,6 +5,8 @@ import {
   Inbox,
   Mail,
   MailOpen,
+  Maximize2,
+  Minimize2,
   Paperclip,
   Reply,
   ReplyAll,
@@ -436,7 +438,7 @@ export function StudentWebmail() {
                 <p className="text-xs text-muted-foreground">From: {userEmail}</p>
               </div>
               <div className="flex items-center gap-2">
-                <Button variant="ghost" size="icon" onClick={() => setFullscreenCompose(!fullscreenCompose)}>{fullscreenCompose ? "—" : "□"}</Button>
+                <Button variant="ghost" size="icon" onClick={() => setFullscreenCompose(!fullscreenCompose)}>{fullscreenCompose ? <Minimize2 className="h-5 w-5" /> : <Maximize2 className="h-5 w-5" />}</Button>
                 <Button variant="ghost" size="icon" onClick={() => setComposeOpen(false)}><X className="h-5 w-5" /></Button>
               </div>
             </div>

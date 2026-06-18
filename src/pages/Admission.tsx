@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Check, ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SEO } from "@/components/common/SEO";
@@ -29,7 +30,7 @@ export function Admission() {
         {submitted ? (
           <div className="mx-auto max-w-lg rounded-sm border border-green-200 bg-green-50 p-8 text-center dark:border-green-800 dark:bg-green-950/30">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/50">
-              <span className="text-3xl">✓</span>
+              <span className="text-3xl"><Check className="h-8 w-8 text-green-600" /></span>
             </div>
             <h2 className="text-2xl font-bold text-green-700 dark:text-green-400">Application Submitted!</h2>
             <p className="mt-3 text-sm text-green-600 dark:text-green-500">Your application has been received. You will receive a confirmation email at <span className="font-semibold">{form.email}</span>.</p>
@@ -60,7 +61,7 @@ export function Admission() {
                     <div className="space-y-2"><label className="text-sm font-semibold">Mother's Name</label><Input value={form.motherName} onChange={(e) => update("motherName", e.target.value)} required /></div>
                   </div>
                   <div className="space-y-2"><label className="text-sm font-semibold">Address</label><Input value={form.address} onChange={(e) => update("address", e.target.value)} placeholder="Village/Thana/District" required /></div>
-                  <Button type="button" className="w-full" onClick={() => setStep(2)}>Next →</Button>
+                  <Button type="button" className="w-full" onClick={() => setStep(2)}>Next <ArrowRight className="ml-2 h-4 w-4" /></Button>
                 </div>
               )}
               {step === 2 && (
@@ -85,8 +86,8 @@ export function Admission() {
                     </ul>
                   </div>
                   <div className="flex gap-3">
-                    <Button type="button" variant="outline" className="w-full" onClick={() => setStep(1)}>← Back</Button>
-                    <Button type="button" className="w-full" onClick={() => setStep(3)}>Next →</Button>
+                    <Button type="button" variant="outline" className="w-full" onClick={() => setStep(1)}><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
+                    <Button type="button" className="w-full" onClick={() => setStep(3)}>Next <ArrowRight className="ml-2 h-4 w-4" /></Button>
                   </div>
                 </div>
               )}
@@ -102,7 +103,7 @@ export function Admission() {
                     <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">Address</span><span className="font-semibold">{form.address || "-"}</span></div>
                   </div>
                   <div className="flex gap-3">
-                    <Button type="button" variant="outline" className="w-full" onClick={() => setStep(2)}>← Back</Button>
+                    <Button type="button" variant="outline" className="w-full" onClick={() => setStep(2)}><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
                     <Button type="submit" className="w-full">Submit Application</Button>
                   </div>
                 </div>

@@ -36,6 +36,18 @@ const StudentResults = lazy(() => import("@/pages/dashboard/StudentResults").the
 const StudentBills = lazy(() => import("@/pages/dashboard/StudentBills").then((m) => ({ default: m.StudentBills })));
 const StudentProfile = lazy(() => import("@/pages/dashboard/StudentProfile").then((m) => ({ default: m.StudentProfile })));
 const StudentWebmail = lazy(() => import("@/pages/dashboard/StudentWebmail").then((m) => ({ default: m.StudentWebmail })));
+const Results = lazy(() => import("@/pages/Results").then((m) => ({ default: m.Results })));
+const ExamRoutine = lazy(() => import("@/pages/ExamRoutine").then((m) => ({ default: m.ExamRoutine })));
+const ClassRoutine = lazy(() => import("@/pages/ClassRoutine").then((m) => ({ default: m.ClassRoutine })));
+const Library = lazy(() => import("@/pages/Library").then((m) => ({ default: m.Library })));
+const Syllabus = lazy(() => import("@/pages/Syllabus").then((m) => ({ default: m.Syllabus })));
+const Principal = lazy(() => import("@/pages/Principal").then((m) => ({ default: m.Principal })));
+const Scholarship = lazy(() => import("@/pages/Scholarship").then((m) => ({ default: m.Scholarship })));
+const Tender = lazy(() => import("@/pages/Tender").then((m) => ({ default: m.Tender })));
+const Feedback = lazy(() => import("@/pages/Feedback").then((m) => ({ default: m.Feedback })));
+const Clubs = lazy(() => import("@/pages/Clubs").then((m) => ({ default: m.Clubs })));
+const Alumni = lazy(() => import("@/pages/Alumni").then((m) => ({ default: m.Alumni })));
+const Placement = lazy(() => import("@/pages/Placement").then((m) => ({ default: m.Placement })));
 const NotFound = lazy(() => import("@/pages/NotFound").then((m) => ({ default: m.NotFound })));
 
 function LazyPage({ children }: { children: React.ReactNode }) {
@@ -60,6 +72,18 @@ export function AppRoutes() {
         <Route path="blog/:slug" element={<LazyPage><BlogDetails /></LazyPage>} />
         <Route path="admission" element={<LazyPage><Admission /></LazyPage>} />
         <Route path="student-corner" element={<LazyPage><StudentCorner /></LazyPage>} />
+        <Route path="results" element={<LazyPage><Results /></LazyPage>} />
+        <Route path="exam-routine" element={<LazyPage><ExamRoutine /></LazyPage>} />
+        <Route path="class-routine" element={<LazyPage><ClassRoutine /></LazyPage>} />
+        <Route path="library" element={<LazyPage><Library /></LazyPage>} />
+        <Route path="syllabus" element={<LazyPage><Syllabus /></LazyPage>} />
+        <Route path="principal" element={<LazyPage><Principal /></LazyPage>} />
+        <Route path="scholarship" element={<LazyPage><Scholarship /></LazyPage>} />
+        <Route path="tender" element={<LazyPage><Tender /></LazyPage>} />
+        <Route path="feedback" element={<LazyPage><Feedback /></LazyPage>} />
+        <Route path="clubs" element={<LazyPage><Clubs /></LazyPage>} />
+        <Route path="alumni" element={<LazyPage><Alumni /></LazyPage>} />
+        <Route path="placement" element={<LazyPage><Placement /></LazyPage>} />
         <Route path="contact" element={<LazyPage><Contact /></LazyPage>} />
         <Route path="privacy-policy" element={<LazyPage><PrivacyPolicy /></LazyPage>} />
         <Route path="terms-and-conditions" element={<LazyPage><TermsAndConditions /></LazyPage>} />

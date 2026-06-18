@@ -4,10 +4,13 @@ import { institute } from "@/utils/constants";
 const quickLinks = [
   { title: "About Us", href: "/about" },
   { title: "Faculty", href: "/faculty" },
+  { title: "Principal's Message", href: "/principal" },
   { title: "Events", href: "/events" },
   { title: "Gallery", href: "/gallery" },
   { title: "Blog", href: "/blog" },
   { title: "Student Corner", href: "/student-corner" },
+  { title: "Student Clubs", href: "/clubs" },
+  { title: "Alumni", href: "/alumni" },
 ];
 
 const academicLinks = [
@@ -16,6 +19,15 @@ const academicLinks = [
   { title: "Electrical Technology", href: "/academics/electrical-technology" },
   { title: "Admission", href: "/admission" },
   { title: "Notice Board", href: "/notices" },
+  { title: "Results", href: "/results" },
+  { title: "Class Routine", href: "/class-routine" },
+  { title: "Exam Routine", href: "/exam-routine" },
+  { title: "Library", href: "/library" },
+  { title: "Syllabus", href: "/syllabus" },
+  { title: "Scholarships", href: "/scholarship" },
+  { title: "Career & Placement", href: "/placement" },
+  { title: "Tenders", href: "/tender" },
+  { title: "Feedback", href: "/feedback" },
 ];
 
 const policyLinks = [

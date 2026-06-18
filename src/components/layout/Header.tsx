@@ -15,8 +15,17 @@ const navItems = [
     { label: "Civil Technology", href: "/academics/civil-technology" },
     { label: "Computer Science & Technology", href: "/academics/computer-science-technology" },
     { label: "Electrical Technology", href: "/academics/electrical-technology" },
+    { label: "Syllabus & Curriculum", href: "/syllabus" },
+    { label: "Class Routine", href: "/class-routine" },
+    { label: "Exam Routine", href: "/exam-routine" },
   ]},
   { label: "Notice Board", href: "/notices" },
+  { label: "Student Life", href: "/clubs", mega: [
+    { label: "Student Clubs", href: "/clubs" },
+    { label: "Library", href: "/library" },
+    { label: "Gallery", href: "/gallery" },
+    { label: "Alumni", href: "/alumni" },
+  ]},
   { label: "Admission", href: "/admission" },
   { label: "Contact", href: "/contact" },
 ];

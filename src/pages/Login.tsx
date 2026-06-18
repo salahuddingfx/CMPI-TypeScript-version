@@ -6,31 +6,37 @@ import { Input } from "@/components/ui/input";
 import { SEO } from "@/components/common/SEO";
 import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
-import { students } from "@/data/mockStudentData";
+import { login as apiLogin } from "@/services/api";
 
 export function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    const matched = students.find((u) => u.email === email && u.password === password);
-    if (!matched) {
+    setLoading(true);
+    try {
+      const data = await apiLogin(email, password);
+      localStorage.setItem("cmpi-token", data.token);
+      localStorage.setItem("cmpi-user", JSON.stringify({
+        id: data.user.id,
+        email: data.user.email,
+        name: data.user.name,
+        department: data.user.department,
+        studentId: data.user.student_id,
+        role: data.user.role,
+      }));
+      navigate("/dashboard");
+    } catch {
       setError("Invalid email or password. Check your institute email credentials.");
-      return;
+    } finally {
+      setLoading(false);
     }
-    localStorage.setItem("cmpi-user", JSON.stringify({
-      id: matched.id,
-      email: matched.email,
-      name: matched.name,
-      department: matched.department,
-      studentId: matched.studentId,
-    }));
-    navigate("/dashboard");
   };
 
   return (
@@ -82,7 +88,9 @@ export function Login() {
                 </label>
                 <Link className="text-primary hover:underline" to="/forgot-password">Forgot password?</Link>
               </div>
-              <Button type="submit" className="w-full">Login</Button>
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Logging in..." : "Login"}
+              </Button>
             </div>
             <p className="mt-6 text-center text-sm text-muted-foreground">
               Don&apos;t have an account? <Link className="text-primary hover:underline" to="/register">Contact admin</Link>

@@ -6,11 +6,7 @@ import { Input } from "@/components/ui/input";
 import { SEO } from "@/components/common/SEO";
 import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
-
-const mockUsers = [
-  { email: "admin@cmpi.edu.bd", password: "admin123", name: "Admin User" },
-  { email: "student@cmpi.edu.bd", password: "student123", name: "Student User" },
-];
+import { students } from "@/data/mockStudentData";
 
 export function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -22,12 +18,18 @@ export function Login() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    const matched = mockUsers.find((u) => u.email === email && u.password === password);
+    const matched = students.find((u) => u.email === email && u.password === password);
     if (!matched) {
-      setError("Invalid email or password. Use test accounts shown below.");
+      setError("Invalid email or password. Check your institute email credentials.");
       return;
     }
-    localStorage.setItem("cmpi-user", JSON.stringify({ email: matched.email, name: matched.name }));
+    localStorage.setItem("cmpi-user", JSON.stringify({
+      id: matched.id,
+      email: matched.email,
+      name: matched.name,
+      department: matched.department,
+      studentId: matched.studentId,
+    }));
     navigate("/dashboard");
   };
 
@@ -36,16 +38,16 @@ export function Login() {
       <SEO title="Login" description="Login to your CMPI student or faculty portal." />
       <section className="container section-pad">
         <div className="mx-auto max-w-md">
-          <SectionHeader title="Welcome back" description="Login to access your CMPI dashboard and resources." align="center" className="mb-8" />
+          <SectionHeader title="Welcome back" description="Login with your institute email to access CMPI dashboard." align="center" className="mb-8" />
           {error && <p className="mb-4 rounded-sm border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">{error}</p>}
           <form onSubmit={handleSubmit} className="rounded-sm border bg-card p-6 shadow-sm sm:p-8">
             <div className="space-y-4">
               <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-semibold">Email</label>
+                <label htmlFor="email" className="text-sm font-semibold">Institute Email</label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="you@example.com"
+                  placeholder="name.dept@cmpi.edu.bd"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -83,14 +85,18 @@ export function Login() {
               <Button type="submit" className="w-full">Login</Button>
             </div>
             <p className="mt-6 text-center text-sm text-muted-foreground">
-              Don&apos;t have an account? <Link className="text-primary hover:underline" to="/register">Create one</Link>
+              Don&apos;t have an account? <Link className="text-primary hover:underline" to="/register">Contact admin</Link>
             </p>
           </form>
 
           <div className="mt-6 rounded-sm border bg-muted/60 p-4 text-sm text-muted-foreground">
-            <p className="font-semibold text-foreground">Test accounts</p>
-            <p className="mt-2">Admin: <span className="font-mono">admin@cmpi.edu.bd</span> / <span className="font-mono">admin123</span></p>
-            <p>Student: <span className="font-mono">student@cmpi.edu.bd</span> / <span className="font-mono">student123</span></p>
+            <p className="font-semibold text-foreground">Test student accounts</p>
+            <div className="mt-3 space-y-2">
+              <p><span className="font-semibold">Rahim (CST):</span> <span className="font-mono">rahim.cst@cmpi.edu.bd</span> / <span className="font-mono">rahim123</span></p>
+              <p><span className="font-semibold">Fatima (Civil):</span> <span className="font-mono">fatima.civil@cmpi.edu.bd</span> / <span className="font-mono">fatima123</span></p>
+              <p><span className="font-semibold">Arif (EEE):</span> <span className="font-mono">arif.eee@cmpi.edu.bd</span> / <span className="font-mono">arif123</span></p>
+              <p><span className="font-semibold">Admin:</span> <span className="font-mono">admin@cmpi.edu.bd</span> / <span className="font-mono">admin123</span></p>
+            </div>
           </div>
         </div>
       </section>

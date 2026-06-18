@@ -3,6 +3,12 @@ import { LayoutDashboard, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageTransition } from "@/components/common/PageTransition";
 
+function getStoredUser() {
+  if (typeof window === "undefined") return null;
+  const raw = localStorage.getItem("cmpi-user");
+  return raw ? JSON.parse(raw) : null;
+}
+
 const tabs = [
   { to: "/dashboard", end: true, icon: LayoutDashboard, label: "Overview" },
   { to: "/dashboard/courses", icon: null, label: "Enrolled Courses" },
@@ -14,6 +20,7 @@ const tabs = [
 
 export function StudentLayout() {
   const navigate = useNavigate();
+  const user = getStoredUser();
 
   return (
     <PageTransition>
@@ -25,6 +32,7 @@ export function StudentLayout() {
                 <div className="mb-6">
                   <p className="text-sm text-muted-foreground">Student Portal</p>
                   <h2 className="text-xl font-bold">Dashboard</h2>
+                  {user?.email && <p className="mt-1 truncate text-xs font-mono text-primary">{user.email}</p>}
                 </div>
                 <nav className="space-y-1">
                   {tabs.map((item) => (

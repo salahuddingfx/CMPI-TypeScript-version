@@ -36,6 +36,8 @@ export function Dashboard() {
           <div>
             <p className="text-sm text-muted-foreground">Welcome back</p>
             <h1 className="text-2xl font-bold text-foreground">{user.name || "User"}</h1>
+            {user.email && <p className="text-sm text-primary font-mono">{user.email}</p>}
+            {user.department && <p className="text-xs text-muted-foreground">{user.department} • {user.studentId}</p>}
           </div>
           <div className="flex items-center gap-3">
             <Button variant="outline" asChild>

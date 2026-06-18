@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import {
   Archive,
-  ArrowLeft,
   Forward,
   Inbox,
   Mail,
@@ -19,7 +18,6 @@ import {
 } from "lucide-react";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 type Folder = "inbox" | "sent" | "drafts" | "trash" | "archive" | "spam";
 type Label = "work" | "personal" | "urgent" | null;
@@ -491,7 +489,7 @@ export function StudentWebmail() {
                   <Button variant="outline" size="sm" onClick={() => spamEmail(selected.id)}>
                     <AlertTriangle className="mr-1 h-3 w-3" /> Spam
                   </Button>
-                  <Button variant="destructive" size="sm" onClick={() => deleteEmail(selected.id)}>
+                  <Button variant="outline" size="sm" className="border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700" onClick={() => deleteEmail(selected.id)}>
                     <Trash2 className="mr-1 h-3 w-3" /> Delete
                   </Button>
                 </div>

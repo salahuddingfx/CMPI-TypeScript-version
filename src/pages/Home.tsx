@@ -342,11 +342,6 @@ export function Home() {
       <section className="container section-pad">
         <SectionHeader eyebrow="Contact Information" title="Get in touch with CMPI" align="left" />
         <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
-          <div className="space-y-4">
-            <InfoCard icon={MapPin} title="Address" value={institute.address} />
-            <InfoCard icon={Phone} title="Phone" value={institute.phone} href={`tel:${institute.phone}`} />
-            <InfoCard icon={Mail} title="Email" value={institute.email} href={`mailto:${institute.email}`} />
-          </div>
           <div className="rounded-sm border bg-card p-6 shadow-sm">
             <h3 className="text-2xl font-bold">Send an Inquiry</h3>
             <p className="mt-2 text-muted-foreground">Use the contact form on the Contact page for detailed messages.</p>

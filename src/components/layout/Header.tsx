@@ -71,21 +71,12 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
-          <Button type="button" variant="outline" size="icon" aria-label="Open search" onClick={() => setSearchOpen(true)}>
-            <Search className="h-5 w-5" />
+        <div className="hidden items-center gap-2 lg:flex">
+          <Button asChild variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-white">
+            <Link to="/login">Sign In</Link>
           </Button>
-          <div className="hidden items-center gap-2 lg:flex">
-            <Button asChild variant="outline" size="sm">
-              <Link to="/login">Sign In</Link>
-            </Button>
-            <Button asChild size="sm">
-              <Link to="/register">Sign Up</Link>
-            </Button>
-          </div>
-          <ThemeToggle />
-          <Button type="button" variant="outline" size="icon" className="lg:hidden" aria-label="Toggle menu" aria-expanded={mobileOpen} onClick={() => setMobileOpen((open) => !open)}>
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          <Button asChild size="sm">
+            <Link to="/register">Sign Up</Link>
           </Button>
         </div>
       </div>

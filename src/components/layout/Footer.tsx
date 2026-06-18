@@ -3,7 +3,6 @@ import {
   Mail,
   MapPin,
   Phone,
-  Youtube,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -87,11 +86,7 @@ export function Footer() {
                   className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/75 transition hover:bg-secondary hover:text-primary"
                   aria-label={link.label}
                 >
-                  {link.label === "YouTube" && <Youtube className="h-4 w-4" />}
-                  {link.label === "Facebook" && <Globe className="h-4 w-4" />}
-                  {link.label === "Instagram" && <Globe className="h-4 w-4" />}
-                  {link.label === "LinkedIn" && <Globe className="h-4 w-4" />}
-                  {link.label === "Twitter" && <Globe className="h-4 w-4" />}
+                  <Globe className="h-4 w-4" />
                 </a>
               ))}
             </div>

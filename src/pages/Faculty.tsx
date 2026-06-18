@@ -6,7 +6,7 @@ import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { FacultyCard } from "@/components/features/FacultyCard";
 import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
-import { useInstituteData } from "@/hooks/useInstituteData";
+import { useInstituteContext } from "@/contexts/InstituteDataContext";
 import type { DepartmentSlug, FacultyMember } from "@/services/types";
 
 type FacultyDepartment = FacultyMember["department"];
@@ -20,7 +20,7 @@ const departmentOptions: Array<{ value: FacultyDepartment | "all"; label: string
 ];
 
 export function Faculty() {
-  const { data, loading, error } = useInstituteData();
+  const { data, loading, error } = useInstituteContext();
   const [query, setQuery] = useState("");
   const [department, setDepartment] = useState<FacultyDepartment | "all">("all");
 

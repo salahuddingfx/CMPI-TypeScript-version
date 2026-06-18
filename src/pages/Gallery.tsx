@@ -4,7 +4,7 @@ import { SEO } from "@/components/common/SEO";
 import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
-import { useInstituteData } from "@/hooks/useInstituteData";
+import { useInstituteContext } from "@/contexts/InstituteDataContext";
 
 const mediaItems = [
   { title: "Annual Technical Exhibition", type: "Photo", description: "Student projects from Civil, CST, and Electrical departments." },
@@ -16,7 +16,7 @@ const mediaItems = [
 ];
 
 export function Gallery() {
-  const { data, loading, error } = useInstituteData();
+  const { data, loading, error } = useInstituteContext();
 
   if (loading) return <LoadingSkeleton />;
   if (error || !data) return <PageTransition className="container section-pad"><div className="rounded-sm border border-destructive/30 bg-destructive/10 p-6 text-destructive">Unable to load gallery data.</div></PageTransition>;

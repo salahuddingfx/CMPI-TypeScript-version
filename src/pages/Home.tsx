@@ -16,7 +16,7 @@ import { FacilityCard } from "@/components/features/FacilityCard";
 import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
-import { useInstituteData } from "@/hooks/useInstituteData";
+import { useInstituteContext } from "@/contexts/InstituteDataContext";
 import { institute } from "@/utils/constants";
 
 const heroSlides = [
@@ -97,7 +97,7 @@ function useTypewriter(text: string) {
 }
 
 export function Home() {
-  const { data, loading, error } = useInstituteData();
+  const { data, loading, error } = useInstituteContext();
   const [current, setCurrent] = useState(0);
   const typedTitle = useTypewriter(heroSlides[current].title);
 

@@ -1,5 +1,5 @@
 import { Outlet, NavLink, Link, useNavigate } from "react-router-dom";
-import { LayoutDashboard } from "lucide-react";
+import { LayoutDashboard, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageTransition } from "@/components/common/PageTransition";
 
@@ -8,6 +8,7 @@ const tabs = [
   { to: "/dashboard/courses", icon: null, label: "Enrolled Courses" },
   { to: "/dashboard/results", icon: null, label: "Results" },
   { to: "/dashboard/bills", icon: null, label: "Bills & Payments" },
+  { to: "/dashboard/webmail", icon: Mail, label: "Webmail" },
   { to: "/dashboard/profile", icon: null, label: "Profile & Settings" },
 ];
 

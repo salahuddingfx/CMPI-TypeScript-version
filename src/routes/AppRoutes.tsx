@@ -35,6 +35,7 @@ const StudentCourses = lazy(() => import("@/pages/dashboard/StudentCourses").the
 const StudentResults = lazy(() => import("@/pages/dashboard/StudentResults").then((m) => ({ default: m.StudentResults })));
 const StudentBills = lazy(() => import("@/pages/dashboard/StudentBills").then((m) => ({ default: m.StudentBills })));
 const StudentProfile = lazy(() => import("@/pages/dashboard/StudentProfile").then((m) => ({ default: m.StudentProfile })));
+const StudentWebmail = lazy(() => import("@/pages/dashboard/StudentWebmail").then((m) => ({ default: m.StudentWebmail })));
 const NotFound = lazy(() => import("@/pages/NotFound").then((m) => ({ default: m.NotFound })));
 
 function LazyPage({ children }: { children: React.ReactNode }) {
@@ -78,6 +79,7 @@ export function AppRoutes() {
           <Route path="courses" element={<LazyPage><StudentCourses /></LazyPage>} />
           <Route path="results" element={<LazyPage><StudentResults /></LazyPage>} />
           <Route path="bills" element={<LazyPage><StudentBills /></LazyPage>} />
+          <Route path="webmail" element={<LazyPage><StudentWebmail /></LazyPage>} />
           <Route path="profile" element={<LazyPage><StudentProfile /></LazyPage>} />
         </Route>
       </Route>

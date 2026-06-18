@@ -207,16 +207,16 @@ export function Home() {
                 <p className="text-sm font-bold uppercase tracking-[0.2em] text-secondary">Institute Focus</p>
                 <h2 className="mt-3 text-2xl font-black sm:text-3xl">{slide.panelTitle}</h2>
               </div>
-              <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-black text-secondary">
+              <span className="rounded-full bg-white/15 px-3 py-1 text-sm font-black text-secondary">
                 0{current + 1}/0{heroSlides.length}
               </span>
             </div>
-            <p className="mt-4 leading-7 text-white/78">{slide.panelDescription}</p>
+            <p className="mt-4 leading-7 text-white/90">{slide.panelDescription}</p>
             <div className="mt-6 grid grid-cols-3 gap-3">
               {slide.stats.map((stat) => (
-                <div key={stat.label} className="rounded-2xl bg-white/10 p-4">
+                <div key={stat.label} className="rounded-2xl bg-white/15 p-4">
                   <p className="text-2xl font-black text-secondary sm:text-3xl">{stat.value}</p>
-                  <p className="mt-1 text-xs leading-5 text-white/76">{stat.label}</p>
+                  <p className="mt-1 text-xs leading-5 text-white/85">{stat.label}</p>
                 </div>
               ))}
             </div>

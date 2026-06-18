@@ -98,7 +98,8 @@ function useTypewriter(text: string) {
 export function Home() {
   const { data, loading, error } = useInstituteContext();
   const [current, setCurrent] = useState(0);
-  const typedTitle = useTypewriter(heroSlides[current].title);
+  const slide = heroSlides[current]!;
+  const typedTitle = useTypewriter(slide.title);
 
   const nextSlide = useCallback(() => {
     setCurrent((previous) => (previous + 1) % heroSlides.length);

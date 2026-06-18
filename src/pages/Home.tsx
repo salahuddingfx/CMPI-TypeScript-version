@@ -23,13 +23,15 @@ const heroSlides = [
   {
     eyebrow: "Admission 2026-2027",
     title: "Building skilled technologists for a modern Bangladesh",
-    description: "Cox's Bazar Model Polytechnic Institute offers practical diploma programs in Civil, Computer Science, and Electrical Technology with a focus on ethics, innovation, and employability.",
+    description:
+      "Cox's Bazar Model Polytechnic Institute offers practical diploma programs in Civil, Computer Science, and Electrical Technology with a focus on ethics, innovation, and employability.",
     cta: "Apply Now",
     ctaHref: "/admission",
     secondaryLabel: "Explore Academics",
     secondaryHref: "/academics",
     panelTitle: "Admission session 2026-2027",
-    panelDescription: "Follow official circulars, submit required documents, and start your diploma engineering journey with structured guidance.",
+    panelDescription:
+      "Follow official circulars, submit required documents, and start your diploma engineering journey with structured guidance.",
     stats: [
       { value: "03", label: "Technology Departments" },
       { value: "450+", label: "Seat Capacity" },
@@ -39,13 +41,15 @@ const heroSlides = [
   {
     eyebrow: "Practical Learning",
     title: "Industry-ready diploma programs for tomorrow",
-    description: "Learn through workshops, project-based labs, technical demonstrations, and industry-aligned curriculum designed for real workplace readiness.",
+    description:
+      "Learn through workshops, project-based labs, technical demonstrations, and industry-aligned curriculum designed for real workplace readiness.",
     cta: "View Departments",
     ctaHref: "/academics",
     secondaryLabel: "Student Resources",
     secondaryHref: "/student-corner",
     panelTitle: "Hands-on technical ecosystem",
-    panelDescription: "Students get continuous access to labs, faculty mentoring, project reviews, and practical skill development throughout the semester.",
+    panelDescription:
+      "Students get continuous access to labs, faculty mentoring, project reviews, and practical skill development throughout the semester.",
     stats: [
       { value: "70%", label: "Practical Focus" },
       { value: "120+", label: "Student Projects" },
@@ -55,13 +59,15 @@ const heroSlides = [
   {
     eyebrow: "Campus Life",
     title: "Innovation, leadership, and student success",
-    description: "CMPI strengthens technical education with clubs, seminars, cultural programs, sports events, and student welfare initiatives.",
+    description:
+      "CMPI strengthens technical education with clubs, seminars, cultural programs, sports events, and student welfare initiatives.",
     cta: "Explore Events",
     ctaHref: "/events",
     secondaryLabel: "View Gallery",
     secondaryHref: "/gallery",
     panelTitle: "Beyond the classroom",
-    panelDescription: "A supportive campus environment helps students grow as disciplined professionals, team leaders, and responsible citizens.",
+    panelDescription:
+      "A supportive campus environment helps students grow as disciplined professionals, team leaders, and responsible citizens.",
     stats: [
       { value: "12+", label: "Student Clubs" },
       { value: "60+", label: "Annual Events" },
@@ -129,8 +135,8 @@ export function Home() {
         keywords={["CMPI", "Cox's Bazar Polytechnic", "Diploma Engineering", "Technical Education"]}
       />
 
-      <section className="relative min-h-[550px] overflow-hidden bg-primary text-white">
-        <div className="container relative grid min-h-[550px] items-center gap-8 border-y border-white/10 py-10 sm:py-14 lg:grid-cols-[1.08fr_0.92fr] lg:py-16">
+      <section className="relative min-h-[550px] overflow-hidden bg-primary text-white" style={{ scrollMarginTop: "5rem" }}>
+        <div className="container relative grid min-h-[550px] items-center gap-8 py-10 sm:py-14 lg:grid-cols-[1.08fr_0.92fr] lg:py-16">
           <AnimatePresence mode="wait">
             <motion.div
               key={current}
@@ -140,17 +146,15 @@ export function Home() {
               transition={{ duration: 0.38 }}
               className="max-w-3xl"
             >
-              <span className="inline-flex rounded-full bg-secondary/20 px-4 py-2 text-sm font-bold text-secondary">
+              <span className="inline-flex items-center gap-2 rounded-full bg-secondary/20 px-4 py-2 text-sm font-bold text-secondary">
                 {slide.eyebrow}
               </span>
-              <h1 className="mt-6 min-h-[132px] text-4xl font-black sm:min-h-[154px] sm:text-5xl lg:text-6xl">
+              <h1 className="mt-6 min-h-[132px] text-4xl font-black text-white sm:min-h-[154px] sm:text-5xl lg:text-6xl">
                 <span aria-hidden="true">{typedTitle}</span>
-                <span className="animate-pulse">|</span>
+                <span className="animate-pulse text-white">|</span>
                 <span className="sr-only">{slide.title}</span>
               </h1>
-              <p className="mt-5 max-w-2xl text-lg leading-8 text-white/86 sm:text-xl">
-                {slide.description}
-              </p>
+              <p className="mt-5 max-w-2xl text-lg leading-8 text-white sm:text-xl">{slide.description}</p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Button asChild size="lg" variant="secondary">
                   <Link to={slide.ctaHref}>
@@ -158,14 +162,14 @@ export function Home() {
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
-                <Button asChild size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 hover:text-white">
+                <Button asChild size="lg" className="border border-white bg-white text-primary hover:bg-white/90">
                   <Link to={slide.secondaryHref}>{slide.secondaryLabel}</Link>
                 </Button>
               </div>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <button
                   type="button"
-                  className="inline-flex h-11 items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 font-bold text-white transition hover:bg-white/20"
+                  className="inline-flex h-11 items-center gap-2 rounded-full border border-white/40 bg-white/10 px-4 font-bold text-white transition hover:bg-white/20"
                   onClick={previousSlide}
                   aria-label="Previous slide"
                 >
@@ -173,7 +177,7 @@ export function Home() {
                 </button>
                 <button
                   type="button"
-                  className="inline-flex h-11 items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 font-bold text-white transition hover:bg-white/20"
+                  className="inline-flex h-11 items-center gap-2 rounded-full border border-white/40 bg-white/10 px-4 font-bold text-white transition hover:bg-white/20"
                   onClick={nextSlide}
                   aria-label="Next slide"
                 >
@@ -184,7 +188,7 @@ export function Home() {
                     <button
                       key={item.eyebrow}
                       type="button"
-                      className={`h-2 rounded-full transition-all ${index === current ? "w-10 bg-secondary" : "w-2 bg-white/30 hover:bg-white/60"}`}
+                      className={`h-2 rounded-full transition-all ${index === current ? "w-10 bg-secondary" : "w-2 bg-white/40 hover:bg-white/70"}`}
                       onClick={() => setCurrent(index)}
                       aria-label={`Show slide ${index + 1}`}
                     />
@@ -207,16 +211,16 @@ export function Home() {
                 <p className="text-sm font-bold uppercase tracking-[0.2em] text-secondary">Institute Focus</p>
                 <h2 className="mt-3 text-2xl font-black sm:text-3xl">{slide.panelTitle}</h2>
               </div>
-              <span className="rounded-full bg-white/15 px-3 py-1 text-sm font-black text-secondary">
+              <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-black text-secondary">
                 0{current + 1}/0{heroSlides.length}
               </span>
             </div>
             <p className="mt-4 leading-7 text-white/90">{slide.panelDescription}</p>
             <div className="mt-6 grid grid-cols-3 gap-3">
               {slide.stats.map((stat) => (
-                <div key={stat.label} className="rounded-2xl bg-white/15 p-4">
+                <div key={stat.label} className="rounded-2xl bg-white/10 p-4">
                   <p className="text-2xl font-black text-secondary sm:text-3xl">{stat.value}</p>
-                  <p className="mt-1 text-xs leading-5 text-white/85">{stat.label}</p>
+                  <p className="mt-1 text-xs leading-5 text-white/90">{stat.label}</p>
                 </div>
               ))}
             </div>
@@ -239,7 +243,8 @@ export function Home() {
           <div className="rounded-sm bg-primary p-8 text-white shadow-xl">
             <h2 className="text-3xl font-bold">Principal Message</h2>
             <p className="mt-5 leading-8 text-white/80">
-              We are committed to nurturing disciplined, skilled, and innovative diploma engineers who can contribute meaningfully to national development. Our campus culture encourages practical learning, ethical conduct, and lifelong growth.
+              We are committed to nurturing disciplined, skilled, and innovative diploma engineers who can contribute meaningfully to national development. Our campus culture
+              encourages practical learning, ethical conduct, and lifelong growth.
             </p>
             <p className="mt-6 font-semibold">Principal, {institute.shortName}</p>
           </div>

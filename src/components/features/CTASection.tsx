@@ -16,23 +16,23 @@ export function CTASection({ title, description, primaryLabel, secondaryLabel, p
     <section className="section-pad">
       <div className="container">
         <div className="gradient-panel">
-        <div className="relative z-10 mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">{title}</h2>
-          <p className="mt-4 text-base leading-7 text-white/85 sm:text-lg">{description}</p>
-          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <Button asChild size="lg" variant="secondary">
-              <Link to={primaryHref}>
-                {primaryLabel}
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Button>
-            {secondaryHref && secondaryLabel && (
-              <Button asChild size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 hover:text-white">
-                <Link to={secondaryHref}>{secondaryLabel}</Link>
+          <div className="relative z-10 mx-auto max-w-3xl px-6 py-10 text-center sm:px-10 sm:py-14 lg:px-16 lg:py-20">
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">{title}</h2>
+            <p className="mt-4 text-base leading-7 text-white/85 sm:text-lg">{description}</p>
+            <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+              <Button asChild size="lg" variant="secondary">
+                <Link to={primaryHref}>
+                  {primaryLabel}
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
               </Button>
-            )}
+              {secondaryHref && secondaryLabel && (
+                <Button asChild size="lg" variant="outline" className="border-white/40 text-foreground hover:bg-white/20 hover:text-foreground">
+                  <Link to={secondaryHref}>{secondaryLabel}</Link>
+                </Button>
+              )}
+            </div>
           </div>
-        </div>
         </div>
       </div>
     </section>

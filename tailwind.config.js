@@ -1,15 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ["class"],
-  content: ["./index.html", "./src/**/*.{ts,tsx}"],
+  content: [
+    "./index.html",
+    "./src/**/*.{ts,tsx}",
+  ],
   theme: {
     extend: {
       fontFamily: {
-        serif: ["Georgia", "Times New Roman", "Times", "serif"],
         sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
-      },
-      screens: {
-        "3xl": "1536px",
       },
       colors: {
         border: "hsl(var(--border))",
@@ -54,6 +53,14 @@ export default {
           gray: "#24313b",
           light: "hsl(var(--background))",
         },
+      },
+      screens: {
+        'xs': '480px',
+        'sm': '640px',
+        'md': '768px',
+        'lg': '1024px',
+        'xl': '1280px',
+        '2xl': '1536px',
       },
       borderRadius: {
         lg: "var(--radius)",

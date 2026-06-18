@@ -71,12 +71,21 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-2 lg:flex">
-          <Button asChild variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-white">
-            <Link to="/login">Sign In</Link>
+        <div className="flex items-center gap-2">
+          <Button type="button" variant="outline" size="icon" aria-label="Open search" onClick={() => setSearchOpen(true)} className="hidden lg:flex">
+            <Search className="h-5 w-5" />
           </Button>
-          <Button asChild size="sm">
-            <Link to="/register">Sign Up</Link>
+          <ThemeToggle />
+          <div className="hidden items-center gap-2 lg:flex">
+            <Button asChild variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-white">
+              <Link to="/login">Sign In</Link>
+            </Button>
+            <Button asChild size="sm">
+              <Link to="/register">Sign Up</Link>
+            </Button>
+          </div>
+          <Button type="button" variant="outline" size="icon" className="lg:hidden" aria-label="Toggle menu" aria-expanded={mobileOpen} onClick={() => setMobileOpen((open) => !open)}>
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </div>
       </div>
@@ -93,7 +102,7 @@ export function Header() {
             <div className="container max-h-[75vh] overflow-auto py-4">
               {navItems.map((item) => (
                 <div key={item.href} className="py-2">
-                    <NavLink to={item.href} className={({ isActive }) => `block rounded-sm px-3 py-2 font-bold ${isActive ? "bg-primary text-white" : "hover:bg-muted"}`} onClick={() => setMobileOpen(false)}>
+                  <NavLink to={item.href} className={({ isActive }) => `block rounded-sm px-3 py-2 font-bold ${isActive ? "bg-primary text-white" : "hover:bg-muted"}`} onClick={() => setMobileOpen(false)}>
                     {item.label}
                   </NavLink>
                   {item.mega && (

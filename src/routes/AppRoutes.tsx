@@ -1,49 +1,44 @@
-import { Suspense } from "react";
+import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import { MainLayout } from "@/layouts/MainLayout";
 import { StudentLayout } from "@/layouts/StudentLayout";
+import { AuthGuard } from "@/components/common/AuthGuard";
 import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
-import { Home } from "@/pages/Home";
-import { About } from "@/pages/About";
-import { Academics } from "@/pages/Academics";
-import { DepartmentPage } from "@/pages/DepartmentPage";
-import { Faculty } from "@/pages/Faculty";
-import { NoticeBoard } from "@/pages/NoticeBoard";
-import { NoticeDetails } from "@/pages/NoticeDetails";
-import { Events } from "@/pages/Events";
-import { EventDetails } from "@/pages/EventDetails";
-import { Gallery } from "@/pages/Gallery";
-import { Blog } from "@/pages/Blog";
-import { BlogDetails } from "@/pages/BlogDetails";
-import { Admission } from "@/pages/Admission";
-import { StudentCorner } from "@/pages/StudentCorner";
-import { Contact } from "@/pages/Contact";
-import { NotFound } from "@/pages/NotFound";
-import { PrivacyPolicy } from "@/pages/PrivacyPolicy";
-import { TermsAndConditions } from "@/pages/TermsAndConditions";
-import { CookiePolicy } from "@/pages/CookiePolicy";
-import { RefundPolicy } from "@/pages/RefundPolicy";
-import { Disclaimer } from "@/pages/Disclaimer";
-import { Accessibility } from "@/pages/Accessibility";
-import { Sitemap } from "@/pages/Sitemap";
-import { Login } from "@/pages/Login";
-import { Register } from "@/pages/Register";
-import { ForgotPassword } from "@/pages/ForgotPassword";
-import { Dashboard } from "@/pages/Dashboard";
-import { DashboardOverview } from "@/pages/dashboard/DashboardOverview";
-import { StudentCourses } from "@/pages/dashboard/StudentCourses";
-import { StudentResults } from "@/pages/dashboard/StudentResults";
-import { StudentBills } from "@/pages/dashboard/StudentBills";
-import { StudentProfile } from "@/pages/dashboard/StudentProfile";
+
+const Home = lazy(() => import("@/pages/Home").then((m) => ({ default: m.Home })));
+const About = lazy(() => import("@/pages/About").then((m) => ({ default: m.About })));
+const Academics = lazy(() => import("@/pages/Academics").then((m) => ({ default: m.Academics })));
+const DepartmentPage = lazy(() => import("@/pages/DepartmentPage").then((m) => ({ default: m.DepartmentPage })));
+const Faculty = lazy(() => import("@/pages/Faculty").then((m) => ({ default: m.Faculty })));
+const NoticeBoard = lazy(() => import("@/pages/NoticeBoard").then((m) => ({ default: m.NoticeBoard })));
+const NoticeDetails = lazy(() => import("@/pages/NoticeDetails").then((m) => ({ default: m.NoticeDetails })));
+const Events = lazy(() => import("@/pages/Events").then((m) => ({ default: m.Events })));
+const EventDetails = lazy(() => import("@/pages/EventDetails").then((m) => ({ default: m.EventDetails })));
+const Gallery = lazy(() => import("@/pages/Gallery").then((m) => ({ default: m.Gallery })));
+const Blog = lazy(() => import("@/pages/Blog").then((m) => ({ default: m.Blog })));
+const BlogDetails = lazy(() => import("@/pages/BlogDetails").then((m) => ({ default: m.BlogDetails })));
+const Admission = lazy(() => import("@/pages/Admission").then((m) => ({ default: m.Admission })));
+const StudentCorner = lazy(() => import("@/pages/StudentCorner").then((m) => ({ default: m.StudentCorner })));
+const Contact = lazy(() => import("@/pages/Contact").then((m) => ({ default: m.Contact })));
+const PrivacyPolicy = lazy(() => import("@/pages/PrivacyPolicy").then((m) => ({ default: m.PrivacyPolicy })));
+const TermsAndConditions = lazy(() => import("@/pages/TermsAndConditions").then((m) => ({ default: m.TermsAndConditions })));
+const CookiePolicy = lazy(() => import("@/pages/CookiePolicy").then((m) => ({ default: m.CookiePolicy })));
+const RefundPolicy = lazy(() => import("@/pages/RefundPolicy").then((m) => ({ default: m.RefundPolicy })));
+const Disclaimer = lazy(() => import("@/pages/Disclaimer").then((m) => ({ default: m.Disclaimer })));
+const Accessibility = lazy(() => import("@/pages/Accessibility").then((m) => ({ default: m.Accessibility })));
+const Sitemap = lazy(() => import("@/pages/Sitemap").then((m) => ({ default: m.Sitemap })));
+const Login = lazy(() => import("@/pages/Login").then((m) => ({ default: m.Login })));
+const Register = lazy(() => import("@/pages/Register").then((m) => ({ default: m.Register })));
+const ForgotPassword = lazy(() => import("@/pages/ForgotPassword").then((m) => ({ default: m.ForgotPassword })));
+const Dashboard = lazy(() => import("@/pages/Dashboard").then((m) => ({ default: m.Dashboard })));
+const StudentCourses = lazy(() => import("@/pages/dashboard/StudentCourses").then((m) => ({ default: m.StudentCourses })));
+const StudentResults = lazy(() => import("@/pages/dashboard/StudentResults").then((m) => ({ default: m.StudentResults })));
+const StudentBills = lazy(() => import("@/pages/dashboard/StudentBills").then((m) => ({ default: m.StudentBills })));
+const StudentProfile = lazy(() => import("@/pages/dashboard/StudentProfile").then((m) => ({ default: m.StudentProfile })));
+const NotFound = lazy(() => import("@/pages/NotFound").then((m) => ({ default: m.NotFound })));
 
 function LazyPage({ children }: { children: React.ReactNode }) {
   return <Suspense fallback={<LoadingSkeleton />}>{children}</Suspense>;
-}
-
-function getStoredUser() {
-  if (typeof window === "undefined") return null;
-  const raw = localStorage.getItem("cmpi-user");
-  return raw ? JSON.parse(raw) : null;
 }
 
 export function AppRoutes() {
@@ -77,19 +72,14 @@ export function AppRoutes() {
         <Route path="forgot-password" element={<LazyPage><ForgotPassword /></LazyPage>} />
       </Route>
 
-      <Route path="/dashboard" element={<StudentLayout />}>
-        <Route
-          index
-          element={
-            <LazyPage>
-              <Dashboard />
-            </LazyPage>
-          }
-        />
-        <Route path="courses" element={<LazyPage><StudentCourses /></LazyPage>} />
-        <Route path="results" element={<LazyPage><StudentResults /></LazyPage>} />
-        <Route path="bills" element={<LazyPage><StudentBills /></LazyPage>} />
-        <Route path="profile" element={<LazyPage><StudentProfile /></LazyPage>} />
+      <Route element={<AuthGuard />}>
+        <Route path="/dashboard" element={<StudentLayout />}>
+          <Route index element={<LazyPage><Dashboard /></LazyPage>} />
+          <Route path="courses" element={<LazyPage><StudentCourses /></LazyPage>} />
+          <Route path="results" element={<LazyPage><StudentResults /></LazyPage>} />
+          <Route path="bills" element={<LazyPage><StudentBills /></LazyPage>} />
+          <Route path="profile" element={<LazyPage><StudentProfile /></LazyPage>} />
+        </Route>
       </Route>
 
       <Route path="*" element={<LazyPage><NotFound /></LazyPage>} />

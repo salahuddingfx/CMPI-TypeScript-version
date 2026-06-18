@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { SEO } from "@/components/common/SEO";
 import { PageTransition } from "@/components/common/PageTransition";
@@ -13,6 +13,7 @@ function getStoredUser() {
 
 export function Dashboard() {
   const [user, setUser] = useState(getStoredUser);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handler = () => setUser(getStoredUser());
@@ -20,15 +21,9 @@ export function Dashboard() {
     return () => window.removeEventListener("storage", handler);
   }, []);
 
-  useEffect(() => {
-    if (!user) {
-      window.location.href = "/login";
-    }
-  }, [user]);
-
   const handleLogout = () => {
     localStorage.removeItem("cmpi-user");
-    setUser(null);
+    navigate("/login");
   };
 
   if (!user) return null;

@@ -4,11 +4,11 @@ import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { FacilityCard } from "@/components/features/FacilityCard";
 import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
-import { useInstituteData } from "@/hooks/useInstituteData";
+import { useInstituteContext } from "@/contexts/InstituteDataContext";
 import { institute } from "@/utils/constants";
 
 export function About() {
-  const { data, loading, error } = useInstituteData();
+  const { data, loading, error } = useInstituteContext();
 
   if (loading) return <LoadingSkeleton />;
   if (error || !data) return <PageTransition className="container section-pad"><div className="rounded-sm border border-destructive/30 bg-destructive/10 p-6 text-destructive">Unable to load about information.</div></PageTransition>;

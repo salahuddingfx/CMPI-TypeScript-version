@@ -25,6 +25,10 @@ import { RefundPolicy } from "@/pages/RefundPolicy";
 import { Disclaimer } from "@/pages/Disclaimer";
 import { Accessibility } from "@/pages/Accessibility";
 import { Sitemap } from "@/pages/Sitemap";
+import { Login } from "@/pages/Login";
+import { Register } from "@/pages/Register";
+import { ForgotPassword } from "@/pages/ForgotPassword";
+import { Dashboard } from "@/pages/Dashboard";
 
 function LazyPage({ children }: { children: React.ReactNode }) {
   return <Suspense fallback={<LoadingSkeleton />}>{children}</Suspense>;
@@ -56,6 +60,10 @@ export function AppRoutes() {
         <Route path="disclaimer" element={<LazyPage><Disclaimer /></LazyPage>} />
         <Route path="accessibility" element={<LazyPage><Accessibility /></LazyPage>} />
         <Route path="sitemap" element={<LazyPage><Sitemap /></LazyPage>} />
+        <Route path="login" element={<LazyPage><Login /></LazyPage>} />
+        <Route path="register" element={<LazyPage><Register /></LazyPage>} />
+        <Route path="forgot-password" element={<LazyPage><ForgotPassword /></LazyPage>} />
+        <Route path="dashboard" element={<LazyPage><Dashboard /></LazyPage>} />
         <Route path="*" element={<LazyPage><NotFound /></LazyPage>} />
       </Route>
     </Routes>

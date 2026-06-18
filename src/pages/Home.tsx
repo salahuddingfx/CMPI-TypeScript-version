@@ -8,7 +8,6 @@ import { CTASection } from "@/components/features/CTASection";
 import { DepartmentCard } from "@/components/features/DepartmentCard";
 import { EventCard } from "@/components/features/EventCard";
 import { GalleryAlbumCard } from "@/components/features/GalleryAlbumCard";
-import { InfoCard } from "@/components/features/InfoCard";
 import { NoticeCard } from "@/components/features/NoticeCard";
 import { StatCard } from "@/components/features/StatCard";
 import { BlogCard } from "@/components/features/BlogCard";

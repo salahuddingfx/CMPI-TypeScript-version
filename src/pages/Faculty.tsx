@@ -7,7 +7,7 @@ import { SectionHeader } from "@/components/common/SectionHeader";
 import { FacultyCard } from "@/components/features/FacultyCard";
 import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
 import { useInstituteContext } from "@/contexts/InstituteDataContext";
-import type { DepartmentSlug, FacultyMember } from "@/services/types";
+import type { FacultyMember } from "@/services/types";
 
 type FacultyDepartment = FacultyMember["department"];
 

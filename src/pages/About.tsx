@@ -67,7 +67,7 @@ export function About() {
       <section className="container section-pad">
         <SectionHeader eyebrow="Campus Facilities" title="Learning infrastructure that supports practical education" />
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <FacilityCard icon={BookOpen} title="Digital Library" description={data.facilities[0].description} />
+          <FacilityCard icon={BookOpen} title="Digital Library" description={data.facilities[0]?.description ?? ""} />
           <FacilityCard icon={Award} title="Department Labs" description="Specialized laboratories for Civil, CST, and Electrical Technology programs." />
           <FacilityCard icon={CalendarDays} title="Academic Section" description="Routine management, examination support, and academic record services." />
           <FacilityCard icon={Users} title="Student Support" description="Guidance, clubs, welfare support, and co-curricular participation opportunities." />

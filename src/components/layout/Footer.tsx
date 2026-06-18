@@ -2,19 +2,45 @@ import { Mail, MapPin, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 import { institute } from "@/utils/constants";
 
-const footerLinks = [
-  { title: "Academics", href: "/academics" },
+const quickLinks = [
+  { title: "About Us", href: "/about" },
+  { title: "Faculty", href: "/faculty" },
+  { title: "Events", href: "/events" },
+  { title: "Gallery", href: "/gallery" },
+  { title: "Blog", href: "/blog" },
+  { title: "Student Corner", href: "/student-corner" },
+];
+
+const academicLinks = [
+  { title: "Academic Programs", href: "/academics" },
+  { title: "Civil Technology", href: "/academics/civil-technology" },
+  { title: "Computer Science & Technology", href: "/academics/computer-science-technology" },
+  { title: "Electrical Technology", href: "/academics/electrical-technology" },
   { title: "Admission", href: "/admission" },
   { title: "Notice Board", href: "/notices" },
-  { title: "Events", href: "/events" },
-  { title: "Student Corner", href: "/student-corner" },
-  { title: "Contact", href: "/contact" },
+];
+
+const resourceLinks = [
+  { title: "Contact Us", href: "/contact" },
+  { title: "Student Resources", href: "/student-corner" },
+  { title: "Campus Events", href: "/events" },
+  { title: "Institute Blog", href: "/blog" },
+  { title: "Photo Gallery", href: "/gallery" },
+];
+
+const policyLinks = [
+  { title: "Privacy Policy", href: "/privacy-policy" },
+  { title: "Terms & Conditions", href: "/terms-and-conditions" },
+  { title: "Cookie Policy", href: "/cookie-policy" },
+  { title: "Refund Policy", href: "/refund-policy" },
+  { title: "Disclaimer", href: "/disclaimer" },
+  { title: "Accessibility", href: "/accessibility" },
 ];
 
 export function Footer() {
   return (
     <footer className="mt-20 border-t bg-cmpe-gray text-white">
-      <div className="container grid gap-10 py-12 lg:grid-cols-[1.4fr_0.8fr_0.8fr]">
+      <div className="container grid gap-10 py-12 lg:grid-cols-[1.35fr_0.85fr_0.85fr_0.85fr]">
         <div>
           <Link to="/" className="inline-flex items-center gap-3">
             <span className="flex h-11 w-11 items-center justify-center rounded-sm bg-secondary font-black text-primary">CMPI</span>
@@ -41,10 +67,11 @@ export function Footer() {
             </a>
           </div>
         </div>
+
         <div>
-          <h2 className="text-base font-bold uppercase tracking-[0.2em] text-secondary">Quick Links</h2>
+          <h2 className="text-base font-bold uppercase tracking-[0.18em] text-secondary">Quick Links</h2>
           <ul className="mt-5 space-y-3">
-            {footerLinks.map((link) => (
+            {quickLinks.map((link) => (
               <li key={link.href}>
                 <Link className="text-white/75 transition hover:text-secondary hover:underline" to={link.href}>
                   {link.title}
@@ -53,12 +80,37 @@ export function Footer() {
             ))}
           </ul>
         </div>
+
         <div>
-          <h2 className="text-base font-bold uppercase tracking-[0.2em] text-secondary">Departments</h2>
+          <h2 className="text-base font-bold uppercase tracking-[0.18em] text-secondary">Academics</h2>
           <ul className="mt-5 space-y-3">
-            <li><Link className="text-white/75 transition hover:text-secondary hover:underline" to="/academics/civil-technology">Civil Technology</Link></li>
-            <li><Link className="text-white/75 transition hover:text-secondary hover:underline" to="/academics/computer-science-technology">Computer Science & Technology</Link></li>
-            <li><Link className="text-white/75 transition hover:text-secondary hover:underline" to="/academics/electrical-technology">Electrical Technology</Link></li>
+            {academicLinks.map((link) => (
+              <li key={link.href}>
+                <Link className="text-white/75 transition hover:text-secondary hover:underline" to={link.href}>
+                  {link.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h2 className="text-base font-bold uppercase tracking-[0.18em] text-secondary">Resources & Policies</h2>
+          <ul className="mt-5 space-y-3">
+            {resourceLinks.map((link) => (
+              <li key={link.href}>
+                <Link className="text-white/75 transition hover:text-secondary hover:underline" to={link.href}>
+                  {link.title}
+                </Link>
+              </li>
+            ))}
+            {policyLinks.map((link) => (
+              <li key={link.href}>
+                <Link className="text-white/75 transition hover:text-secondary hover:underline" to={link.href}>
+                  {link.title}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
       </div>

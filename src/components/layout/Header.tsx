@@ -5,7 +5,7 @@ import { Link, NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
 import { SearchPanel } from "@/components/features/SearchPanel";
-import { useInstituteData } from "@/hooks/useInstituteData";
+import { useInstituteContext } from "@/contexts/InstituteDataContext";
 import { institute } from "@/utils/constants";
 
 const navItems = [
@@ -48,7 +48,7 @@ function NavLinkItem({ item }: { item: (typeof navItems)[number] }) {
 }
 
 export function Header() {
-  const { data } = useInstituteData();
+  const { data } = useInstituteContext();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 

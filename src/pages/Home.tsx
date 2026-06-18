@@ -339,15 +339,17 @@ export function Home() {
         secondaryHref="/contact"
       />
 
-      <section className="container section-pad">
-        <SectionHeader eyebrow="Contact Information" title="Get in touch with CMPI" align="left" />
-        <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
-          <div className="rounded-sm border bg-card p-6 shadow-sm">
-            <h3 className="text-2xl font-bold">Send an Inquiry</h3>
-            <p className="mt-2 text-muted-foreground">Use the contact form on the Contact page for detailed messages.</p>
-            <Button asChild className="mt-5">
-              <Link to="/contact">Go to Contact Page</Link>
-            </Button>
+      <section className="section-pad bg-muted/60">
+        <div className="container">
+          <SectionHeader eyebrow="Contact Information" title="Get in touch with CMPI" align="left" />
+          <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
+            <div className="rounded-sm border bg-card p-6 shadow-sm">
+              <h3 className="text-2xl font-bold">Send an Inquiry</h3>
+              <p className="mt-2 text-muted-foreground">Use the contact form on the Contact page for detailed messages.</p>
+              <Button asChild className="mt-5">
+                <Link to="/contact">Go to Contact Page</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>

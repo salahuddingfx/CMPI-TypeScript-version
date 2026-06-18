@@ -1,19 +1,23 @@
-import axios, { type AxiosAdapter } from "axios";
+import axios from "axios";
 import { instituteData } from "@/services/mockData";
 
-const mockAdapter: AxiosAdapter = (config) =>
-  Promise.resolve({
-    data: config.data ?? instituteData,
-    status: 200,
-    statusText: "OK",
-    headers: {},
-    config,
-  });
+const isDev = import.meta.env.DEV;
+
+const mockAdapter = isDev
+  ? (config) =>
+      Promise.resolve({
+        data: config.data ?? instituteData,
+        status: 200,
+        statusText: "OK",
+        headers: {},
+        config,
+      })
+  : undefined;
 
 export const api = axios.create({
   baseURL: "/api",
   timeout: 8000,
-  adapter: mockAdapter,
+  ...(mockAdapter && { adapter: mockAdapter }),
 });
 
 export async function fetchInstituteData() {

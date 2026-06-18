@@ -117,9 +117,9 @@ export function DashboardOverview() {
         <h3 className="text-base font-bold uppercase tracking-[0.18em] text-primary">Resources</h3>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {quickResources.map((item) => (
-            <a key={item.href} href={item.href} className="rounded-sm border border-border/60 bg-card p-4 text-center text-sm font-semibold transition hover:border-primary hover:text-primary">
+            <Link key={item.href} to={item.href} className="rounded-sm border border-border/60 bg-card p-4 text-center text-sm font-semibold transition hover:border-primary hover:text-primary">
               {item.title}
-            </a>
+            </Link>
           ))}
         </div>
       </div>

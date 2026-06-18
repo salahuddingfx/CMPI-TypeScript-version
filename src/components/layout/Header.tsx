@@ -72,11 +72,11 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Button type="button" variant="outline" size="icon" aria-label="Open search" onClick={() => setSearchOpen(true)}>
-            <Search className="h-5 w-5" />
-          </Button>
-          <ThemeToggle />
           <div className="hidden items-center gap-2 lg:flex">
+            <Button type="button" variant="outline" size="icon" aria-label="Open search" onClick={() => setSearchOpen(true)}>
+              <Search className="h-5 w-5" />
+            </Button>
+            <ThemeToggle />
             <Button asChild variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-white">
               <Link to="/login">Sign In</Link>
             </Button>
@@ -84,6 +84,7 @@ export function Header() {
               <Link to="/register">Sign Up</Link>
             </Button>
           </div>
+
           <Button type="button" variant="outline" size="icon" className="lg:hidden" aria-label="Toggle menu" aria-expanded={mobileOpen} onClick={() => setMobileOpen((open) => !open)}>
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>

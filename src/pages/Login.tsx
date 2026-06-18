@@ -7,15 +7,26 @@ import { SEO } from "@/components/common/SEO";
 import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
 
+const mockUsers = [
+  { email: "admin@cmpi.edu.bd", password: "admin123", name: "Admin User" },
+  { email: "student@cmpi.edu.bd", password: "student123", name: "Student User" },
+];
+
 export function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Mock login - replace with real auth later
-    localStorage.setItem("cmpi-user", JSON.stringify({ email, name: "Demo User" }));
+    setError("");
+    const matched = mockUsers.find((u) => u.email === email && u.password === password);
+    if (!matched) {
+      setError("Invalid email or password. Use test accounts shown below.");
+      return;
+    }
+    localStorage.setItem("cmpi-user", JSON.stringify({ email: matched.email, name: matched.name }));
     window.location.href = "/dashboard";
   };
 
@@ -25,6 +36,7 @@ export function Login() {
       <section className="container section-pad">
         <div className="mx-auto max-w-md">
           <SectionHeader title="Welcome back" description="Login to access your CMPI dashboard and resources." align="center" className="mb-8" />
+          {error && <p className="mb-4 rounded-sm border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">{error}</p>}
           <form onSubmit={handleSubmit} className="rounded-sm border bg-card p-6 shadow-sm sm:p-8">
             <div className="space-y-4">
               <div className="space-y-2">
@@ -73,6 +85,12 @@ export function Login() {
               Don&apos;t have an account? <Link className="text-primary hover:underline" to="/register">Create one</Link>
             </p>
           </form>
+
+          <div className="mt-6 rounded-sm border bg-muted/60 p-4 text-sm text-muted-foreground">
+            <p className="font-semibold text-foreground">Test accounts</p>
+            <p className="mt-2">Admin: <span className="font-mono">admin@cmpi.edu.bd</span> / <span className="font-mono">admin123</span></p>
+            <p>Student: <span className="font-mono">student@cmpi.edu.bd</span> / <span className="font-mono">student123</span></p>
+          </div>
         </div>
       </section>
     </PageTransition>

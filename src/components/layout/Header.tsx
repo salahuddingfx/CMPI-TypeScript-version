@@ -69,7 +69,13 @@ export function Header() {
           {navItems.map((item) => (
             <NavLinkItem key={item.href} item={item} />
           ))}
-          <div className="ml-2 flex items-center gap-2">
+        </nav>
+
+        <div className="flex items-center gap-2">
+          <Button type="button" variant="outline" size="icon" aria-label="Open search" onClick={() => setSearchOpen(true)}>
+            <Search className="h-5 w-5" />
+          </Button>
+          <div className="hidden items-center gap-2 lg:flex">
             <Button asChild variant="outline" size="sm">
               <Link to="/login">Sign In</Link>
             </Button>
@@ -77,12 +83,6 @@ export function Header() {
               <Link to="/register">Sign Up</Link>
             </Button>
           </div>
-        </nav>
-
-        <div className="flex items-center gap-2">
-          <Button type="button" variant="outline" size="icon" aria-label="Open search" onClick={() => setSearchOpen(true)} className="hidden lg:flex">
-            <Search className="h-5 w-5" />
-          </Button>
           <ThemeToggle />
           <Button type="button" variant="outline" size="icon" className="lg:hidden" aria-label="Toggle menu" aria-expanded={mobileOpen} onClick={() => setMobileOpen((open) => !open)}>
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}

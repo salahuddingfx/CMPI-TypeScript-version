@@ -1,101 +1,114 @@
-import { CheckCircle2 } from "lucide-react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { SEO } from "@/components/common/SEO";
 import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
-import { CheckList } from "@/components/features/StatCard";
-import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
-import { useInstituteContext } from "@/contexts/InstituteDataContext";
-import { institute } from "@/utils/constants";
 
-const requirements = [
-  "SSC or equivalent science group result with required GPA criteria",
-  "Citizenship certificate or birth registration document",
-  "Recent passport-size photographs",
-  "Completed application form and prescribed fee receipt",
-  "Academic transcripts and certificates attested when required",
-];
-
-const fees = [
-  { label: "Admission Form", value: "As per official circular" },
-  { label: "Semester Tuition", value: "Government-approved diploma fee structure" },
-  { label: "Exam Fee", value: "As per BTEB and institute notice" },
-  { label: "Library/Card Services", value: "Nominal institutional charges" },
-];
+const departments = ["Civil Technology", "Computer Science & Technology", "Electrical Technology"];
 
 export function Admission() {
-  const { data, loading, error } = useInstituteContext();
+  const [step, setStep] = useState(1);
+  const [submitted, setSubmitted] = useState(false);
+  const [form, setForm] = useState({ name: "", email: "", phone: "", department: "", sscGpa: "", fatherName: "", motherName: "", address: "", bloodGroup: "" });
 
-  if (loading) return <LoadingSkeleton />;
-  if (error || !data) return <PageTransition className="container section-pad"><div className="rounded-sm border border-destructive/30 bg-destructive/10 p-6 text-destructive">Unable to load admission information.</div></PageTransition>;
+  const update = (field: string, value: string) => setForm((prev) => ({ ...prev, [field]: value }));
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitted(true);
+  };
 
   return (
     <PageTransition>
-      <SEO title="Admission" description="Admission information, requirements, fees, FAQs, and application guidance for Cox's Bazar Model Polytechnic Institute." />
+      <SEO title="Apply for Admission" description="Online admission application for CMPI diploma programs." />
       <section className="container section-pad">
-        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="rounded-sm bg-primary p-8 text-white shadow-2xl">
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-secondary">Admission Information</p>
-            <h1 className="mt-3 text-4xl font-black">Join CMPI for diploma engineering</h1>
-            <p className="mt-5 leading-8 text-white/80">
-              Admission is conducted according to Bangladesh Technical Education Board guidelines and official institute circulars. Applicants should follow published dates, eligibility criteria, and document requirements.
-            </p>
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              <div className="rounded-sm bg-white/10 p-4">
-                <p className="text-sm text-white/70">Contact</p>
-                <p className="font-bold">{institute.phone}</p>
-              </div>
-              <div className="rounded-sm bg-white/10 p-4">
-                <p className="text-sm text-white/70">Email</p>
-                <p className="font-bold">{institute.email}</p>
-              </div>
+        <SectionHeader eyebrow="Admission 2026-2027" title="Apply online for diploma programs" description="Fill in the application form below. All fields are required." align="center" className="mb-10" />
+
+        {submitted ? (
+          <div className="mx-auto max-w-lg rounded-sm border border-green-200 bg-green-50 p-8 text-center dark:border-green-800 dark:bg-green-950/30">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/50">
+              <span className="text-3xl">✓</span>
             </div>
+            <h2 className="text-2xl font-bold text-green-700 dark:text-green-400">Application Submitted!</h2>
+            <p className="mt-3 text-sm text-green-600 dark:text-green-500">Your application has been received. You will receive a confirmation email at <span className="font-semibold">{form.email}</span>.</p>
+            <p className="mt-2 text-sm text-green-600 dark:text-green-500">Application ID: <span className="font-mono font-bold">CMPI-ADM-{Date.now().toString().slice(-6)}</span></p>
+            <Button className="mt-6" onClick={() => { setSubmitted(false); setStep(1); setForm({ name: "", email: "", phone: "", department: "", sscGpa: "", fatherName: "", motherName: "", address: "", bloodGroup: "" }); }}>Submit Another Application</Button>
           </div>
-          <div className="rounded-sm border bg-card p-6 shadow-sm">
-            <h2 className="text-2xl font-bold">Application Checklist</h2>
-            <ul className="mt-5 space-y-3">
-              {requirements.map((item) => (
-                <li key={item} className="flex gap-3">
-                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-                  <span className="text-muted-foreground">{item}</span>
-                </li>
+        ) : (
+          <div className="mx-auto max-w-2xl">
+            <div className="mb-8 flex items-center justify-center gap-2">
+              {[1, 2, 3].map((s) => (
+                <div key={s} className="flex items-center gap-2">
+                  <div className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${step >= s ? "bg-primary text-white" : "bg-muted text-muted-foreground"}`}>{s}</div>
+                  {s < 3 && <div className={`h-0.5 w-12 ${step > s ? "bg-primary" : "bg-muted"}`} />}
+                </div>
               ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-muted/60 py-16 sm:py-20 lg:py-24">
-        <div className="container grid gap-8 lg:grid-cols-2">
-          <div>
-            <SectionHeader eyebrow="Requirements" title="Eligibility and documents" align="left" />
-            <CheckList items={requirements} />
-          </div>
-          <div>
-            <SectionHeader eyebrow="Fees" title="Fee structure overview" align="left" />
-            <div className="rounded-sm border bg-card p-6 shadow-sm">
-              <dl className="space-y-4">
-                {fees.map((fee) => (
-                  <div key={fee.label} className="flex items-center justify-between gap-4 border-b pb-4 last:border-0 last:pb-0">
-                    <dt className="font-semibold">{fee.label}</dt>
-                    <dd className="text-right text-sm text-muted-foreground">{fee.value}</dd>
-                  </div>
-                ))}
-              </dl>
             </div>
-          </div>
-        </div>
-      </section>
 
-      <section className="container section-pad">
-        <SectionHeader eyebrow="FAQ" title="Admission frequently asked questions" align="left" />
-        <div className="grid gap-4">
-          {data.faqs.map((faq) => (
-            <details key={faq.question} className="rounded-sm border bg-card p-5 shadow-sm">
-              <summary className="cursor-pointer font-bold">{faq.question}</summary>
-              <p className="mt-3 leading-7 text-muted-foreground">{faq.answer}</p>
-            </details>
-          ))}
-        </div>
+            <form onSubmit={handleSubmit} className="rounded-sm border bg-card p-6 shadow-sm sm:p-8">
+              {step === 1 && (
+                <div className="space-y-4">
+                  <h3 className="text-lg font-bold">Personal Information</h3>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="space-y-2"><label className="text-sm font-semibold">Full Name</label><Input value={form.name} onChange={(e) => update("name", e.target.value)} placeholder="Your full name" required /></div>
+                    <div className="space-y-2"><label className="text-sm font-semibold">Email</label><Input type="email" value={form.email} onChange={(e) => update("email", e.target.value)} placeholder="you@example.com" required /></div>
+                    <div className="space-y-2"><label className="text-sm font-semibold">Phone</label><Input value={form.phone} onChange={(e) => update("phone", e.target.value)} placeholder="+880 1XXX-XXXXXX" required /></div>
+                    <div className="space-y-2"><label className="text-sm font-semibold">Blood Group</label><Input value={form.bloodGroup} onChange={(e) => update("bloodGroup", e.target.value)} placeholder="A+, B+, O+, etc." /></div>
+                    <div className="space-y-2"><label className="text-sm font-semibold">Father's Name</label><Input value={form.fatherName} onChange={(e) => update("fatherName", e.target.value)} required /></div>
+                    <div className="space-y-2"><label className="text-sm font-semibold">Mother's Name</label><Input value={form.motherName} onChange={(e) => update("motherName", e.target.value)} required /></div>
+                  </div>
+                  <div className="space-y-2"><label className="text-sm font-semibold">Address</label><Input value={form.address} onChange={(e) => update("address", e.target.value)} placeholder="Village/Thana/District" required /></div>
+                  <Button type="button" className="w-full" onClick={() => setStep(2)}>Next →</Button>
+                </div>
+              )}
+              {step === 2 && (
+                <div className="space-y-4">
+                  <h3 className="text-lg font-bold">Academic Information</h3>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="space-y-2"><label className="text-sm font-semibold">SSC/Equivalent GPA</label><Input value={form.sscGpa} onChange={(e) => update("sscGpa", e.target.value)} placeholder="e.g. 4.50" required /></div>
+                    <div className="space-y-2"><label className="text-sm font-semibold">Preferred Department</label>
+                      <select value={form.department} onChange={(e) => update("department", e.target.value)} className="flex h-11 w-full rounded-sm border border-input bg-background px-4 py-2 text-sm" required>
+                        <option value="">Select department</option>
+                        {departments.map((d) => <option key={d} value={d}>{d}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                  <div className="rounded-sm bg-muted/60 p-4 text-sm text-muted-foreground">
+                    <p className="font-semibold text-foreground">Required documents</p>
+                    <ul className="mt-2 list-disc space-y-1 pl-4">
+                      <li>SSC/Equivalent certificate and marksheet</li>
+                      <li>Citizenship certificate (NID/Birth cert)</li>
+                      <li>4 passport-size photographs</li>
+                      <li>Guardian's NID copy</li>
+                    </ul>
+                  </div>
+                  <div className="flex gap-3">
+                    <Button type="button" variant="outline" className="w-full" onClick={() => setStep(1)}>← Back</Button>
+                    <Button type="button" className="w-full" onClick={() => setStep(3)}>Next →</Button>
+                  </div>
+                </div>
+              )}
+              {step === 3 && (
+                <div className="space-y-4">
+                  <h3 className="text-lg font-bold">Review & Submit</h3>
+                  <div className="grid gap-3 text-sm">
+                    <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">Name</span><span className="font-semibold">{form.name || "-"}</span></div>
+                    <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">Email</span><span className="font-semibold">{form.email || "-"}</span></div>
+                    <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">Phone</span><span className="font-semibold">{form.phone || "-"}</span></div>
+                    <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">Department</span><span className="font-semibold">{form.department || "-"}</span></div>
+                    <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">SSC GPA</span><span className="font-semibold">{form.sscGpa || "-"}</span></div>
+                    <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">Address</span><span className="font-semibold">{form.address || "-"}</span></div>
+                  </div>
+                  <div className="flex gap-3">
+                    <Button type="button" variant="outline" className="w-full" onClick={() => setStep(2)}>← Back</Button>
+                    <Button type="submit" className="w-full">Submit Application</Button>
+                  </div>
+                </div>
+              )}
+            </form>
+          </div>
+        )}
       </section>
     </PageTransition>
   );

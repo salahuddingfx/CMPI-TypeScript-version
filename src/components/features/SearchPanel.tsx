@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -48,9 +49,9 @@ export function SearchPanel({ departments, faculty, notices, events, blogs, onOp
       <div className="mt-4 max-h-72 overflow-auto divide-y">
         {filteredItems.length > 0 ? (
           filteredItems.slice(0, 10).map((item) => (
-            <a
+            <Link
               key={`${item.type}-${item.label}`}
-              href={item.href}
+              to={item.href}
               className="flex items-center justify-between gap-4 rounded-sm px-3 py-3 text-sm hover:bg-muted"
               onClick={() => onOpenChange(false)}
             >
@@ -59,7 +60,7 @@ export function SearchPanel({ departments, faculty, notices, events, blogs, onOp
                 <span className="ml-2 text-xs text-muted-foreground">{item.type}</span>
               </span>
               <span className="text-primary">Open</span>
-            </a>
+            </Link>
           ))
         ) : (
           <p className="px-3 py-6 text-center text-sm text-muted-foreground">No search results found.</p>

@@ -1,6 +1,5 @@
-import { useState } from "react";
-import { Outlet, NavLink, Link } from "react-router-dom";
-import { Home, LayoutDashboard, LogOut, User } from "lucide-react";
+import { Outlet, NavLink, Link, useNavigate } from "react-router-dom";
+import { LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageTransition } from "@/components/common/PageTransition";
 
@@ -13,6 +12,8 @@ const tabs = [
 ];
 
 export function StudentLayout() {
+  const navigate = useNavigate();
+
   return (
     <PageTransition>
       <section className="min-h-[72vh] bg-muted/60">
@@ -50,7 +51,7 @@ export function StudentLayout() {
                     className="w-full"
                     onClick={() => {
                       localStorage.removeItem("cmpi-user");
-                      window.location.href = "/login";
+                      navigate("/login");
                     }}
                   >
                     Logout

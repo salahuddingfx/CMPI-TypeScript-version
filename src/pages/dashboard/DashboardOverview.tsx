@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { SectionHeader } from "@/components/common/SectionHeader";
 
 const enrolledCourses = [

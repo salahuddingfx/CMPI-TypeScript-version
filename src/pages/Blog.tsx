@@ -6,10 +6,10 @@ import { SEO } from "@/components/common/SEO";
 import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
-import { useInstituteData } from "@/hooks/useInstituteData";
+import { useInstituteContext } from "@/contexts/InstituteDataContext";
 
 export function Blog() {
-  const { data, loading, error } = useInstituteData();
+  const { data, loading, error } = useInstituteContext();
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
 

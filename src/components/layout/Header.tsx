@@ -10,6 +10,7 @@ import { institute } from "@/utils/constants";
 
 const navItems = [
   { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
   { label: "Academics", href: "/academics", mega: [
     { label: "Civil Technology", href: "/academics/civil-technology" },
     { label: "Computer Science & Technology", href: "/academics/computer-science-technology" },

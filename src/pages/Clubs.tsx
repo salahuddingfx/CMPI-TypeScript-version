@@ -1,4 +1,4 @@
-import { Monitor, MessageSquare, Bot, Trophy, Camera, HeartHandshake, Users, Mail, Calendar, ArrowRight } from "lucide-react";
+import { Monitor, MessageSquare, Bot, Trophy, Camera, HeartHandshake, Users, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SEO } from "@/components/common/SEO";
 import { PageTransition } from "@/components/common/PageTransition";

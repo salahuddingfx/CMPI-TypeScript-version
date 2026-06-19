@@ -116,8 +116,8 @@ export function Footer() {
     <footer className="relative mt-20 overflow-hidden border-t border-white/10 bg-cmpe-gray">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(244,180,27,0.18),transparent_26rem)]" />
       <div className="relative container">
-        <div className="grid gap-12 py-14 sm:grid-cols-2 lg:grid-cols-[1.3fr_0.9fr_0.9fr_0.9fr]">
-          <div>
+        <div className="grid gap-8 py-14 grid-cols-2 lg:grid-cols-[1.3fr_0.9fr_0.9fr_0.9fr]">
+          <div className="col-span-2 lg:col-span-1">
             <Link to="/" className="inline-flex items-center gap-3">
               <span className="flex h-12 w-12 items-center justify-center rounded-sm bg-secondary font-black text-primary">
                 CMPI

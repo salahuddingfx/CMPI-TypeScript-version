@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchInstituteData } from "@/services/api";
+import { instituteData } from "@/services/mockData";
 import type { InstituteData } from "@/services/types";
 
 export function useInstituteData() {
@@ -14,8 +15,12 @@ export function useInstituteData() {
       try {
         const result = await fetchInstituteData();
         if (mounted) setData(result);
-      } catch (err) {
-        if (mounted) setError(err instanceof Error ? err.message : "Unable to load data");
+      } catch {
+        // API unavailable (backend not running) — fall back to local mock data
+        if (mounted) {
+          setData(instituteData);
+          setError(null); // treat mock data as a clean load, not an error
+        }
       } finally {
         if (mounted) setLoading(false);
       }

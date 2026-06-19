@@ -46,6 +46,7 @@ const Scholarship = lazy(() => import("@/pages/Scholarship").then((m) => ({ defa
 const Tender = lazy(() => import("@/pages/Tender").then((m) => ({ default: m.Tender })));
 const Feedback = lazy(() => import("@/pages/Feedback").then((m) => ({ default: m.Feedback })));
 const Clubs = lazy(() => import("@/pages/Clubs").then((m) => ({ default: m.Clubs })));
+const ClubDetails = lazy(() => import("@/pages/ClubDetails").then((m) => ({ default: m.ClubDetails })));
 const Alumni = lazy(() => import("@/pages/Alumni").then((m) => ({ default: m.Alumni })));
 const Placement = lazy(() => import("@/pages/Placement").then((m) => ({ default: m.Placement })));
 const NotFound = lazy(() => import("@/pages/NotFound").then((m) => ({ default: m.NotFound })));
@@ -82,6 +83,7 @@ export function AppRoutes() {
         <Route path="tender" element={<LazyPage><Tender /></LazyPage>} />
         <Route path="feedback" element={<LazyPage><Feedback /></LazyPage>} />
         <Route path="clubs" element={<LazyPage><Clubs /></LazyPage>} />
+        <Route path="clubs/:id" element={<LazyPage><ClubDetails /></LazyPage>} />
         <Route path="alumni" element={<LazyPage><Alumni /></LazyPage>} />
         <Route path="placement" element={<LazyPage><Placement /></LazyPage>} />
         <Route path="contact" element={<LazyPage><Contact /></LazyPage>} />

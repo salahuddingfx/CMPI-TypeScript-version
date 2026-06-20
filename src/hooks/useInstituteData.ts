@@ -26,8 +26,10 @@ export function useInstituteData() {
           setData(result);
         }
         // If API returns wrong shape (e.g. {message:"Unauthenticated"}), keep mock data silently
-      } catch {
-        // Network/API error — mock data is already set, do nothing
+      } catch (err) {
+        if (mounted) {
+          setError(err instanceof Error ? err.message : "Failed to load data");
+        }
       } finally {
         if (mounted) setLoading(false);
       }

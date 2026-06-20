@@ -29,6 +29,13 @@ export function Login() {
         name: data.user.name,
         department: data.user.department,
         studentId: data.user.student_id,
+        semester: data.user.semester,
+        session: data.user.session,
+        phone: data.user.phone,
+        guardian: data.user.guardian,
+        bloodGroup: data.user.blood_group,
+        address: data.user.address,
+        admissionDate: data.user.admission_date,
         role: data.user.role,
       }));
       navigate("/dashboard");
@@ -96,16 +103,6 @@ export function Login() {
               Don&apos;t have an account? <Link className="text-primary hover:underline" to="/register">Contact admin</Link>
             </p>
           </form>
-
-          <div className="mt-6 rounded-sm border bg-muted/60 p-4 text-sm text-muted-foreground">
-            <p className="font-semibold text-foreground">Test student accounts</p>
-            <div className="mt-3 space-y-2">
-              <p><span className="font-semibold">Rahim (CST):</span> <span className="font-mono">rahim.cst@cmpi.edu.bd</span> / <span className="font-mono">rahim123</span></p>
-              <p><span className="font-semibold">Fatima (Civil):</span> <span className="font-mono">fatima.civil@cmpi.edu.bd</span> / <span className="font-mono">fatima123</span></p>
-              <p><span className="font-semibold">Arif (EEE):</span> <span className="font-mono">arif.eee@cmpi.edu.bd</span> / <span className="font-mono">arif123</span></p>
-              <p><span className="font-semibold">Admin:</span> <span className="font-mono">admin@cmpi.edu.bd</span> / <span className="font-mono">admin123</span></p>
-            </div>
-          </div>
         </div>
       </section>
     </PageTransition>

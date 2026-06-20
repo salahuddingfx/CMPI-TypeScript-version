@@ -1,4 +1,5 @@
-import { Outlet, NavLink, Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { Outlet, NavLink, Link, useNavigate, useLocation } from "react-router-dom";
 import { LayoutDashboard, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageTransition } from "@/components/common/PageTransition";
@@ -20,7 +21,19 @@ const tabs = [
 
 export function StudentLayout() {
   const navigate = useNavigate();
+  const location = useLocation();
   const user = getStoredUser();
+  const isPending = user?.role === "student" && user?.status === "pending";
+
+  useEffect(() => {
+    if (isPending && location.pathname !== "/dashboard") {
+      navigate("/dashboard");
+    }
+  }, [isPending, location.pathname, navigate]);
+
+  const allowedTabs = isPending
+    ? tabs.filter((t) => t.to === "/dashboard")
+    : tabs;
 
   return (
     <PageTransition>
@@ -33,9 +46,20 @@ export function StudentLayout() {
                   <p className="text-sm text-muted-foreground">Student Portal</p>
                   <h2 className="text-xl font-bold">Dashboard</h2>
                   {user?.email && <p className="mt-1 truncate text-xs font-mono text-primary">{user.email}</p>}
+                  {user?.status && (
+                    <span className={`inline-block mt-2 rounded-full px-2 py-0.5 text-[10px] font-black uppercase border ${
+                      user.status === "active"
+                        ? "bg-green-500/10 text-green-600 border-green-500/20"
+                        : user.status === "suspended"
+                        ? "bg-red-500/10 text-red-600 border-red-500/20"
+                        : "bg-amber-500/10 text-amber-600 border-amber-500/20"
+                    }`}>
+                      {user.status}
+                    </span>
+                  )}
                 </div>
                 <nav className="space-y-1">
-                  {tabs.map((item) => (
+                  {allowedTabs.map((item) => (
                     <NavLink
                       key={item.to}
                       to={item.to}

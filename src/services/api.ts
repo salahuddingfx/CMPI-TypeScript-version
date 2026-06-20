@@ -41,6 +41,11 @@ export async function login(email: string, password: string) {
   return response.data;
 }
 
+export async function register(data: Record<string, any>) {
+  const response = await api.post("/register", data);
+  return response.data;
+}
+
 export async function logout() {
   await api.post("/logout");
   localStorage.removeItem("cmpi-token");
@@ -69,6 +74,11 @@ export async function getStudentBills() {
 
 export async function getStudentEmails() {
   const response = await api.get("/dashboard/emails");
+  return response.data;
+}
+
+export async function getEmailBody(id: string) {
+  const response = await api.get(`/dashboard/emails/${id}/body`);
   return response.data;
 }
 
@@ -139,5 +149,10 @@ export async function submitFeedback(data: { title: string; category: string; de
 
 export async function upvoteFeedback(id: number) {
   const response = await api.post(`/feedbacks/${id}/upvote`);
+  return response.data;
+}
+
+export async function fetchSocialLinks() {
+  const response = await api.get("/social-links");
   return response.data;
 }

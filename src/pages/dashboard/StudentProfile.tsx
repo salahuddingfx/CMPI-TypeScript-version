@@ -4,8 +4,29 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { studentProfile as initialProfile } from "@/data/mockStudentData";
 
+function getStoredUser() {
+  if (typeof window === "undefined") return null;
+  const raw = localStorage.getItem("cmpi-user");
+  return raw ? JSON.parse(raw) : null;
+}
+
 export function StudentProfile() {
-  const [profile, setProfile] = useState(initialProfile);
+  const storedUser = getStoredUser();
+  const initialData = {
+    name: storedUser?.name || initialProfile.name,
+    studentId: storedUser?.studentId || initialProfile.studentId,
+    department: storedUser?.department || initialProfile.department,
+    semester: storedUser?.semester || initialProfile.semester || "1st",
+    session: storedUser?.session || initialProfile.session || "N/A",
+    email: storedUser?.email || initialProfile.email,
+    phone: storedUser?.phone || initialProfile.phone || "N/A",
+    admissionDate: storedUser?.admissionDate || initialProfile.admissionDate || "N/A",
+    guardian: storedUser?.guardian || initialProfile.guardian || "N/A",
+    bloodGroup: storedUser?.bloodGroup || initialProfile.bloodGroup || "N/A",
+    address: storedUser?.address || initialProfile.address || "N/A",
+  };
+
+  const [profile, setProfile] = useState(initialData);
   const [saved, setSaved] = useState(false);
 
   const update = (field: keyof typeof profile, value: string) => {
@@ -14,6 +35,21 @@ export function StudentProfile() {
   };
 
   const handleSave = () => {
+    if (storedUser) {
+      const updatedUser = {
+        ...storedUser,
+        name: profile.name,
+        email: profile.email,
+        phone: profile.phone,
+        department: profile.department,
+        semester: profile.semester,
+        guardian: profile.guardian,
+        blood_group: profile.bloodGroup,
+        address: profile.address,
+      };
+      localStorage.setItem("cmpi-user", JSON.stringify(updatedUser));
+      window.dispatchEvent(new Event("storage"));
+    }
     setSaved(true);
   };
 

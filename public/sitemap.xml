@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://www.cmpi.edu.bd/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://www.cmpi.edu.bd/about</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.cmpi.edu.bd/academics</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.cmpi.edu.bd/academics/computer-science-technology</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.cmpi.edu.bd/academics/civil-technology</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.cmpi.edu.bd/academics/electrical-technology</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.cmpi.edu.bd/faculty</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.cmpi.edu.bd/notices</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.cmpi.edu.bd/events</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.cmpi.edu.bd/gallery</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.cmpi.edu.bd/blog</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.cmpi.edu.bd/admission</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.cmpi.edu.bd/contact</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.cmpi.edu.bd/student-corner</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.cmpi.edu.bd/clubs</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://www.cmpi.edu.bd/library</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://www.cmpi.edu.bd/syllabus</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.cmpi.edu.bd/results</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.cmpi.edu.bd/class-routine</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.cmpi.edu.bd/exam-routine</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.cmpi.edu.bd/privacy-policy</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://www.cmpi.edu.bd/terms-and-conditions</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://www.cmpi.edu.bd/sitemap</loc><changefreq>monthly</changefreq><priority>0.2</priority></url>
+  <url><loc>https://www.cmpi.edu.bd/developer</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+</urlset>

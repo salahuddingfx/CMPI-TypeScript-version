@@ -21,6 +21,7 @@ import {
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { Button } from "@/components/ui/button";
 import { getEmailsForUser, type WebmailEmail } from "@/data/mockStudentData";
+import { getStudentEmails, getEmailBody } from "@/services/api";
 
 type Folder = "inbox" | "sent" | "drafts" | "trash" | "archive" | "spam";
 type Label = "work" | "personal" | "urgent" | null;
@@ -38,7 +39,6 @@ function getStoredUser() {
 }
 
 const allContacts = [
-  { name: "Admin", email: "admin@cmpi.edu.bd" },
   { name: "Exam Controller", email: "exam@cmpi.edu.bd" },
   { name: "CST Department", email: "tanjila.cst@cmpi.edu.bd" },
   { name: "Civil Department", email: "nasrin.civil@cmpi.edu.bd" },
@@ -70,8 +70,46 @@ export function StudentWebmail() {
   const userEmail = currentUser?.email ?? "rahim.cst@cmpi.edu.bd";
   const userName = currentUser?.name ?? "Student";
 
-  const [emails, setEmails] = useState<WebmailEmail[]>(() => getEmailsForUser(userEmail));
+  const [emails, setEmails] = useState<WebmailEmail[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    async function loadEmails() {
+      setLoading(true);
+      try {
+        const data = await getStudentEmails();
+        if (active) {
+          const mapped = data.map((e: any) => ({
+            id: String(e.id),
+            from: e.from_email || "Unknown Sender",
+            to: e.to_email || userEmail,
+            subject: e.subject || "No Subject",
+            preview: e.preview || "",
+            body: e.body,
+            date: e.date ? e.date.slice(0, 10) : new Date().toISOString().slice(0, 10),
+            folder: e.folder || "inbox",
+            read: e.read === 1 || e.read === true,
+            starred: e.starred === 1 || e.starred === true,
+            label: e.label || null
+          }));
+          setEmails(mapped);
+        }
+      } catch (err) {
+        console.error("Failed to load webmail", err);
+        if (active) {
+          setEmails(getEmailsForUser(userEmail));
+        }
+      } finally {
+        if (active) setLoading(false);
+      }
+    }
+    loadEmails();
+    return () => {
+      active = false;
+    };
+  }, [userEmail]);
   const [activeFolder, setActiveFolder] = useState<Folder>("inbox");
   const [searchQuery, setSearchQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
@@ -124,7 +162,19 @@ export function StudentWebmail() {
 
   const openEmail = useCallback((id: string) => {
     setSelectedId(id);
-    setEmails((prev) => prev.map((e) => (e.id === id ? { ...e, read: true } : e)));
+    setEmails((prev) => {
+      const emailItem = prev.find((e) => e.id === id);
+      if (emailItem && emailItem.body === null) {
+        getEmailBody(id)
+          .then((data) => {
+            setEmails((latest) =>
+              latest.map((e) => (e.id === id ? { ...e, body: data.body } : e))
+            );
+          })
+          .catch((err) => console.error("Failed to load email body", err));
+      }
+      return prev.map((e) => (e.id === id ? { ...e, read: true } : e));
+    });
   }, []);
 
   const toggleStar = useCallback((id: string) => {
@@ -341,7 +391,12 @@ export function StudentWebmail() {
               )}
             </div>
             <div ref={emailListRef} className="max-h-[520px] overflow-auto divide-y">
-              {filtered.length === 0 ? (
+              {loading ? (
+                <div className="flex flex-col items-center justify-center py-20 gap-3">
+                  <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+                  <p className="text-xs text-muted-foreground">Checking live mailbox...</p>
+                </div>
+              ) : filtered.length === 0 ? (
                 <p className="px-4 py-6 text-center text-sm text-muted-foreground">No emails in this folder.</p>
               ) : (
                 filtered.map((email) => {
@@ -408,7 +463,14 @@ export function StudentWebmail() {
                   <Button variant="outline" size="sm" className="border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700" onClick={() => deleteEmail(selected.id)}><Trash2 className="mr-1 h-3 w-3" /> Delete</Button>
                 </div>
                 <div className="max-h-[360px] overflow-auto rounded-sm border bg-card p-4">
-                  <p className="whitespace-pre-line text-sm leading-7 text-foreground">{selected.body}</p>
+                  {selected.body === null ? (
+                    <div className="flex flex-col items-center justify-center py-10 gap-2">
+                      <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+                      <p className="text-xs text-muted-foreground">Fetching email content from mail server...</p>
+                    </div>
+                  ) : (
+                    <p className="whitespace-pre-line text-sm leading-7 text-foreground">{selected.body}</p>
+                  )}
                 </div>
               </div>
             ) : (

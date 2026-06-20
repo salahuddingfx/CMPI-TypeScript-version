@@ -68,7 +68,7 @@ export function Header() {
       </a>
       <div className="container flex min-h-16 items-center justify-between gap-4">
         <Link to="/" className="flex items-center gap-3" aria-label={`${institute.name} home`}>
-          <span className="flex h-11 w-11 items-center justify-center rounded-sm bg-primary text-lg font-black text-white ring-4 ring-secondary/30">CMPI</span>
+          <img src="/CMPI.png" alt="CMPI Logo" className="h-11 w-11 object-contain" />
           <span className="hidden sm:block">
             <span className="block max-w-56 text-sm font-black leading-5">{institute.shortName}</span>
             <span className="block text-xs text-muted-foreground">{institute.tagline}</span>

@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { InstituteDataProvider } from "@/contexts/InstituteDataContext";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import "./index.css";
+import "@/utils/dialog";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

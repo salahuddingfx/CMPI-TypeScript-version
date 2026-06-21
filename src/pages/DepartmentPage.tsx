@@ -57,7 +57,9 @@ export function DepartmentPage() {
   }
 
   const facultyIds = department.facultyIds ?? [];
-  const facultyMembers = data.faculty.filter((member) => facultyIds.includes(member.id));
+  const facultyMembers = facultyIds.length > 0
+    ? data.faculty.filter((member) => facultyIds.includes(member.id))
+    : data.faculty.filter((member) => member.department === slug);
 
   const groupedSubjects: Record<string, Subject[]> = {};
   for (const sem of SEM_ORDER) {

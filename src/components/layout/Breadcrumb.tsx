@@ -1,6 +1,13 @@
 import { Link, useLocation } from "react-router-dom";
 import { routeLabels } from "@/utils/constants";
 
+function toTitleCase(str: string): string {
+  return str
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
 export function Breadcrumb() {
   const { pathname } = useLocation();
   const segments = pathname.split("/").filter(Boolean);
@@ -16,7 +23,7 @@ export function Breadcrumb() {
         {segments.map((segment, index) => {
           const href = `/${segments.slice(0, index + 1).join("/")}`;
           const isLast = index === segments.length - 1;
-          const label = routeLabels[segment] || segment.replaceAll("-", " ");
+          const label = routeLabels[segment] || toTitleCase(segment.replaceAll("-", " "));
 
           return (
             <span key={href} className="flex items-center gap-2">

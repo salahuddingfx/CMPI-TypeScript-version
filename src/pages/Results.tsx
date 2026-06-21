@@ -5,8 +5,8 @@ import { Input } from "@/components/ui/input";
 import { SEO } from "@/components/common/SEO";
 import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
-import { getSubjectName, detectDepartmentFromSubjects } from "@/utils/btebSubjectCodes";
-import { api } from "@/services/api";
+import { getSubjectName as getLocalSubjectName, detectDepartmentFromSubjects as localDetectDept } from "@/utils/btebSubjectCodes";
+import { api, lookupSubjects, detectDepartmentFromAPI } from "@/services/api";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 interface CourseResult {
@@ -116,17 +116,17 @@ const REGULATION_WEIGHTS = {
 
 // Infer most accurate department from all records for this student
 function computeDepartment(records: BtebResultPayload[]): string {
-  // PRIORITY 1: Use the API's stored department field (most reliable)
+  // PRIORITY 1: Use the API's stored department field (set during PDF import - most reliable)
   const stored = records.find(r => r.department && r.department !== "General Technology" && r.department !== "Auto Detect" && r.department !== "");
   if (stored) return stored.department;
 
-  // PRIORITY 2: Detect from referred subject codes (fallback)
+  // PRIORITY 2: Fallback to local dictionary detection
   const allSubjectCodes: string[] = [];
   records.forEach(r => {
     if (r.referred_subjects) allSubjectCodes.push(...r.referred_subjects);
   });
   if (allSubjectCodes.length > 0) {
-    const detected = detectDepartmentFromSubjects(allSubjectCodes);
+    const detected = localDetectDept(allSubjectCodes);
     if (detected !== "General Technology") return detected;
   }
 
@@ -758,7 +758,7 @@ export function Results() {
                                       <tr key={subCode} className="hover:bg-red-50/50 dark:hover:bg-red-900/5">
                                         <td className="px-4 py-2 text-muted-foreground font-bold">{idx + 1}</td>
                                         <td className="px-4 py-2 font-mono font-bold text-primary">{subCode.replace(/\([^)]+\)/g, "")}</td>
-                                        <td className="px-4 py-2 font-semibold">{getSubjectName(subCode)}</td>
+                                        <td className="px-4 py-2 font-semibold">{getLocalSubjectName(subCode)}</td>
                                         <td className="px-4 py-2 text-muted-foreground font-medium">
                                           {parseSubjectSuffix(subCode)}
                                         </td>

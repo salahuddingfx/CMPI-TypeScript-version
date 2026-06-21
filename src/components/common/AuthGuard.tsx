@@ -1,4 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
+import { SessionGuard } from "./SessionGuard";
 
 function getStoredUser() {
   if (typeof window === "undefined") return null;
@@ -13,5 +14,9 @@ export function AuthGuard() {
     return <Navigate to="/login" replace />;
   }
 
-  return <Outlet />;
+  return (
+    <SessionGuard>
+      <Outlet />
+    </SessionGuard>
+  );
 }

@@ -521,3 +521,26 @@ section.bg-primary.text-white::before {
   75% { transform: scale(1.05) translate(-0.5%, 1%); }
   100% { transform: scale(1) translate(0, 0); }
 }
+
+/* Print styles — only show the result card */
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+  #printable-result,
+  #printable-result * {
+    visibility: visible !important;
+  }
+  #printable-result {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 20px;
+    background: white !important;
+  }
+  @page {
+    margin: 1cm;
+    size: A4;
+  }
+}

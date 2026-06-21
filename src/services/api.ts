@@ -174,3 +174,27 @@ export async function fetchSocialLinks() {
   const response = await api.get("/social-links");
   return response.data;
 }
+
+// ── Subject & Department API ─────────────────────────────────────────────────
+
+/** Lookup subjects by codes (batch). Returns { code: { name, department, ... } } */
+export async function lookupSubjects(codes: string[]) {
+  const response = await api.get("/subjects/lookup", {
+    params: { codes: codes.join(",") },
+  });
+  return response.data;
+}
+
+/** Detect department from subject codes. Returns { department: string } */
+export async function detectDepartmentFromAPI(codes: string[]) {
+  const response = await api.get("/subjects/detect-department", {
+    params: { codes: codes.join(",") },
+  });
+  return response.data.department;
+}
+
+/** Get full subject dictionary from backend. Returns { code: { name, dept } } */
+export async function getSubjectDictionary() {
+  const response = await api.get("/subjects/dictionary");
+  return response.data;
+}

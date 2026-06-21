@@ -77,6 +77,18 @@ export interface StudentResource {
   updatedAt: string;
 }
 
+export interface Subject {
+  id?: number;
+  department: string;
+  semester: string;
+  subject_code: string;
+  subject_name: string;
+  credit: number;
+  theory_marks?: number;
+  practical_marks?: number;
+  total_marks?: number;
+}
+
 export interface InstituteData {
   stats: Array<{ label: string; value: string }>;
   facilities: Array<{ title: string; description: string }>;

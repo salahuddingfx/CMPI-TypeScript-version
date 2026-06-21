@@ -5,7 +5,7 @@ import { SEO } from "@/components/common/SEO";
 import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { FacultyCard } from "@/components/features/FacultyCard";
-import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
+import { FacultySkeleton } from "@/components/common/LoadingSkeleton";
 import { useInstituteContext } from "@/contexts/InstituteDataContext";
 import type { FacultyMember } from "@/services/types";
 
@@ -34,7 +34,7 @@ export function Faculty() {
     });
   }, [data, department, query]);
 
-  if (loading) return <LoadingSkeleton />;
+  if (loading) return <FacultySkeleton />;
   if (error || !data) return <PageTransition className="container section-pad"><div className="rounded-sm border border-destructive/30 bg-destructive/10 p-6 text-destructive">Unable to load faculty listing.</div></PageTransition>;
 
   return (

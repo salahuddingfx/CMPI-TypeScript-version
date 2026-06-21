@@ -486,12 +486,15 @@ export function Results() {
                             (r) => semIndex(r.semester) === semIndex(sem) && (r.exam_type ?? 'regular') !== 'regular'
                           );
                           const record = regularRecord ?? rescrutinyRecord;
+                          const isDropped = droppedSemesters.includes(sem);
                           return (
                             <div
                               key={sem}
                               className={`rounded-lg border p-2 text-center flex flex-col items-center gap-0.5 ${
                                 !record
                                   ? "border-muted/30 bg-muted/10 opacity-40"
+                                  : isDropped
+                                  ? "border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-900/30"
                                   : record.status === "Passed"
                                   ? "border-green-200 bg-green-50 dark:bg-green-950/20 dark:border-green-900/30"
                                   : "border-red-200 bg-red-50 dark:bg-red-950/20 dark:border-red-900/30"
@@ -501,7 +504,13 @@ export function Results() {
                                 {sem}
                               </span>
                               {record ? (
-                                record.status === "Passed" ? (
+                                isDropped ? (
+                                  <div className="flex flex-col items-center gap-0.5">
+                                    <span className="text-[10px] font-black text-amber-600 dark:text-amber-400">
+                                      Drop
+                                    </span>
+                                  </div>
+                                ) : record.status === "Passed" ? (
                                   <div className="flex flex-col items-center gap-0.5">
                                     <span className="text-base font-black text-green-700 dark:text-green-400">
                                       {parseFloat(record.gpa || "0").toFixed(2)}
@@ -530,6 +539,22 @@ export function Results() {
                             </div>
                           );
                         })}
+                      </div>
+                      <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1">
+                          <span className="w-2 h-2 rounded-full bg-green-500" /> Passed
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <span className="w-2 h-2 rounded-full bg-amber-500" /> Dropped
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <span className="w-2 h-2 rounded-full bg-red-500" /> Referred
+                        </span>
+                        {passedSemesters.length > 0 && (
+                          <span className="ml-auto font-bold">
+                            Avg GPA: <span className="text-primary">{avgGpa.toFixed(2)}</span> (across {passedSemesters.length} passed)
+                          </span>
+                        )}
                       </div>
                     </div>
 

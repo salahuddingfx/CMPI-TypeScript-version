@@ -51,7 +51,7 @@ export function StudentLayout() {
                       user.status === "active"
                         ? "bg-green-500/10 text-green-600 border-green-500/20"
                         : user.status === "suspended"
-                        ? "bg-red-500/10 text-red-600 border-red-500/20"
+                        ? "bg-red-500/10 text-red-600 border-red-500/20 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800/30"
                         : "bg-amber-500/10 text-amber-600 border-amber-500/20"
                     }`}>
                       {user.status}

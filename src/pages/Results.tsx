@@ -391,6 +391,7 @@ export function Results() {
                   ? passedSemesters.reduce((sum, r) => sum + parseFloat(r.gpa || "0"), 0) / passedSemesters.length
                   : 0;
                 const allPassed = referredSemesters.length === 0 && passedSemesters.length > 0;
+                const hasSemesterDrop = deduped.some(r => r.status === "Referred" && (r.referred_subjects?.length ?? 0) >= 4);
 
                 return (
                   <>
@@ -508,17 +509,29 @@ export function Results() {
                         </div>
                       </div>
                     ) : referredSemesters.length > 0 ? (
-                      <div className="rounded-xl border bg-card shadow-sm p-5 flex flex-wrap items-center gap-6 border-l-4 border-l-red-400 dark:border-l-red-600">
+                      <div className={`rounded-xl border bg-card shadow-sm p-5 flex flex-wrap items-center gap-6 border-l-4 ${
+                        hasSemesterDrop 
+                          ? "border-l-red-600 bg-red-500/5 dark:bg-red-950/10" 
+                          : "border-l-amber-500 dark:border-l-amber-600"
+                      }`}>
                         <div className="flex items-center gap-4">
-                          <div className="p-3 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-xl">
+                          <div className={`p-3 rounded-xl ${
+                            hasSemesterDrop 
+                              ? "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400" 
+                              : "bg-amber-100 dark:bg-amber-900/30 text-amber-500 dark:text-amber-400"
+                          }`}>
                             <AlertCircle className="h-8 w-8" />
                           </div>
                           <div>
-                            <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">Referred Summary</p>
+                            <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">
+                              {hasSemesterDrop ? "Semester Drop Status" : "Referred Summary"}
+                            </p>
                             <div className="flex items-baseline gap-2 mt-0.5">
-                              <p className="text-3xl font-black text-red-600 dark:text-red-400">{referredSemesters.length}</p>
+                              <p className={`text-3xl font-black ${hasSemesterDrop ? "text-red-600 dark:text-red-400" : "text-amber-600 dark:text-amber-400"}`}>
+                                {hasSemesterDrop ? "Dropped" : referredSemesters.length}
+                              </p>
                               <p className="text-sm font-bold text-muted-foreground">
-                                semester{referredSemesters.length > 1 ? 's' : ''} referred
+                                {hasSemesterDrop ? "Wait 1 Year (BTEB Rule)" : `semester${referredSemesters.length > 1 ? 's' : ''} referred`}
                               </p>
                             </div>
                           </div>
@@ -526,7 +539,7 @@ export function Results() {
                         <div className="h-10 w-px bg-border hidden sm:block" />
                         <div>
                           <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">Total Referred Subjects</p>
-                          <p className="text-3xl font-black text-primary mt-0.5">{totalReferredSubjects}</p>
+                          <p className={`text-3xl font-black mt-0.5 ${hasSemesterDrop ? "text-red-600" : "text-primary"}`}>{totalReferredSubjects}</p>
                           <p className="text-xs text-muted-foreground mt-0.5">
                             across {referredSemesters.length} semester{referredSemesters.length > 1 ? 's' : ''}
                           </p>
@@ -548,55 +561,83 @@ export function Results() {
 
                     {/* ── Semester Cards ── */}
                     <div className="space-y-4">
-                      {deduped.map((record) => (
-                        <div key={record.id} className={`rounded-xl border bg-card p-6 shadow-sm ${
-                          (record.exam_type ?? 'regular') !== 'regular' 
-                            ? 'border-l-4 border-l-amber-400 dark:border-l-amber-600' 
-                            : ''
-                        }`}>
-                          <div className="flex flex-wrap items-center justify-between gap-4 border-b pb-4 mb-4">
-                            <div className="flex items-center gap-3">
-                              <div className="p-2 bg-primary/10 text-primary rounded-lg">
-                                <BookOpen className="h-5 w-5" />
-                              </div>
-                              <div>
-                                <h3 className="font-extrabold text-lg">{record.semester} Semester Result</h3>
-                                <div className="flex items-center gap-2 mt-0.5">
-                                  <p className="text-xs text-muted-foreground">
-                                    Regulation: {record.regulation} · Holding Year: {record.holding_year}
-                                  </p>
-                                  {record.exam_type && record.exam_type !== 'regular' && (
-                                    <span className="inline-flex items-center rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 border border-amber-200 dark:border-amber-800 px-2 py-0.5 text-[10px] font-black uppercase">
-                                      {record.exam_type === 'rescrutiny' ? 'Board Challenge' : record.exam_type}
-                                    </span>
-                                  )}
+                      {deduped.map((record) => {
+                        const referredCount = record.referred_subjects?.length ?? 0;
+                        const isSemesterDrop = record.status === "Referred" && referredCount >= 4;
+                        return (
+                          <div key={record.id} className={`rounded-xl border bg-card p-6 shadow-sm ${
+                            isSemesterDrop
+                              ? 'border-l-4 border-l-red-600 bg-red-500/[0.02] dark:bg-red-950/[0.02]'
+                              : (record.exam_type ?? 'regular') !== 'regular' 
+                              ? 'border-l-4 border-l-amber-400 dark:border-l-amber-600' 
+                              : ''
+                          }`}>
+                            <div className="flex flex-wrap items-center justify-between gap-4 border-b pb-4 mb-4">
+                              <div className="flex items-center gap-3">
+                                <div className={`p-2 rounded-lg ${isSemesterDrop ? 'bg-red-100 text-red-600 dark:bg-red-950/40 dark:text-red-400' : 'bg-primary/10 text-primary'}`}>
+                                  <BookOpen className="h-5 w-5" />
                                 </div>
-                              </div>
-                            </div>
-
-                            <div className="text-right">
-                              {record.status === "Passed" ? (
                                 <div>
-                                  <p className="text-3xl font-black text-primary">{parseFloat(record.gpa || "0").toFixed(2)}</p>
-                                  <p className="text-[10px] font-bold text-muted-foreground uppercase">SGPA</p>
+                                  <h3 className="font-extrabold text-lg">{record.semester} Semester Result</h3>
+                                  <div className="flex items-center gap-2 mt-0.5">
+                                    <p className="text-xs text-muted-foreground">
+                                      Regulation: {record.regulation} · Holding Year: {record.holding_year}
+                                    </p>
+                                    {record.exam_type && record.exam_type !== 'regular' && (
+                                      <span className="inline-flex items-center rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 border border-amber-200 dark:border-amber-800 px-2 py-0.5 text-[10px] font-black uppercase">
+                                        {record.exam_type === 'rescrutiny' ? 'Board Challenge' : record.exam_type}
+                                      </span>
+                                    )}
+                                  </div>
                                 </div>
-                              ) : (
-                                <div className="flex flex-col items-end gap-1">
-                                  <span className="px-3 py-1 bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 rounded-full font-black text-xs">
-                                    Referred — {record.referred_subjects?.length ?? 0} subject{(record.referred_subjects?.length ?? 0) > 1 ? 's' : ''}
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-                          </div>
+                              </div>
 
-                          {record.status === "Passed" ? (
-                            <div className="flex items-center gap-3 text-sm text-green-700 bg-green-50 dark:bg-green-950/20 dark:text-green-400 p-3 rounded-lg border border-green-100 dark:border-green-900/30">
-                              <CheckCircle className="h-5 w-5" />
-                              <span>Student has successfully passed the semester examinations.</span>
+                              <div className="text-right">
+                                {record.status === "Passed" ? (
+                                  <div>
+                                    <p className="text-3xl font-black text-primary">{parseFloat(record.gpa || "0").toFixed(2)}</p>
+                                    <p className="text-[10px] font-bold text-muted-foreground uppercase">SGPA</p>
+                                  </div>
+                                ) : (
+                                  <div className="flex flex-col items-end gap-1">
+                                    <span className={`px-3 py-1 rounded-full font-black text-xs ${
+                                      isSemesterDrop
+                                        ? "bg-red-600 text-white dark:bg-red-900 dark:text-red-200"
+                                        : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
+                                    }`}>
+                                      {isSemesterDrop 
+                                        ? `Semester Drop — ${referredCount} referred` 
+                                        : `Referred — ${referredCount} subject${referredCount > 1 ? 's' : ''}`
+                                      }
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
                             </div>
-                          ) : (
-                            <div className="space-y-3">
+
+                            {record.status === "Passed" ? (
+                              <div className="flex items-center gap-3 text-sm text-green-700 bg-green-50 dark:bg-green-950/20 dark:text-green-400 p-3 rounded-lg border border-green-100 dark:border-green-900/30">
+                                <CheckCircle className="h-5 w-5" />
+                                <span>Student has successfully passed the semester examinations.</span>
+                              </div>
+                            ) : (
+                              <div className="space-y-3">
+                                {isSemesterDrop ? (
+                                  <div className="flex items-start gap-3 text-sm text-red-700 bg-red-50 dark:bg-red-950/10 dark:text-red-400 p-3 rounded-lg border border-red-100 dark:border-red-900/30">
+                                    <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
+                                    <div>
+                                      <p className="font-extrabold text-red-800 dark:text-red-300">Semester Drop Status (BTEB Rules)</p>
+                                      <p className="mt-0.5 text-xs font-semibold leading-relaxed text-red-600 dark:text-red-400">
+                                        You have 4 or more referred subjects in this semester examination. Under official BTEB regulations, this constitutes a <strong>Semester Drop</strong>. You must wait 1 year to repeat this semester before progressing.
+                                      </p>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <div className="flex items-center gap-3 text-sm text-amber-700 bg-amber-50 dark:bg-amber-950/10 dark:text-amber-400 p-3 rounded-lg border border-amber-100 dark:border-amber-900/30">
+                                    <AlertCircle className="h-5 w-5 shrink-0" />
+                                    <span>Student is promoted but has referred subjects. Must clear them in subsequent examinations.</span>
+                                  </div>
+                                )}
                               <div className="flex items-center justify-between">
                                 <p className="text-sm font-bold text-red-600 flex items-center gap-2">
                                   <AlertCircle className="h-4 w-4" />
@@ -633,7 +674,8 @@ export function Results() {
                             </div>
                           )}
                         </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </>
                 );

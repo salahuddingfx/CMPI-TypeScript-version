@@ -188,6 +188,19 @@ export async function getSubjects(params?: { department?: string; semester?: str
   return response.data;
 }
 
+/** Upload a file to the backend, returns the file metadata including the url */
+export async function uploadFile(file: File, folder: string = "others") {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("folder", folder);
+  const response = await api.post("/upload", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
+}
+
 /** Lookup subjects by codes (batch). Returns { code: { name, department, ... } } */
 export async function lookupSubjects(codes: string[]) {
   const response = await api.get("/subjects/lookup", {

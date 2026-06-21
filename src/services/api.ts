@@ -112,6 +112,11 @@ export async function getEvent(id: string) {
   return response.data;
 }
 
+export async function registerEvent(id: string, payload: Record<string, string>) {
+  const response = await api.post(`/events/${id}/register`, payload);
+  return response.data;
+}
+
 export async function getBlogs() {
   const response = await api.get("/blogs");
   return response.data;

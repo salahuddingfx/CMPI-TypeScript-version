@@ -417,6 +417,7 @@
 }
 
 section.bg-primary.text-white {
+  position: relative;
   background:
     radial-gradient(circle at 82% 12%, rgb(244 180 27 / 0.3), transparent 24rem),
     linear-gradient(135deg, hsl(var(--primary)), #064e3b 56%, #0f172a);

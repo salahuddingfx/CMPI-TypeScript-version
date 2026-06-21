@@ -222,7 +222,6 @@ export const BTEB_SUBJECTS: Record<string, BtebSubjectInfo> = {
   // ═══════════════════════════════════════════════════════════════════════════
 
   // 2022 Regulation — Electrical Technology (267xx / 268xx)
-  "26711": { name: "Basic Electricity", dept: "Shared" },
   "26712": { name: "Electrical Engineering Materials", dept: "Electrical Technology" },
   "26722": { name: "Electrical Engineering Drawing", dept: "Electrical Technology" },
   "26731": { name: "Electrical Circuits-II", dept: "Electrical Technology" },
@@ -242,7 +241,6 @@ export const BTEB_SUBJECTS: Record<string, BtebSubjectInfo> = {
   "66711": { name: "Basic Electricity", dept: "Electrical Technology" },
   "66712": { name: "Electrical Engineering Fundamentals", dept: "Electrical Technology" },
   "66713": { name: "Electrical Engineering Materials", dept: "Electrical Technology" },
-  "66721": { name: "Electrical Circuits-1", dept: "Electrical Technology" },
   "66722": { name: "Electrical Appliances", dept: "Electrical Technology" },
   "66731": { name: "Electrical Circuits-2", dept: "Electrical Technology" },
   "66732": { name: "Advance Electricity", dept: "Electrical Technology" },
@@ -262,7 +260,6 @@ export const BTEB_SUBJECTS: Record<string, BtebSubjectInfo> = {
   "66775": { name: "Testing & Maintenance of Electrical Equipment", dept: "Electrical Technology" },
   "66781": { name: "Industrial Training", dept: "Electrical Technology" },
   "66811": { name: "Basic Electronics", dept: "Electrical Technology" },
-  "66845": { name: "Industrial Electronics", dept: "Electrical Technology" },
   "66856": { name: "Digital Electronics & Microprocessor", dept: "Electrical Technology" },
   "66863": { name: "Instrumentation & Process Control", dept: "Electrical Technology" },
   "66867": { name: "Communication Engineering", dept: "Electrical Technology" },
@@ -300,9 +297,6 @@ export const BTEB_SUBJECTS: Record<string, BtebSubjectInfo> = {
   // ═══════════════════════════════════════════════════════════════════════════
 
   // 2016 Regulation — Telecom (670xx/671xx)
-  "67041": { name: "Data & Telecommunication", dept: "Telecommunications Technology" },
-  "67051": { name: "Mobile Communication", dept: "Telecommunications Technology" },
-  "67061": { name: "Transmission Engineering", dept: "Telecommunications Technology" },
   "67062": { name: "Switching Engineering", dept: "Telecommunications Technology" },
   "67064": { name: "Optical Fiber Communication", dept: "Telecommunications Technology" },
   "67071": { name: "Computer Networks & Services", dept: "Telecommunications Technology" },
@@ -316,7 +310,6 @@ export const BTEB_SUBJECTS: Record<string, BtebSubjectInfo> = {
   // MECHANICAL TECHNOLOGY
   // ═══════════════════════════════════════════════════════════════════════════
 
-  "27012": { name: "Basic Workshop Practice", dept: "Shared" },
   "27044": { name: "Applied Mechanics", dept: "Mechanical Technology" },
   "27071": { name: "Design of Machine Elements", dept: "Mechanical Technology" },
   "27131": { name: "Engineering Thermodynamics", dept: "Mechanical Technology" },

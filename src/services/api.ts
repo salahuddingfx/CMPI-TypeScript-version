@@ -57,6 +57,16 @@ export async function getDashboard() {
   return response.data;
 }
 
+export async function getStudentProfile() {
+  const response = await api.get("/dashboard/profile");
+  return response.data;
+}
+
+export async function updateStudentProfile(data: Record<string, string>) {
+  const response = await api.put("/dashboard/profile", data);
+  return response.data;
+}
+
 export async function getStudentCourses() {
   const response = await api.get("/dashboard/courses");
   return response.data;
@@ -132,8 +142,16 @@ export async function searchAll(query: string) {
   return response.data;
 }
 
-export async function submitAdmission(data: Record<string, string>) {
-  const response = await api.post("/admissions", data);
+export async function submitAdmission(formData: FormData) {
+  const response = await api.post("/admissions", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+    timeout: 30000,
+  });
+  return response.data;
+}
+
+export async function trackAdmission(applicationId: string) {
+  const response = await api.post("/admissions/track", { application_id: applicationId });
   return response.data;
 }
 

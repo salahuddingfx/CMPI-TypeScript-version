@@ -1,4 +1,5 @@
 import { Award, BookOpen, CalendarDays, Users } from "lucide-react";
+import { Link } from "react-router-dom";
 import { SEO } from "@/components/common/SEO";
 import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
@@ -60,6 +61,9 @@ export function About() {
               We believe every student can become a capable technologist when provided with quality instruction, hands-on practice, and a supportive learning environment. CMPI continues to strengthen academic standards, industry linkage, and co-curricular development.
             </p>
             <p className="mt-6 font-bold text-primary">Principal, {institute.shortName}</p>
+            <Link to="/principal" className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-primary hover:underline">
+              Read full message →
+            </Link>
           </div>
         </div>
       </section>
@@ -67,7 +71,7 @@ export function About() {
       <section className="container section-pad">
         <SectionHeader eyebrow="Campus Facilities" title="Learning infrastructure that supports practical education" />
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <FacilityCard icon={BookOpen} title="Digital Library" description={data.facilities[0]?.description ?? ""} />
+          <FacilityCard icon={BookOpen} title="Digital Library" description={data.facilities[0]?.description ?? "A quiet study environment with technical references, journals, and digital learning resources."} />
           <FacilityCard icon={Award} title="Department Labs" description="Specialized laboratories for Civil, CST, and Electrical Technology programs." />
           <FacilityCard icon={CalendarDays} title="Academic Section" description="Routine management, examination support, and academic record services." />
           <FacilityCard icon={Users} title="Student Support" description="Guidance, clubs, welfare support, and co-curricular participation opportunities." />

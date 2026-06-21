@@ -30,7 +30,7 @@ const Sitemap = lazy(() => import("@/pages/Sitemap").then((m) => ({ default: m.S
 const Login = lazy(() => import("@/pages/Login").then((m) => ({ default: m.Login })));
 const Register = lazy(() => import("@/pages/Register").then((m) => ({ default: m.Register })));
 const ForgotPassword = lazy(() => import("@/pages/ForgotPassword").then((m) => ({ default: m.ForgotPassword })));
-const Dashboard = lazy(() => import("@/pages/Dashboard").then((m) => ({ default: m.Dashboard })));
+const DashboardOverview = lazy(() => import("@/pages/dashboard/DashboardOverview").then((m) => ({ default: m.default })));
 const StudentCourses = lazy(() => import("@/pages/dashboard/StudentCourses").then((m) => ({ default: m.StudentCourses })));
 const StudentResults = lazy(() => import("@/pages/dashboard/StudentResults").then((m) => ({ default: m.StudentResults })));
 const StudentBills = lazy(() => import("@/pages/dashboard/StudentBills").then((m) => ({ default: m.StudentBills })));
@@ -103,7 +103,7 @@ export function AppRoutes() {
 
       <Route element={<AuthGuard />}>
         <Route path="/dashboard" element={<StudentLayout />}>
-          <Route index element={<LazyPage><Dashboard /></LazyPage>} />
+          <Route index element={<LazyPage><DashboardOverview /></LazyPage>} />
           <Route path="courses" element={<LazyPage><StudentCourses /></LazyPage>} />
           <Route path="results" element={<LazyPage><StudentResults /></LazyPage>} />
           <Route path="bills" element={<LazyPage><StudentBills /></LazyPage>} />

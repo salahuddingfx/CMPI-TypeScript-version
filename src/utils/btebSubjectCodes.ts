@@ -304,6 +304,137 @@ export const BTEB_SUBJECTS: Record<string, BtebSubjectInfo> = {
   "27131": { name: "Engineering Thermodynamics", dept: "Mechanical Technology" },
   "27161": { name: "Engine Overhauling, Inspection & Testing", dept: "Mechanical Technology" },
   "27171": { name: "Service Station Operation & Estimating", dept: "Mechanical Technology" },
+
+  // 2022 Regulation — Automobile Technology (262xx)
+  "26241": { name: "Automotive Body Building", dept: "Automobile Technology" },
+
+  // 2022 Regulation — Chemical Technology (263xx)
+  "26355": { name: "Refrigeration & Cold Storage", dept: "Chemical Technology" },
+  "26364": { name: "Industrial Stoichiometry & Thermodynamics", dept: "Chemical Technology" },
+  "26365": { name: "Instrumental Methods of Analysis", dept: "Chemical Technology" },
+
+  // 2022 Regulation — Civil Technology updates (264xx / 288xx)
+  "26447": { name: "Basic Estimating & Costing", dept: "Civil Technology" },
+  "28861": { name: "Advanced Construction", dept: "Civil Technology" },
+
+  // 2022 Regulation — Electrical Technology updates (267xx)
+  "26762": { name: "Transmission and Distribution of Electrical Power-I", dept: "Electrical Technology" },
+  "26764": { name: "Transmission and Distribution of Electrical Power", dept: "Electrical Technology" },
+  "26771": { name: "AC Machine-II", dept: "Electrical Technology" },
+  "26773": { name: "Switch Gear and Protection", dept: "Electrical Technology" },
+
+  // 2022 Regulation — Electronics Technology updates (268xx)
+  "26821": { name: "Electronic Devices and Circuits", dept: "Electronics Technology" },
+  "26831": { name: "Digital Electronics-I", dept: "Electronics Technology" },
+  "26832": { name: "Power Electronics", dept: "Electronics Technology" },
+  "26841": { name: "Digital Electronics-II", dept: "Electronics Technology" },
+  "26843": { name: "Networks, Filters and Transmission lines", dept: "Electronics Technology" },
+  "26851": { name: "Television Engineering", dept: "Electronics Technology" },
+  "26852": { name: "Electronic Appliances", dept: "Electronics Technology" },
+  "26861": { name: "TV Studio and Broadcasting", dept: "Electronics Technology" },
+  "26862": { name: "Microcontroller and Embedded System", dept: "Electronics Technology" },
+
+  // 2022 Regulation — Food Technology (269xx)
+  "26932": { name: "Food Industrial Chemistry", dept: "Food Technology" },
+  "26952": { name: "Food Preservation-II", dept: "Food Technology" },
+  "26954": { name: "Food & Beverage Products", dept: "Food Technology" },
+  "26961": { name: "Food Engineering Operation-I", dept: "Food Technology" },
+  "26963": { name: "Bakery Products", dept: "Food Technology" },
+  "26964": { name: "Food Adulteration & Toxicology", dept: "Food Technology" },
+
+  // 2022 Regulation — Mechanical Technology updates (270xx)
+  "27021": { name: "Mechanical Engineering Drawing", dept: "Mechanical Technology" },
+  "27042": { name: "Machine Shop Practice-III", dept: "Mechanical Technology" },
+  "27043": { name: "Metallurgy", dept: "Mechanical Technology" },
+  "27053": { name: "Advanced Welding-I", dept: "Mechanical Technology" },
+  "27055": { name: "Manufacturing Process", dept: "Mechanical Technology" },
+  "27062": { name: "Mechanical Measurement & Metrology", dept: "Mechanical Technology" },
+  "27063": { name: "CAD & CAM", dept: "Mechanical Technology" },
+  "27065": { name: "Plant Engineering & Maintenance", dept: "Mechanical Technology" },
+  "27073": { name: "Heat Treatment of Metal", dept: "Mechanical Technology" },
+  "29231": { name: "Mechatronics & PLC", dept: "Mechanical Technology" },
+
+  // 2022 Regulation — Power Technology (271xx)
+  "27111": { name: "Power Engineering Fundamentals", dept: "Power Technology" },
+  "27151": { name: "Fundamental of Hybrid & Electric Vehicle", dept: "Power Technology" },
+  "27152": { name: "Power Plant Engineering", dept: "Power Technology" },
+
+  // 2022 Regulation — RAC Technology (272xx)
+  "27231": { name: "RAC Cycles & Components", dept: "RAC Technology" },
+  "27252": { name: "Commercial & Industrial RAC", dept: "RAC Technology" },
+  "27261": { name: "Advanced Refrigeration and Air conditioning", dept: "RAC Technology" },
+
+  // 2022 Regulation — Marine Technology (279xx)
+  "27941": { name: "Fluid Mechanics & Hydraulic Machinery", dept: "Marine Technology" },
+  "27942": { name: "Marine IC Engine-II", dept: "Marine Technology" },
+  "27954": { name: "Marine IC Engine Operation & Maintenance", dept: "Marine Technology" },
+  "27961": { name: "Power System Protection", dept: "Marine Technology" },
+  "27962": { name: "Marine Electrical Installation & Instrumentation", dept: "Marine Technology" },
+  "27963": { name: "Shipboard Deck machinery, Out-fittings & Bridge Equipment", dept: "Marine Technology" },
+  "27964": { name: "Marine Propulsion & Steering System", dept: "Marine Technology" },
+  "27965": { name: "Marine Environmental Science", dept: "Marine Technology" },
+
+  // 2022 Regulation — Shipbuilding Technology (280xx)
+  "28021": { name: "General Ship Knowledge", dept: "Shipbuilding Technology" },
+  "28061": { name: "Ship Design", dept: "Shipbuilding Technology" },
+
+  // 2022 Regulation — CST updates (285xx)
+  "28533": { name: "IT Support Services", dept: "Computer Science & Technology" },
+  "28567": { name: "Programming in C", dept: "Computer Science & Technology" },
+  "28572": { name: "Network Administration & Services", dept: "Computer Science & Technology" },
+  "28573": { name: "Cyber Security & Ethics", dept: "Computer Science & Technology" },
+  "28575": { name: "Multimedia & Animation", dept: "Computer Science & Technology" },
+
+  // 2022 Regulation — Electromedical Technology (286xx)
+  "28621": { name: "Basic Biomedical Engineering", dept: "Electromedical Technology" },
+  "28632": { name: "Operating Room Equipment", dept: "Electromedical Technology" },
+  "28641": { name: "Medical Transducers & Sensors", dept: "Electromedical Technology" },
+  "28651": { name: "Bio-medical Instrumentation & Measurements", dept: "Electromedical Technology" },
+  "28652": { name: "Dental Equipment", dept: "Electromedical Technology" },
+  "28653": { name: "Anesthesia & Respiratory Equipment", dept: "Electromedical Technology" },
+  "28654": { name: "Coronary & Intensive Care Unit Equipment", dept: "Electromedical Technology" },
+  "28661": { name: "Robotics & Robotic Surgery", dept: "Electromedical Technology" },
+
+  // 2016 Regulation — Power Technology (662xx / 671xx)
+  "66241": { name: "Automotive Body Building", dept: "Power Technology" },
+  "66253": { name: "Automobile Air-conditioning", dept: "Power Technology" },
+  "66274": { name: "Vehicle Automation & Signaling", dept: "Power Technology" },
+  "67142": { name: "Automotive Suspension, Brake, Steering & Transmission System", dept: "Power Technology" },
+  "67153": { name: "Engine Overhauling & Inspection", dept: "Power Technology" },
+  "67162": { name: "Fluid Mechanics & Machineries", dept: "Power Technology" },
+  "67172": { name: "Automobile Trouble Shooting & Driving", dept: "Power Technology" },
+
+  // 2016 Regulation — Chemical Technology (663xx)
+  "66363": { name: "Industrial Stoichiometry & Thermodynamics", dept: "Chemical Technology" },
+
+  // 2016 Regulation — Civil Technology updates (664xx)
+  "66467": { name: "Basic Design of Structure", dept: "Civil Technology" },
+
+  // 2016 Regulation — Electrical Technology updates (667xx)
+  "66743": { name: "Electrical Circuits & Machines", dept: "Electrical Technology" },
+  "66764": { name: "Transmission & Distribution of Electrical Power", dept: "Electrical Technology" },
+
+  // 2016 Regulation — Food Technology (669xx)
+  "66944": { name: "Food Chemistry", dept: "Food Technology" },
+  "66973": { name: "Food Quality Control & Assurance", dept: "Food Technology" },
+
+  // 2016 Regulation — Mechanical Technology updates (670xx)
+  "67052": { name: "Mechanical Estimating & Costing", dept: "Mechanical Technology" },
+  "67053": { name: "Advance Welding - 1", dept: "Mechanical Technology" },
+  "67076": { name: "Mechatronics & PLC", dept: "Mechanical Technology" },
+
+  // 2016 Regulation — Shipbuilding Technology (680xx)
+  "68081": { name: "Industrial Training", dept: "Shipbuilding Technology" },
+
+  // 2016 Regulation — Electronics Technology updates (686xx)
+  "68662": { name: "TV Broadcasting and Studio", dept: "Electronics Technology" },
+  "68663": { name: "Instrumentation & Process Control", dept: "Electronics Technology" },
+  "68665": { name: "Electronic Project-1", dept: "Electronics Technology" },
+  "68671": { name: "Computer Control & Robotics", dept: "Electronics Technology" },
+  "68672": { name: "Microwave, Radar & Navigation Aids", dept: "Electronics Technology" },
+
+  // 2016 Regulation — Architecture Technology (687xx)
+  "68774": { name: "AIDT Professional Practice", dept: "Architecture Technology" }
 };
 
 /** Get the subject name by its code, falling back to a formatted code label */

@@ -1,115 +1,341 @@
 import { useState } from "react";
-import { Check, ArrowLeft, ArrowRight } from "lucide-react";
+import { Check, ArrowLeft, ArrowRight, Upload, Search, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SEO } from "@/components/common/SEO";
 import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
+import { submitAdmission, trackAdmission } from "@/services/api";
 
-const departments = ["Civil Technology", "Computer Science & Technology", "Electrical Technology"];
+const departments = [
+  "Civil Technology",
+  "Computer Science & Technology",
+  "Electrical Technology",
+  "Electronics Technology",
+  "Telecommunications Technology",
+  "Mechanical Technology",
+  "Marine Technology",
+];
+
+const requiredDocs = [
+  { key: "ssc_certificate", label: "SSC Certificate + Marksheat" },
+  { key: "nid_birth", label: "National ID Card (NID) / Birth Certificate" },
+  { key: "photos", label: "4 Passport-size Photographs" },
+  { key: "guardian_nid", label: "Guardian's NID Copy" },
+  { key: "transfer_cert", label: "Transfer Certificate" },
+  { key: "character_cert", label: "Proshongso Potro (Character Certificate)" },
+];
+
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1";
 
 export function Admission() {
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
-  const [appId] = useState(() => `CMPI-ADM-${Date.now().toString().slice(-6)}`);
-  const [form, setForm] = useState({ name: "", email: "", phone: "", department: "", sscGpa: "", fatherName: "", motherName: "", address: "", bloodGroup: "" });
+  const [submitting, setSubmitting] = useState(false);
+  const [serverAppId, setServerAppId] = useState("");
+  const [error, setError] = useState<string | null>(null);
+
+  const [form, setForm] = useState({
+    name: "", email: "", phone: "", department: "", session: "",
+    sscGpa: "", hscGpa: "", fatherName: "", motherName: "",
+    address: "", bloodGroup: "",
+  });
+
+  const [docs, setDocs] = useState<Record<string, File | null>>({});
+
+  // Status tracking
+  const [trackMode, setTrackMode] = useState(false);
+  const [trackId, setTrackId] = useState("");
+  const [trackResult, setTrackResult] = useState<any>(null);
+  const [trackLoading, setTrackLoading] = useState(false);
 
   const update = (field: string, value: string) => setForm((prev) => ({ ...prev, [field]: value }));
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleDocChange = (key: string, file: File | null) => {
+    setDocs((prev) => ({ ...prev, [key]: file }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setSubmitting(true);
+    setError(null);
+    try {
+      const fd = new FormData();
+      Object.entries(form).forEach(([k, v]) => {
+        const apiKey = k.replace(/([A-Z])/g, "_$1").toLowerCase();
+        fd.append(apiKey, v);
+      });
+      Object.entries(docs).forEach(([key, file]) => {
+        if (file) fd.append(`doc_${key}`, file);
+      });
+      const res = await submitAdmission(fd);
+      setServerAppId(res.application_id);
+      setSubmitted(true);
+    } catch (err: any) {
+      setError(err.response?.data?.message || err.response?.data?.error || "Submission failed. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleTrack = async () => {
+    if (!trackId) return;
+    setTrackLoading(true);
+    try {
+      const res = await trackAdmission(trackId);
+      setTrackResult(res);
+    } catch {
+      setTrackResult(null);
+      setError("Application not found. Check your Application ID.");
+    } finally {
+      setTrackLoading(false);
+    }
+  };
+
+  const statusColor = (s: string) => {
+    switch (s?.toLowerCase()) {
+      case "approved": return "text-green-600 bg-green-50 border-green-200";
+      case "rejected": return "text-red-600 bg-red-50 border-red-200";
+      default: return "text-yellow-600 bg-yellow-50 border-yellow-200";
+    }
   };
 
   return (
     <PageTransition>
       <SEO title="Apply for Admission" description="Online admission application for CMPI diploma programs." />
       <section className="container section-pad">
-        <SectionHeader eyebrow="Admission 2026-2027" title="Apply online for diploma programs" description="Fill in the application form below. All fields are required." align="center" className="mb-10" />
+        <SectionHeader
+          eyebrow={`Admission ${new Date().getFullYear()}-${new Date().getFullYear() + 1}`}
+          title="Apply for diploma programs"
+          description="Fill in the application form below. You can also download the form and submit it physically."
+          align="center"
+          className="mb-10"
+        />
 
-        {submitted ? (
-          <div className="mx-auto max-w-lg rounded-sm border border-green-200 bg-green-50 p-8 text-center dark:border-green-800 dark:bg-green-950/30">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/50">
-              <span className="text-3xl"><Check className="h-8 w-8 text-green-600" /></span>
+        {/* Action buttons */}
+        <div className="mx-auto mb-8 flex max-w-lg flex-wrap justify-center gap-3">
+          <a
+            href={`${API_BASE}/admissions/download-form`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-sm border border-primary/30 bg-primary/5 px-4 py-2 text-sm font-medium text-primary hover:bg-primary/10"
+          >
+            <Download className="h-4 w-4" /> Download PDF Form
+          </a>
+          <button
+            onClick={() => { setTrackMode(!trackMode); setTrackResult(null); setError(null); }}
+            className="inline-flex items-center gap-2 rounded-sm border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+          >
+            <Search className="h-4 w-4" /> Track Application
+          </button>
+        </div>
+
+        {/* Status Tracking */}
+        {trackMode && (
+          <div className="mx-auto mb-10 max-w-lg rounded-sm border bg-card p-6 shadow-sm">
+            <h3 className="mb-4 text-lg font-bold">Track Your Application</h3>
+            <div className="flex gap-3">
+              <Input
+                value={trackId}
+                onChange={(e) => setTrackId(e.target.value)}
+                placeholder="Enter Application ID (e.g. CMPI-ADM-000123)"
+              />
+              <Button onClick={handleTrack} disabled={!trackId || trackLoading}>
+                {trackLoading ? "Checking..." : "Track"}
+              </Button>
             </div>
-            <h2 className="text-2xl font-bold text-green-700 dark:text-green-400">Application Submitted!</h2>
-            <p className="mt-3 text-sm text-green-600 dark:text-green-500">Your application has been received. You will receive a confirmation email at <span className="font-semibold">{form.email}</span>.</p>
-            <p className="mt-2 text-sm text-green-600 dark:text-green-500">Application ID: <span className="font-mono font-bold">{appId}</span></p>
-            <Button className="mt-6" onClick={() => { setSubmitted(false); setStep(1); setForm({ name: "", email: "", phone: "", department: "", sscGpa: "", fatherName: "", motherName: "", address: "", bloodGroup: "" }); }}>Submit Another Application</Button>
+            {trackResult && (
+              <div className="mt-4 rounded-sm border p-4">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono font-bold">{trackResult.application_id}</span>
+                  <span className={`rounded-full border px-3 py-1 text-xs font-semibold ${statusColor(trackResult.status)}`}>
+                    {trackResult.status}
+                  </span>
+                </div>
+                <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
+                  <div><span className="text-muted-foreground">Name:</span> {trackResult.name}</div>
+                  <div><span className="text-muted-foreground">Department:</span> {trackResult.department}</div>
+                  <div><span className="text-muted-foreground">Session:</span> {trackResult.session || "N/A"}</div>
+                  <div><span className="text-muted-foreground">Applied:</span> {new Date(trackResult.created_at).toLocaleDateString()}</div>
+                </div>
+                {trackResult.documents?.length > 0 && (
+                  <div className="mt-3 text-sm"><span className="text-muted-foreground">Documents uploaded:</span> {trackResult.documents.length}/6</div>
+                )}
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="mx-auto max-w-2xl">
-            <div className="mb-8 flex items-center justify-center gap-2">
-              {[1, 2, 3].map((s) => (
-                <div key={s} className="flex items-center gap-2">
-                  <div className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${step >= s ? "bg-primary text-white" : "bg-muted text-muted-foreground"}`}>{s}</div>
-                  {s < 3 && <div className={`h-0.5 w-12 ${step > s ? "bg-primary" : "bg-muted"}`} />}
-                </div>
-              ))}
-            </div>
+        )}
 
-            <form onSubmit={handleSubmit} className="rounded-sm border bg-card p-6 shadow-sm sm:p-8">
-              {step === 1 && (
-                <div className="space-y-4">
-                  <h3 className="text-lg font-bold">Personal Information</h3>
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="space-y-2"><label className="text-sm font-semibold">Full Name</label><Input value={form.name} onChange={(e) => update("name", e.target.value)} placeholder="Your full name" required /></div>
-                    <div className="space-y-2"><label className="text-sm font-semibold">Email</label><Input type="email" value={form.email} onChange={(e) => update("email", e.target.value)} placeholder="you@example.com" required /></div>
-                    <div className="space-y-2"><label className="text-sm font-semibold">Phone</label><Input value={form.phone} onChange={(e) => update("phone", e.target.value)} placeholder="+880 1XXX-XXXXXX" required /></div>
-                    <div className="space-y-2"><label className="text-sm font-semibold">Blood Group</label><Input value={form.bloodGroup} onChange={(e) => update("bloodGroup", e.target.value)} placeholder="A+, B+, O+, etc." /></div>
-                    <div className="space-y-2"><label className="text-sm font-semibold">Father's Name</label><Input value={form.fatherName} onChange={(e) => update("fatherName", e.target.value)} required /></div>
-                    <div className="space-y-2"><label className="text-sm font-semibold">Mother's Name</label><Input value={form.motherName} onChange={(e) => update("motherName", e.target.value)} required /></div>
-                  </div>
-                  <div className="space-y-2"><label className="text-sm font-semibold">Address</label><Input value={form.address} onChange={(e) => update("address", e.target.value)} placeholder="Village/Thana/District" required /></div>
-                  <Button type="button" className="w-full" onClick={() => setStep(2)}>Next <ArrowRight className="ml-2 h-4 w-4" /></Button>
+        {error && (
+          <div className="mx-auto mb-6 max-w-lg rounded-sm border border-red-200 bg-red-50 p-3 text-center text-sm text-red-600 dark:border-red-800 dark:bg-red-950/30 dark:text-red-400">
+            {error}
+          </div>
+        )}
+
+        {/* Application Form */}
+        {!trackMode && (
+          <>
+            {submitted ? (
+              <div className="mx-auto max-w-lg rounded-sm border border-green-200 bg-green-50 p-8 text-center dark:border-green-800 dark:bg-green-950/30">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/50">
+                  <Check className="h-8 w-8 text-green-600" />
                 </div>
-              )}
-              {step === 2 && (
-                <div className="space-y-4">
-                  <h3 className="text-lg font-bold">Academic Information</h3>
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="space-y-2"><label className="text-sm font-semibold">SSC/Equivalent GPA</label><Input value={form.sscGpa} onChange={(e) => update("sscGpa", e.target.value)} placeholder="e.g. 4.50" required /></div>
-                    <div className="space-y-2"><label className="text-sm font-semibold">Preferred Department</label>
-                      <select value={form.department} onChange={(e) => update("department", e.target.value)} className="flex h-11 w-full rounded-sm border border-input bg-background px-4 py-2 text-sm" required>
-                        <option value="">Select department</option>
-                        {departments.map((d) => <option key={d} value={d}>{d}</option>)}
-                      </select>
+                <h2 className="text-2xl font-bold text-green-700 dark:text-green-400">Application Submitted!</h2>
+                <p className="mt-3 text-sm text-green-600 dark:text-green-500">
+                  Your application has been received. A confirmation email was sent to <span className="font-semibold">{form.email}</span>.
+                </p>
+                <p className="mt-2 text-sm text-green-600 dark:text-green-500">
+                  Application ID: <span className="font-mono font-bold text-foreground">{serverAppId}</span>
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">Save this ID to track your application status.</p>
+                <div className="mt-4 flex flex-col gap-2">
+                  <Button
+                    onClick={() => {
+                      setSubmitted(false);
+                      setStep(1);
+                      setForm({ name: "", email: "", phone: "", department: "", session: "", sscGpa: "", hscGpa: "", fatherName: "", motherName: "", address: "", bloodGroup: "" });
+                      setDocs({});
+                    }}
+                  >
+                    Submit Another Application
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className="mx-auto max-w-2xl">
+                {/* Step indicators */}
+                <div className="mb-8 flex items-center justify-center gap-2">
+                  {[1, 2, 3, 4].map((s) => (
+                    <div key={s} className="flex items-center gap-2">
+                      <div className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${step >= s ? "bg-primary text-white" : "bg-muted text-muted-foreground"}`}>{s}</div>
+                      {s < 4 && <div className={`h-0.5 w-8 ${step > s ? "bg-primary" : "bg-muted"}`} />}
                     </div>
-                  </div>
-                  <div className="rounded-sm bg-muted/60 p-4 text-sm text-muted-foreground">
-                    <p className="font-semibold text-foreground">Required documents</p>
-                    <ul className="mt-2 list-disc space-y-1 pl-4">
-                      <li>SSC/Equivalent certificate and marksheet</li>
-                      <li>Citizenship certificate (NID/Birth cert)</li>
-                      <li>4 passport-size photographs</li>
-                      <li>Guardian's NID copy</li>
-                    </ul>
-                  </div>
-                  <div className="flex gap-3">
-                    <Button type="button" variant="outline" className="w-full" onClick={() => setStep(1)}><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
-                    <Button type="button" className="w-full" onClick={() => setStep(3)}>Next <ArrowRight className="ml-2 h-4 w-4" /></Button>
-                  </div>
+                  ))}
                 </div>
-              )}
-              {step === 3 && (
-                <div className="space-y-4">
-                  <h3 className="text-lg font-bold">Review & Submit</h3>
-                  <div className="grid gap-3 text-sm">
-                    <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">Name</span><span className="font-semibold">{form.name || "-"}</span></div>
-                    <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">Email</span><span className="font-semibold">{form.email || "-"}</span></div>
-                    <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">Phone</span><span className="font-semibold">{form.phone || "-"}</span></div>
-                    <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">Department</span><span className="font-semibold">{form.department || "-"}</span></div>
-                    <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">SSC GPA</span><span className="font-semibold">{form.sscGpa || "-"}</span></div>
-                    <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">Address</span><span className="font-semibold">{form.address || "-"}</span></div>
-                  </div>
-                  <div className="flex gap-3">
-                    <Button type="button" variant="outline" className="w-full" onClick={() => setStep(2)}><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
-                    <Button type="submit" className="w-full">Submit Application</Button>
-                  </div>
-                </div>
-              )}
-            </form>
-          </div>
+
+                <form onSubmit={handleSubmit} className="rounded-sm border bg-card p-6 shadow-sm sm:p-8">
+                  {/* Step 1: Personal Info */}
+                  {step === 1 && (
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-bold">Personal Information</h3>
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <div className="space-y-2"><label className="text-sm font-semibold">Full Name</label><Input value={form.name} onChange={(e) => update("name", e.target.value)} placeholder="Your full name" required /></div>
+                        <div className="space-y-2"><label className="text-sm font-semibold">Email</label><Input type="email" value={form.email} onChange={(e) => update("email", e.target.value)} placeholder="you@example.com" required /></div>
+                        <div className="space-y-2"><label className="text-sm font-semibold">Phone</label><Input value={form.phone} onChange={(e) => update("phone", e.target.value)} placeholder="+880 1XXX-XXXXXX" required /></div>
+                        <div className="space-y-2"><label className="text-sm font-semibold">Blood Group</label><Input value={form.bloodGroup} onChange={(e) => update("bloodGroup", e.target.value)} placeholder="A+, B+, O+, etc." /></div>
+                        <div className="space-y-2"><label className="text-sm font-semibold">Father's Name</label><Input value={form.fatherName} onChange={(e) => update("fatherName", e.target.value)} required /></div>
+                        <div className="space-y-2"><label className="text-sm font-semibold">Mother's Name</label><Input value={form.motherName} onChange={(e) => update("motherName", e.target.value)} required /></div>
+                      </div>
+                      <div className="space-y-2"><label className="text-sm font-semibold">Address</label><Input value={form.address} onChange={(e) => update("address", e.target.value)} placeholder="Village/Thana/District" required /></div>
+                      <Button type="button" className="w-full" onClick={() => setStep(2)}>Next <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                    </div>
+                  )}
+
+                  {/* Step 2: Academic Info */}
+                  {step === 2 && (
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-bold">Academic Information</h3>
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <div className="space-y-2">
+                          <label className="text-sm font-semibold">Admission Session</label>
+                          <select value={form.session} onChange={(e) => update("session", e.target.value)} className="flex h-11 w-full rounded-sm border border-input bg-background px-4 py-2 text-sm" required>
+                            <option value="">Select session</option>
+                            <option value="2025-26">2025-26</option>
+                            <option value="2026-27">2026-27</option>
+                            <option value="2027-28">2027-28</option>
+                          </select>
+                        </div>
+                        <div className="space-y-2"><label className="text-sm font-semibold">Preferred Department</label>
+                          <select value={form.department} onChange={(e) => update("department", e.target.value)} className="flex h-11 w-full rounded-sm border border-input bg-background px-4 py-2 text-sm" required>
+                            <option value="">Select department</option>
+                            {departments.map((d) => <option key={d} value={d}>{d}</option>)}
+                          </select>
+                        </div>
+                        <div className="space-y-2"><label className="text-sm font-semibold">SSC/Equivalent GPA</label><Input value={form.sscGpa} onChange={(e) => update("sscGpa", e.target.value)} placeholder="e.g. 4.50" required /></div>
+                        <div className="space-y-2"><label className="text-sm font-semibold">HSC/Equivalent GPA (if any)</label><Input value={form.hscGpa} onChange={(e) => update("hscGpa", e.target.value)} placeholder="e.g. 4.00" /></div>
+                      </div>
+
+                      <div className="rounded-sm bg-muted/60 p-4 text-sm text-muted-foreground">
+                        <p className="font-semibold text-foreground">Required Documents</p>
+                        <ul className="mt-2 list-disc space-y-1 pl-4">
+                          {requiredDocs.map((d) => <li key={d.key}>{d.label}</li>)}
+                        </ul>
+                        <p className="mt-2 text-xs">Upload scanned copies below, or download the PDF form and bring documents physically.</p>
+                      </div>
+
+                      <div className="flex gap-3">
+                        <Button type="button" variant="outline" className="w-full" onClick={() => setStep(1)}><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
+                        <Button type="button" className="w-full" onClick={() => setStep(3)}>Next <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Step 3: Document Upload */}
+                  {step === 3 && (
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-bold">Upload Documents</h3>
+                      <p className="text-sm text-muted-foreground">Upload scanned copies of required documents. All fields are optional — you can also submit documents physically at the institute.</p>
+
+                      <div className="grid gap-3">
+                        {requiredDocs.map((doc) => (
+                          <div key={doc.key} className="flex items-center gap-3 rounded-sm border p-3">
+                            <Upload className="h-4 w-4 shrink-0 text-muted-foreground" />
+                            <div className="flex-1 min-w-0">
+                              <div className="text-sm font-medium">{doc.label}</div>
+                              {docs[doc.key] && (
+                                <div className="text-xs text-green-600 mt-1">{docs[doc.key]!.name}</div>
+                              )}
+                            </div>
+                            <label className="cursor-pointer shrink-0 rounded-sm border border-primary/30 bg-primary/5 px-3 py-1 text-xs font-medium text-primary hover:bg-primary/10">
+                              Choose File
+                              <input
+                                type="file"
+                                className="hidden"
+                                accept=".pdf,.jpg,.jpeg,.png"
+                                onChange={(e) => handleDocChange(doc.key, e.target.files?.[0] || null)}
+                              />
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="flex gap-3">
+                        <Button type="button" variant="outline" className="w-full" onClick={() => setStep(2)}><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
+                        <Button type="button" className="w-full" onClick={() => setStep(4)}>Next <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Step 4: Review & Submit */}
+                  {step === 4 && (
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-bold">Review & Submit</h3>
+                      <div className="grid gap-2 text-sm">
+                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">Name</span><span className="font-semibold">{form.name || "-"}</span></div>
+                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">Email</span><span className="font-semibold">{form.email || "-"}</span></div>
+                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">Phone</span><span className="font-semibold">{form.phone || "-"}</span></div>
+                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">Session</span><span className="font-semibold">{form.session || "-"}</span></div>
+                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">Department</span><span className="font-semibold">{form.department || "-"}</span></div>
+                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">SSC GPA</span><span className="font-semibold">{form.sscGpa || "-"}</span></div>
+                        {form.hscGpa && <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">HSC GPA</span><span className="font-semibold">{form.hscGpa}</span></div>}
+                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">Address</span><span className="font-semibold">{form.address || "-"}</span></div>
+                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2">
+                          <span className="text-muted-foreground">Documents</span>
+                          <span className="font-semibold">{Object.values(docs).filter(Boolean).length} / {requiredDocs.length} uploaded</span>
+                        </div>
+                      </div>
+                      <div className="flex gap-3">
+                        <Button type="button" variant="outline" className="w-full" onClick={() => setStep(3)}><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
+                        <Button type="submit" className="w-full" disabled={submitting}>
+                          {submitting ? "Submitting..." : "Submit Application"}
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </form>
+              </div>
+            )}
+          </>
         )}
       </section>
     </PageTransition>

@@ -29,7 +29,7 @@ export function ClubDetails() {
       <SEO title={club.name} description={club.description} />
 
       {/* Hero */}
-      <section className="bg-primary text-white">
+      <section className="relative bg-primary text-white">
         <div className="container py-12 sm:py-16">
           <Button asChild variant="ghost" className="mb-8 text-white/70 hover:text-white hover:bg-white/10 -ml-2">
             <Link to="/clubs"><ArrowLeft className="mr-2 h-4 w-4" /> All Clubs</Link>

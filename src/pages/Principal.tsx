@@ -12,11 +12,11 @@ export function Principal() {
         <div className="mx-auto max-w-2xl">
           <div className="rounded-sm border bg-card p-8 shadow-sm">
             <div className="flex flex-col items-center text-center">
-              <div className="mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-muted text-3xl font-bold text-muted-foreground">
-                <span className="text-primary text-2xl">Pr</span>
+              <div className="mb-4 h-32 w-32 overflow-hidden rounded-full border-4 border-primary/20 shadow-md">
+                <img src="/principal.png" alt="Principal Ln. Md. Didar Ullah" className="h-full w-full object-cover" />
               </div>
-              <h2 className="text-xl font-bold">Principal's Name</h2>
-              <p className="text-sm text-muted-foreground">B.Sc. Engg., M.Sc. Engg.</p>
+              <h2 className="text-xl font-bold">Ln. Md. Didar Ullah</h2>
+              <p className="text-sm text-muted-foreground">Principal & Visionary</p>
               <p className="mt-1 text-xs text-muted-foreground/70">Cox's Bazar Model Polytechnic Institute</p>
             </div>
             <blockquote className="mt-6 border-l-4 border-primary/30 pl-4 text-sm italic leading-relaxed text-muted-foreground">

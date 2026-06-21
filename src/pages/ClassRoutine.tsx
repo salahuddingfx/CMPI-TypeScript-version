@@ -1,10 +1,11 @@
-import { useState, useRef } from "react";
-import { FileText, Upload, Eye, Download, X, Clock } from "lucide-react";
+import { useState, useEffect } from "react";
+import { FileText, Download, Eye, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SEO } from "@/components/common/SEO";
 import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { PdfPreviewModal } from "@/components/common/PdfPreviewModal";
+import { api } from "@/services/api";
 
 type Dept = "CST" | "Civil" | "EEE";
 
@@ -14,59 +15,58 @@ const deptLabel: Record<Dept, string> = {
   EEE: "Electrical Technology",
 };
 
-const days = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"];
-const timeSlots = ["8:00 - 9:30", "9:45 - 11:15", "11:30 - 1:00", "2:00 - 3:30", "3:45 - 5:15"];
-
-const routines: Record<Dept, Record<string, Record<string, string>>> = {
-  CST: {
-    Saturday:  { "8:00 - 9:30": "Web Dev (CST-301)", "9:45 - 11:15": "DB Lab (CST-302)", "11:30 - 1:00": "Networks (CST-303)", "2:00 - 3:30": "", "3:45 - 5:15": "" },
-    Sunday:    { "8:00 - 9:30": "", "9:45 - 11:15": "Web Dev (CST-301)", "11:30 - 1:00": "", "2:00 - 3:30": "Networks Lab (CST-303)", "3:45 - 5:15": "" },
-    Monday:    { "8:00 - 9:30": "SE (CST-304)", "9:45 - 11:15": "", "11:30 - 1:00": "Web Dev Lab (CST-301)", "2:00 - 3:30": "", "3:45 - 5:15": "" },
-    Tuesday:   { "8:00 - 9:30": "", "9:45 - 11:15": "DB (CST-302)", "11:30 - 1:00": "", "2:00 - 3:30": "SE (CST-304)", "3:45 - 5:15": "" },
-    Wednesday: { "8:00 - 9:30": "Networks (CST-303)", "9:45 - 11:15": "", "11:30 - 1:00": "DB (CST-302)", "2:00 - 3:30": "", "3:45 - 5:15": "" },
-    Thursday:  { "8:00 - 9:30": "", "9:45 - 11:15": "Lab (CST-304)", "11:30 - 1:00": "", "2:00 - 3:30": "", "3:45 - 5:15": "" },
-  },
-  Civil: {
-    Saturday:  { "8:00 - 9:30": "Structural (CIV-301)", "9:45 - 11:15": "", "11:30 - 1:00": "Surveying Lab (CIV-302)", "2:00 - 3:30": "", "3:45 - 5:15": "" },
-    Sunday:    { "8:00 - 9:30": "", "9:45 - 11:15": "Materials (CIV-303)", "11:30 - 1:00": "", "2:00 - 3:30": "Structural (CIV-301)", "3:45 - 5:15": "" },
-    Monday:    { "8:00 - 9:30": "Surveying (CIV-302)", "9:45 - 11:15": "", "11:30 - 1:00": "Materials Lab (CIV-303)", "2:00 - 3:30": "", "3:45 - 5:15": "" },
-    Tuesday:   { "8:00 - 9:30": "", "9:45 - 11:15": "", "11:30 - 1:00": "Structural (CIV-301)", "2:00 - 3:30": "Surveying (CIV-302)", "3:45 - 5:15": "" },
-    Wednesday: { "8:00 - 9:30": "Materials (CIV-303)", "9:45 - 11:15": "", "11:30 - 1:00": "", "2:00 - 3:30": "", "3:45 - 5:15": "" },
-    Thursday:  { "8:00 - 9:30": "", "9:45 - 11:15": "CAD Lab (CIV-304)", "11:30 - 1:00": "", "2:00 - 3:30": "", "3:45 - 5:15": "" },
-  },
-  EEE: {
-    Saturday:  { "8:00 - 9:30": "Power Electronics (EEE-301)", "9:45 - 11:15": "", "11:30 - 1:00": "Control Systems (EEE-302)", "2:00 - 3:30": "", "3:45 - 5:15": "" },
-    Sunday:    { "8:00 - 9:30": "", "9:45 - 11:15": "Machines (EEE-303)", "11:30 - 1:00": "", "2:00 - 3:30": "Power Electronics Lab (EEE-301)", "3:45 - 5:15": "" },
-    Monday:    { "8:00 - 9:30": "Control Systems (EEE-302)", "9:45 - 11:15": "", "11:30 - 1:00": "", "2:00 - 3:30": "Machines (EEE-303)", "3:45 - 5:15": "" },
-    Tuesday:   { "8:00 - 9:30": "", "9:45 - 11:15": "", "11:30 - 1:00": "Power Electronics (EEE-301)", "2:00 - 3:30": "", "3:45 - 5:15": "" },
-    Wednesday: { "8:00 - 9:30": "", "9:45 - 11:15": "Machines Lab (EEE-303)", "11:30 - 1:00": "Control Systems (EEE-302)", "2:00 - 3:30": "", "3:45 - 5:15": "" },
-    Thursday:  { "8:00 - 9:30": "Electronics Lab (EEE-304)", "9:45 - 11:15": "", "11:30 - 1:00": "", "2:00 - 3:30": "", "3:45 - 5:15": "" },
-  },
+const deptMap: Record<Dept, string> = {
+  CST: "Computer Science & Technology",
+  Civil: "Civil Technology",
+  EEE: "Electrical Technology",
 };
 
-// Per-dept routine PDFs (uploaded by admin)
-type RoutinePdfs = Record<Dept, string | null>;
+const allSemesters = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th"];
+
+interface Routine {
+  id: number;
+  department: string;
+  semester: string;
+  academic_year: string;
+  title: string;
+  pdf_path: string;
+  original_name: string;
+  created_at: string;
+}
+
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1";
 
 export function ClassRoutine() {
   const [dept, setDept] = useState<Dept>("CST");
-  const [pdfs, setPdfs] = useState<RoutinePdfs>({ CST: null, Civil: null, EEE: null });
+  const [semester, setSemester] = useState("1st");
+  const [routines, setRoutines] = useState<Routine[]>([]);
+  const [loading, setLoading] = useState(true);
   const [preview, setPreview] = useState<{ url: string; title: string } | null>(null);
-  const fileRef = useRef<HTMLInputElement | null>(null);
 
-  const routine = routines[dept];
+  useEffect(() => {
+    loadRoutines();
+  }, []);
 
-  const handleUpload = (file: File) => {
-    if (file.type !== "application/pdf") { alert("Please upload a PDF."); return; }
-    const url = URL.createObjectURL(file);
-    setPdfs((prev) => ({ ...prev, [dept]: url }));
+  async function loadRoutines() {
+    setLoading(true);
+    try {
+      const response = await api.get("/class-routines");
+      setRoutines(response.data);
+    } catch {}
+    setLoading(false);
+  }
+
+  const currentDeptRoutines = routines.filter(
+    (r) => r.department === deptMap[dept]
+  );
+
+  const semesterRoutine = currentDeptRoutines.find(
+    (r) => r.semester === semester || r.semester === "all"
+  );
+
+  const getDownloadUrl = (routine: Routine) => {
+    return `${API_BASE}/class-routines/${routine.id}/download`;
   };
-
-  const handleRemove = () => {
-    if (pdfs[dept]) URL.revokeObjectURL(pdfs[dept]!);
-    setPdfs((prev) => ({ ...prev, [dept]: null }));
-  };
-
-  const currentPdf = pdfs[dept];
 
   return (
     <PageTransition>
@@ -80,14 +80,14 @@ export function ClassRoutine() {
         <SectionHeader
           eyebrow="Academics"
           title="Weekly Class Routine"
-          description="Department-wise weekly class schedule for the current semester."
+          description="Department-wise weekly class schedule. Sunday - Thursday, 9:00 AM - 1:40 PM. 4 periods x 40 minutes."
           align="center"
           className="mb-10"
         />
 
         <div className="mx-auto max-w-5xl">
-          {/* Tabs */}
-          <div className="mb-6 flex flex-wrap justify-center gap-2">
+          {/* Department Tabs */}
+          <div className="mb-4 flex flex-wrap justify-center gap-2">
             {(["CST", "Civil", "EEE"] as const).map((d) => (
               <button
                 key={d}
@@ -100,79 +100,68 @@ export function ClassRoutine() {
             ))}
           </div>
 
-          {/* PDF Upload strip */}
-          <div className="mb-4 flex flex-wrap items-center gap-3 rounded-sm border bg-muted/40 px-4 py-3">
-            <FileText className="h-5 w-5 text-primary shrink-0" />
-            <span className="text-sm font-semibold flex-1">
-              {currentPdf ? `Official routine PDF uploaded for ${deptLabel[dept]}` : `Upload official PDF routine for ${deptLabel[dept]}`}
-            </span>
-            {currentPdf ? (
-              <div className="flex gap-2">
-                <Button size="sm" onClick={() => setPreview({ url: currentPdf, title: `${deptLabel[dept]} — Class Routine` })}>
-                  <Eye className="mr-1 h-3 w-3" /> Preview PDF
-                </Button>
-                <a href={currentPdf} download={`routine-${dept}.pdf`}>
-                  <Button size="sm" variant="outline"><Download className="mr-1 h-3 w-3" /> Download</Button>
-                </a>
-                <Button size="sm" variant="ghost" className="text-destructive hover:text-destructive" onClick={handleRemove}>
-                  <X className="mr-1 h-3 w-3" /> Remove
-                </Button>
-              </div>
-            ) : (
-              <>
-                <input
-                  ref={fileRef}
-                  type="file"
-                  accept="application/pdf"
-                  className="hidden"
-                  onChange={(e) => { const f = e.target.files?.[0]; if (f) handleUpload(f); e.target.value = ""; }}
-                />
-                <Button size="sm" variant="outline" onClick={() => fileRef.current?.click()}>
-                  <Upload className="mr-1 h-3 w-3" /> Upload PDF
-                </Button>
-              </>
-            )}
+          {/* Semester Tabs */}
+          <div className="mb-6 flex flex-wrap justify-center gap-1">
+            {allSemesters.map((s) => (
+              <button
+                key={s}
+                type="button"
+                className={`rounded-sm px-3 py-1 text-xs font-medium transition ${semester === s ? "bg-primary/10 text-primary border border-primary/30" : "text-muted-foreground hover:text-foreground"}`}
+                onClick={() => setSemester(s)}
+              >
+                {s}
+              </button>
+            ))}
           </div>
 
-          {/* Routine Table */}
-          <div className="overflow-x-auto rounded-sm border bg-card shadow-sm">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-muted/60">
-                  <th className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> Time</span>
-                  </th>
-                  {days.map((d) => (
-                    <th key={d} className="px-3 py-3 text-center text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                      {d.slice(0, 3)}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {timeSlots.map((slot, i) => (
-                  <tr key={slot} className={i % 2 === 0 ? "" : "bg-muted/20"}>
-                    <td className="whitespace-nowrap border-t px-3 py-2.5 font-semibold text-muted-foreground text-xs">{slot}</td>
-                    {days.map((d) => {
-                      const cell = routine[d]?.[slot] ?? "";
-                      const isLab = cell.toLowerCase().includes("lab");
-                      return (
-                        <td
-                          key={d}
-                          className={`border-t px-3 py-2.5 text-center text-xs ${cell ? "font-semibold" : "text-muted-foreground/30"} ${isLab ? "text-primary" : "text-foreground"}`}
-                        >
-                          {cell ? (
-                            <span className={`rounded px-1.5 py-0.5 ${isLab ? "bg-primary/10" : ""}`}>{cell}</span>
-                          ) : "—"}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p className="mt-3 text-right text-xs text-muted-foreground">Lab periods highlighted in blue.</p>
+          {/* Routine Content */}
+          {loading ? (
+            <div className="flex items-center justify-center py-16 gap-2 text-muted-foreground">
+              <Loader2 className="h-5 w-5 animate-spin" />
+              Loading routines...
+            </div>
+          ) : semesterRoutine ? (
+            <div className="rounded-sm border bg-card shadow-sm p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h3 className="text-lg font-bold">{semesterRoutine.title}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {deptLabel[dept]} — {semester} Semester — {semesterRoutine.academic_year}
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <Button size="sm" onClick={() => setPreview({ url: getDownloadUrl(semesterRoutine), title: semesterRoutine.title })}>
+                    <Eye className="mr-1 h-3 w-3" /> View PDF
+                  </Button>
+                  <a href={getDownloadUrl(semesterRoutine)} download={semesterRoutine.original_name}>
+                    <Button size="sm" variant="outline">
+                      <Download className="mr-1 h-3 w-3" /> Download
+                    </Button>
+                  </a>
+                </div>
+              </div>
+
+              {/* Embedded PDF viewer */}
+              <div className="w-full rounded-sm border overflow-hidden" style={{ height: "700px" }}>
+                <iframe
+                  src={getDownloadUrl(semesterRoutine)}
+                  className="w-full h-full"
+                  title={semesterRoutine.title}
+                />
+              </div>
+            </div>
+          ) : (
+            <div className="rounded-sm border bg-card shadow-sm p-12 text-center">
+              <FileText className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-muted-foreground">No routine available</h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                {deptLabel[dept]} — {semester} semester routine has not been uploaded yet.
+              </p>
+              <p className="text-xs text-muted-foreground mt-4">
+                Contact the admin to upload the class routine PDF.
+              </p>
+            </div>
+          )}
         </div>
       </section>
     </PageTransition>

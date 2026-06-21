@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Trophy, GraduationCap, BookOpen, Printer, AlertCircle } from "lucide-react";
+import { Search, Trophy, GraduationCap, BookOpen, Printer, AlertCircle, Calculator, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SEO } from "@/components/common/SEO";
@@ -50,6 +50,7 @@ interface BtebResultPayload {
   status: "Passed" | "Referred";
   referred_subjects: string[] | null;
   raw_text: string | null;
+  exam_type: string | null;
   created_at: string;
 }
 
@@ -90,6 +91,11 @@ function semIndex(s: string | null | undefined): number {
   const idx = SEM_ORDER.findIndex((x) => (s ?? "").toLowerCase().startsWith(x.charAt(0)));
   return idx === -1 ? 99 : idx;
 }
+
+const REGULATION_WEIGHTS = {
+  "2022": [0.05, 0.05, 0.10, 0.10, 0.20, 0.20, 0.20, 0.10],
+  "2016": [0.05, 0.05, 0.05, 0.10, 0.10, 0.20, 0.20, 0.25],
+};
 
 // Infer most accurate department from all records for this student
 function computeDepartment(records: BtebResultPayload[]): string {
@@ -171,7 +177,7 @@ const mockResults: Record<string, StudentResult> = {
 
 // ── Component ─────────────────────────────────────────────────────────────────
 export function Results() {
-  const [searchMode, setSearchMode] = useState<"transcript" | "bteb">("transcript");
+  const [searchMode, setSearchMode] = useState<"transcript" | "bteb" | "cgpa">("transcript");
   const [query, setQuery] = useState("");
   const [result, setResult] = useState<StudentResult | null>(null);
   const [btebResults, setBtebResults] = useState<BtebResultPayload[]>([]);
@@ -179,6 +185,8 @@ export function Results() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [openSemesters, setOpenSemesters] = useState<Record<string, boolean>>({});
+  const [calculatorGpas, setCalculatorGpas] = useState<string[]>(Array(8).fill(""));
+  const [calculatorReg, setCalculatorReg] = useState<"2016" | "2022">("2022");
 
 
   const handleSearch = async () => {
@@ -215,6 +223,35 @@ export function Results() {
   const toggleSem = (sem: string) =>
     setOpenSemesters((prev) => ({ ...prev, [sem]: !prev[sem] }));
 
+  const handleAutoPopulateCalculator = (results: BtebResultPayload[], inferredReg: string) => {
+    const gpas = Array(8).fill("");
+    results.forEach(r => {
+      if (r.status === "Passed" && r.gpa) {
+        const idx = SEM_ORDER.indexOf(r.semester);
+        if (idx !== -1) {
+          gpas[idx] = parseFloat(r.gpa).toFixed(2);
+        }
+      }
+    });
+    setCalculatorGpas(gpas);
+    setCalculatorReg(inferredReg === "2016" ? "2016" : "2022");
+    setSearchMode("cgpa");
+  };
+
+  const getCalculatedCgpa = () => {
+    const weights = REGULATION_WEIGHTS[calculatorReg];
+    let weightedSum = 0;
+    let weightSum = 0;
+    for (let i = 0; i < 8; i++) {
+      const val = parseFloat(calculatorGpas[i]);
+      if (!isNaN(val) && val > 0 && val <= 4) {
+        weightedSum += val * weights[i];
+        weightSum += weights[i];
+      }
+    }
+    return weightSum > 0 ? (weightedSum / weightSum) : 0;
+  };
+
   return (
     <PageTransition>
       <SEO title="Results Portal" description="Check your semester examination BTEB results at CMPI." />
@@ -229,60 +266,77 @@ export function Results() {
         />
 
         {/* Toggle Mode Buttons */}
-        <div className="mx-auto max-w-xl flex gap-3 mb-8 border p-1.5 rounded-xl bg-muted/30">
+        <div className="mx-auto max-w-xl flex gap-2 mb-8 border p-1.5 rounded-xl bg-muted/30">
           <button
             type="button"
-            className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all ${
+            className={`flex-1 py-2.5 px-2 text-xs sm:text-sm font-bold rounded-lg transition-all whitespace-nowrap overflow-hidden text-ellipsis ${
               searchMode === "transcript"
                 ? "bg-primary text-white shadow-sm"
                 : "text-muted-foreground hover:bg-muted"
             }`}
             onClick={() => { setSearchMode("transcript"); setSearched(false); setError(null); setQuery(""); }}
           >
-            Student Transcript (Student ID)
+            Student Transcript (ID)
           </button>
           <button
             type="button"
-            className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all ${
+            className={`flex-1 py-2.5 px-2 text-xs sm:text-sm font-bold rounded-lg transition-all whitespace-nowrap overflow-hidden text-ellipsis ${
               searchMode === "bteb"
                 ? "bg-primary text-white shadow-sm"
                 : "text-muted-foreground hover:bg-muted"
             }`}
             onClick={() => { setSearchMode("bteb"); setSearched(false); setError(null); setQuery(""); }}
           >
-            BTEB Board Result (Roll No.)
+            <span className="hidden sm:inline">BTEB Board Result (Roll No.)</span>
+            <span className="sm:hidden">Board Result</span>
+          </button>
+          <button
+            type="button"
+            className={`flex-1 py-2.5 px-2 text-xs sm:text-sm font-bold rounded-lg transition-all whitespace-nowrap overflow-hidden text-ellipsis ${
+              searchMode === "cgpa"
+                ? "bg-primary text-white shadow-sm"
+                : "text-muted-foreground hover:bg-muted"
+            }`}
+            onClick={() => { setSearchMode("cgpa"); setSearched(false); setError(null); setQuery(""); }}
+          >
+            <span className="flex items-center justify-center gap-1.5">
+              <Calculator className="h-4 w-4" />
+              <span>CGPA Calculator</span>
+            </span>
           </button>
         </div>
 
         {/* Search Input Panel */}
-        <div className="mx-auto max-w-xl">
-          <div className="flex gap-2">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder={
-                  searchMode === "transcript"
-                    ? "Enter Student ID (e.g. CMPI-2023-0456)"
-                    : "Enter BTEB Roll Number (e.g. 232345)"
-                }
-                className="pl-10"
-                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-              />
+        {searchMode !== "cgpa" && (
+          <div className="mx-auto max-w-xl">
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder={
+                    searchMode === "transcript"
+                      ? "Enter Student ID (e.g. CMPI-2023-0456)"
+                      : "Enter BTEB Roll Number (e.g. 232345)"
+                  }
+                  className="pl-10"
+                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                />
+              </div>
+              <Button onClick={handleSearch} disabled={loading}>
+                {loading ? "Searching..." : "Search"}
+              </Button>
             </div>
-            <Button onClick={handleSearch} disabled={loading}>
-              {loading ? "Searching..." : "Search"}
-            </Button>
+            <p className="mt-2 text-xs text-muted-foreground">
+              {searchMode === "transcript" ? (
+                <>Try: <span className="font-mono">CMPI-2023-0456</span> or <span className="font-mono">CMPI-2023-0312</span></>
+              ) : (
+                <>Enter your 6-digit BTEB board roll number (e.g. 232345)</>
+              )}
+            </p>
           </div>
-          <p className="mt-2 text-xs text-muted-foreground">
-            {searchMode === "transcript" ? (
-              <>Try: <span className="font-mono">CMPI-2023-0456</span> or <span className="font-mono">CMPI-2023-0312</span></>
-            ) : (
-              <>Enter your 6-digit BTEB board roll number (e.g. 232345)</>
-            )}
-          </p>
-        </div>
+        )}
 
         {error && (
           <div className="mx-auto mt-6 max-w-3xl rounded-sm border border-destructive/30 bg-destructive/10 p-4 text-destructive text-sm flex items-center gap-2">
@@ -298,8 +352,44 @@ export function Results() {
               (() => {
                 // Sort results 1st → 8th
                 const sorted = [...btebResults].sort((a, b) => semIndex(a.semester) - semIndex(b.semester));
+
+                // Group by semester — keep regular and rescrutiny as separate records
+                const semMap = new Map<string, BtebResultPayload[]>();
+                for (const record of sorted) {
+                  const key = (record.semester ?? "").toLowerCase().trim();
+                  if (!semMap.has(key)) semMap.set(key, []);
+                  semMap.get(key)!.push(record);
+                }
+                // For each semester, pick the "display" record: prefer regular Passed, then rescrutiny
+                const deduped: BtebResultPayload[] = [];
+                for (const key of SEM_ORDER.map(s => s.toLowerCase())) {
+                  const records = semMap.get(key);
+                  if (!records || records.length === 0) continue;
+                  // Find regular first, then rescrutiny
+                  const regular = records.find(r => (r.exam_type ?? 'regular') === 'regular');
+                  const rescrutiny = records.find(r => (r.exam_type ?? 'regular') !== 'regular');
+                  if (regular) deduped.push(regular);
+                  else if (records[0]) deduped.push(records[0]);
+                  if (rescrutiny && rescrutiny !== regular) deduped.push(rescrutiny);
+                }
+                // Also include any semesters not in SEM_ORDER
+                for (const [key, records] of semMap) {
+                  if (!SEM_ORDER.some(s => s.toLowerCase() === key)) {
+                    deduped.push(...records);
+                  }
+                }
+
                 const department = computeDepartment(btebResults);
-                const regulation = sorted[0]?.regulation ?? "2022";
+                const regulation = deduped[0]?.regulation ?? "2022";
+
+                // Compute summary stats
+                const passedSemesters = deduped.filter(r => r.status === "Passed" && (r.exam_type ?? 'regular') === 'regular');
+                const referredSemesters = deduped.filter(r => r.status === "Referred");
+                const totalReferredSubjects = referredSemesters.reduce((sum, r) => sum + (r.referred_subjects?.length ?? 0), 0);
+                const avgGpa = passedSemesters.length > 0
+                  ? passedSemesters.reduce((sum, r) => sum + parseFloat(r.gpa || "0"), 0) / passedSemesters.length
+                  : 0;
+                const allPassed = referredSemesters.length === 0 && passedSemesters.length > 0;
 
                 return (
                   <>
@@ -327,9 +417,14 @@ export function Results() {
                           </p>
                         </div>
                       </div>
-                      <Button variant="outline" size="sm" onClick={() => window.print()}>
-                        <Printer className="mr-1 h-3 w-3" /> Print Results
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm" onClick={() => handleAutoPopulateCalculator(btebResults, regulation)}>
+                          <Calculator className="mr-1 h-3 w-3" /> Calculate CGPA
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={() => window.print()}>
+                          <Printer className="mr-1 h-3 w-3" /> Print Results
+                        </Button>
+                      </div>
                     </div>
 
                     {/* ── GPA Summary Grid ── */}
@@ -339,9 +434,14 @@ export function Results() {
                       </p>
                       <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
                         {SEM_ORDER.map((sem) => {
-                          const record = sorted.find(
-                            (r) => (r.semester ?? "").toLowerCase().startsWith(sem.charAt(0))
+                          // Find regular record first, then rescrutiny
+                          const regularRecord = deduped.find(
+                            (r) => (r.semester ?? "").toLowerCase().startsWith(sem.charAt(0)) && (r.exam_type ?? 'regular') === 'regular'
                           );
+                          const rescrutinyRecord = deduped.find(
+                            (r) => (r.semester ?? "").toLowerCase().startsWith(sem.charAt(0)) && (r.exam_type ?? 'regular') !== 'regular'
+                          );
+                          const record = regularRecord ?? rescrutinyRecord;
                           return (
                             <div
                               key={sem}
@@ -358,13 +458,27 @@ export function Results() {
                               </span>
                               {record ? (
                                 record.status === "Passed" ? (
-                                  <span className="text-base font-black text-green-700 dark:text-green-400">
-                                    {parseFloat(record.gpa || "0").toFixed(2)}
-                                  </span>
+                                  <div className="flex flex-col items-center gap-0.5">
+                                    <span className="text-base font-black text-green-700 dark:text-green-400">
+                                      {parseFloat(record.gpa || "0").toFixed(2)}
+                                    </span>
+                                    {rescrutinyRecord && (
+                                      <span className="text-[8px] font-black uppercase text-amber-600 dark:text-amber-400 leading-none">
+                                        Challenge
+                                      </span>
+                                    )}
+                                  </div>
                                 ) : (
-                                  <span className="text-xs font-black text-red-600 dark:text-red-400">
-                                    Ref
-                                  </span>
+                                  <div className="flex flex-col items-center gap-0.5">
+                                    <span className="text-xs font-black text-red-600 dark:text-red-400">
+                                      Ref
+                                    </span>
+                                    {(record.exam_type ?? 'regular') !== 'regular' && (
+                                      <span className="text-[8px] font-black uppercase text-amber-600 dark:text-amber-400 leading-none">
+                                        Challenge
+                                      </span>
+                                    )}
+                                  </div>
                                 )
                               ) : (
                                 <span className="text-base font-black text-muted-foreground/40">–</span>
@@ -375,10 +489,70 @@ export function Results() {
                       </div>
                     </div>
 
+                    {/* ── Summary Card ── */}
+                    {allPassed ? (
+                      <div className="rounded-xl border bg-card shadow-sm p-5 flex items-center gap-4 border-l-4 border-l-green-500 dark:border-l-green-600">
+                        <div className="p-3 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-xl">
+                          <Trophy className="h-8 w-8" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">Overall Performance</p>
+                          <div className="flex items-baseline gap-2 mt-0.5">
+                            <p className="text-3xl font-black text-green-600 dark:text-green-400">{avgGpa.toFixed(2)}</p>
+                            <p className="text-sm font-bold text-muted-foreground">Average GPA across {passedSemesters.length} semesters</p>
+                          </div>
+                          <p className="text-xs text-muted-foreground mt-0.5">
+                            Student has passed all {passedSemesters.length} semesters with no referred subjects.
+                          </p>
+                        </div>
+                      </div>
+                    ) : referredSemesters.length > 0 ? (
+                      <div className="rounded-xl border bg-card shadow-sm p-5 flex flex-wrap items-center gap-6 border-l-4 border-l-red-400 dark:border-l-red-600">
+                        <div className="flex items-center gap-4">
+                          <div className="p-3 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-xl">
+                            <AlertCircle className="h-8 w-8" />
+                          </div>
+                          <div>
+                            <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">Referred Summary</p>
+                            <div className="flex items-baseline gap-2 mt-0.5">
+                              <p className="text-3xl font-black text-red-600 dark:text-red-400">{referredSemesters.length}</p>
+                              <p className="text-sm font-bold text-muted-foreground">
+                                semester{referredSemesters.length > 1 ? 's' : ''} referred
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="h-10 w-px bg-border hidden sm:block" />
+                        <div>
+                          <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">Total Referred Subjects</p>
+                          <p className="text-3xl font-black text-primary mt-0.5">{totalReferredSubjects}</p>
+                          <p className="text-xs text-muted-foreground mt-0.5">
+                            across {referredSemesters.length} semester{referredSemesters.length > 1 ? 's' : ''}
+                          </p>
+                        </div>
+                        {passedSemesters.length > 0 && (
+                          <>
+                            <div className="h-10 w-px bg-border hidden sm:block" />
+                            <div>
+                              <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">Passed GPA</p>
+                              <p className="text-3xl font-black text-green-600 dark:text-green-400 mt-0.5">{avgGpa.toFixed(2)}</p>
+                              <p className="text-xs text-muted-foreground mt-0.5">
+                                avg across {passedSemesters.length} passed semester{passedSemesters.length > 1 ? 's' : ''}
+                              </p>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    ) : null}
+
                     {/* ── Semester Cards ── */}
                     <div className="space-y-4">
-                      {sorted.map((record) => (
-                        <div key={record.id} className="rounded-xl border bg-card p-6 shadow-sm">
+                      {deduped.map((record) => (
+                        <div key={record.id} className={`rounded-xl border bg-card p-6 shadow-sm ${
+                          (record.exam_type ?? 'regular') !== 'regular' 
+                            ? 'border-l-4 border-l-amber-400 dark:border-l-amber-600' 
+                            : ''
+                        }`}>
                           <div className="flex flex-wrap items-center justify-between gap-4 border-b pb-4 mb-4">
                             <div className="flex items-center gap-3">
                               <div className="p-2 bg-primary/10 text-primary rounded-lg">
@@ -386,9 +560,16 @@ export function Results() {
                               </div>
                               <div>
                                 <h3 className="font-extrabold text-lg">{record.semester} Semester Result</h3>
-                                <p className="text-xs text-muted-foreground">
-                                  Regulation: {record.regulation} · Holding Year: {record.holding_year}
-                                </p>
+                                <div className="flex items-center gap-2 mt-0.5">
+                                  <p className="text-xs text-muted-foreground">
+                                    Regulation: {record.regulation} · Holding Year: {record.holding_year}
+                                  </p>
+                                  {record.exam_type && record.exam_type !== 'regular' && (
+                                    <span className="inline-flex items-center rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 border border-amber-200 dark:border-amber-800 px-2 py-0.5 text-[10px] font-black uppercase">
+                                      {record.exam_type === 'rescrutiny' ? 'Board Challenge' : record.exam_type}
+                                    </span>
+                                  )}
+                                </div>
                               </div>
                             </div>
 
@@ -399,9 +580,11 @@ export function Results() {
                                   <p className="text-[10px] font-bold text-muted-foreground uppercase">SGPA</p>
                                 </div>
                               ) : (
-                                <span className="px-3 py-1 bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 rounded-full font-black text-xs">
-                                  Referred
-                                </span>
+                                <div className="flex flex-col items-end gap-1">
+                                  <span className="px-3 py-1 bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 rounded-full font-black text-xs">
+                                    Referred — {record.referred_subjects?.length ?? 0} subject{(record.referred_subjects?.length ?? 0) > 1 ? 's' : ''}
+                                  </span>
+                                </div>
                               )}
                             </div>
                           </div>
@@ -413,22 +596,29 @@ export function Results() {
                             </div>
                           ) : (
                             <div className="space-y-3">
-                              <p className="text-sm font-bold text-red-600 flex items-center gap-2">
-                                <AlertCircle className="h-4 w-4" />
-                                List of Referred Subjects ({record.referred_subjects?.length} courses):
-                              </p>
+                              <div className="flex items-center justify-between">
+                                <p className="text-sm font-bold text-red-600 flex items-center gap-2">
+                                  <AlertCircle className="h-4 w-4" />
+                                  Referred Subjects
+                                </p>
+                                <span className="text-xs font-black text-red-600 bg-red-50 dark:bg-red-900/20 px-2 py-0.5 rounded-full">
+                                  {record.referred_subjects?.length ?? 0} total
+                                </span>
+                              </div>
                               <div className="border rounded-lg overflow-hidden bg-muted/10">
                                 <table className="w-full text-xs text-left">
-                                  <thead className="bg-muted">
+                                  <thead className="bg-red-50 dark:bg-red-900/10">
                                     <tr>
-                                      <th className="px-4 py-2">Subject Code</th>
-                                      <th className="px-4 py-2">Subject Name</th>
-                                      <th className="px-4 py-2">Exam Type</th>
+                                      <th className="px-4 py-2 font-black">#</th>
+                                      <th className="px-4 py-2 font-black">Subject Code</th>
+                                      <th className="px-4 py-2 font-black">Subject Name</th>
+                                      <th className="px-4 py-2 font-black">Type</th>
                                     </tr>
                                   </thead>
                                   <tbody className="divide-y bg-card">
-                                    {record.referred_subjects?.map((subCode) => (
-                                      <tr key={subCode} className="hover:bg-muted/10">
+                                    {record.referred_subjects?.map((subCode, idx) => (
+                                      <tr key={subCode} className="hover:bg-red-50/50 dark:hover:bg-red-900/5">
+                                        <td className="px-4 py-2 text-muted-foreground font-bold">{idx + 1}</td>
                                         <td className="px-4 py-2 font-mono font-bold text-primary">{subCode.replace(/\([^)]+\)/g, "")}</td>
                                         <td className="px-4 py-2 font-semibold">{getSubjectName(subCode)}</td>
                                         <td className="px-4 py-2 text-muted-foreground font-medium">
@@ -571,6 +761,138 @@ export function Results() {
                 <p className="mt-1 text-sm text-muted-foreground">No records match Student ID "{query}". Please verify and try again.</p>
               </div>
             )}
+          </div>
+        )}
+
+        {/* ── CGPA Calculator Output ─── */}
+        {searchMode === "cgpa" && (
+          <div className="mx-auto mt-6 max-w-3xl space-y-6">
+            <div className="rounded-xl border bg-card shadow-md p-6 border-l-4 border-l-primary bg-gradient-to-r from-primary/5 via-transparent to-transparent">
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-primary/10 text-primary rounded-xl">
+                  <Calculator className="h-6 w-6" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-black">BTEB CGPA Calculator</h2>
+                  <p className="text-sm text-muted-foreground mt-0.5">
+                    Official weighted calculation for BTEB Diploma-in-Engineering (Probidhan 2022 & 2016).
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-[1.2fr_0.8fr]">
+              {/* Form Card */}
+              <div className="rounded-xl border bg-card shadow-sm p-6 space-y-4">
+                <div className="flex items-center justify-between border-b pb-3 mb-4">
+                  <p className="text-sm font-black uppercase tracking-wider text-muted-foreground">
+                    Enter Semester GPAs
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setCalculatorReg("2022")}
+                      className={`text-xs font-black px-3 py-1.5 rounded-full transition-all border ${
+                        calculatorReg === "2022"
+                          ? "bg-primary text-white border-primary shadow-sm"
+                          : "text-muted-foreground hover:bg-muted"
+                      }`}
+                    >
+                      Probidhan 2022
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setCalculatorReg("2016")}
+                      className={`text-xs font-black px-3 py-1.5 rounded-full transition-all border ${
+                        calculatorReg === "2016"
+                          ? "bg-primary text-white border-primary shadow-sm"
+                          : "text-muted-foreground hover:bg-muted"
+                      }`}
+                    >
+                      Probidhan 2016
+                    </button>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  {SEM_ORDER.map((sem, idx) => (
+                    <div key={sem} className="space-y-1">
+                      <label className="text-xs font-bold text-muted-foreground flex justify-between">
+                        <span>{sem} Semester</span>
+                        <span className="font-mono opacity-60">
+                          (Wt: {(REGULATION_WEIGHTS[calculatorReg][idx] * 100)}%)
+                        </span>
+                      </label>
+                      <Input
+                        type="number"
+                        min="2.00"
+                        max="4.00"
+                        step="0.01"
+                        placeholder="0.00"
+                        value={calculatorGpas[idx]}
+                        onChange={(e) => {
+                          const newGpas = [...calculatorGpas];
+                          newGpas[idx] = e.target.value;
+                          setCalculatorGpas(newGpas);
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+
+                <div className="pt-4 border-t flex justify-end">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-1 text-xs"
+                    onClick={() => setCalculatorGpas(Array(8).fill(""))}
+                  >
+                    <RefreshCw className="h-3.5 w-3.5" /> Clear All
+                  </Button>
+                </div>
+              </div>
+
+              {/* Calculations Summary Card */}
+              <div className="space-y-6">
+                <div className="rounded-xl border bg-card shadow-sm p-6 text-center space-y-4">
+                  <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">
+                    Calculated CGPA
+                  </p>
+                  <div className="inline-flex items-center justify-center h-32 w-32 rounded-full border-4 border-primary/20 bg-primary/5 text-primary">
+                    <span className="text-4xl font-black">
+                      {getCalculatedCgpa() > 0 ? getCalculatedCgpa().toFixed(2) : "0.00"}
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {calculatorGpas.filter(g => parseFloat(g) > 0).length > 0
+                      ? `Based on ${calculatorGpas.filter(g => parseFloat(g) > 0).length} entered semesters under BTEB Probidhan-${calculatorReg}.`
+                      : "Enter one or more semester GPAs to compute."}
+                  </p>
+                </div>
+
+                <div className="rounded-xl border bg-card shadow-sm p-6 space-y-4">
+                  <h3 className="text-sm font-black uppercase tracking-wider text-muted-foreground">
+                    Weightage Breakdown
+                  </h3>
+                  <div className="space-y-2 text-xs">
+                    {SEM_ORDER.map((sem, idx) => {
+                      const isEntered = parseFloat(calculatorGpas[idx]) > 0;
+                      return (
+                        <div
+                          key={sem}
+                          className={`flex justify-between items-center py-1 border-b last:border-0 ${
+                            isEntered ? "font-semibold text-foreground" : "text-muted-foreground opacity-60"
+                          }`}
+                        >
+                          <span>{sem} Semester</span>
+                          <span>{(REGULATION_WEIGHTS[calculatorReg][idx] * 100)}%</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 

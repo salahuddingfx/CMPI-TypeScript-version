@@ -253,9 +253,40 @@ export function Home() {
             <p className="mt-6 font-semibold">Principal, {institute.shortName}</p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            {data.stats.map((stat) => (
+            {(data.stats && data.stats.length > 0 ? data.stats : [
+              { label: "Academic Departments", value: "3" },
+              { label: "Experienced Faculty", value: "86+" },
+              { label: "Modern Laboratories", value: "24" },
+              { label: "Student Clubs", value: "12" },
+            ]).map((stat) => (
               <StatCard key={stat.label} value={stat.value} label={stat.label} />
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Institute Introduction Video ── */}
+      <section className="bg-primary py-16 sm:py-20 lg:py-24">
+        <div className="container">
+          <SectionHeader
+            eyebrow="Watch & Learn"
+            title="See CMPI in action"
+            description="Get a glimpse of our campus, laboratories, faculty, and student life through our official introduction video."
+            className="[&_*]:text-white [&_.eyebrow]:text-secondary mb-10"
+          />
+          <div className="mx-auto max-w-4xl">
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl ring-4 ring-white/10 aspect-video bg-black">
+              <iframe
+                className="absolute inset-0 w-full h-full"
+                src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0&modestbranding=1"
+                title="CMPI Institute Introduction Video"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+            <p className="mt-4 text-center text-sm text-white/60 font-semibold">
+              Cox's Bazar Model Polytechnic Institute — Official Introduction
+            </p>
           </div>
         </div>
       </section>

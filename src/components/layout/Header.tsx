@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, Search, X } from "lucide-react";
+import { Menu, Search, X, User, LogOut } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
@@ -10,22 +10,33 @@ import { institute } from "@/utils/constants";
 
 const navItems = [
   { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
-  { label: "Academics", href: "/academics", mega: [
-    { label: "Civil Technology", href: "/academics/civil-technology" },
-    { label: "Computer Science & Technology", href: "/academics/computer-science-technology" },
-    { label: "Electrical Technology", href: "/academics/electrical-technology" },
-    { label: "Syllabus & Curriculum", href: "/syllabus" },
-    { label: "Class Routine", href: "/class-routine" },
-    { label: "Exam Routine", href: "/exam-routine" },
-  ]},
+  {
+    label: "About", href: "/about", mega: [
+      { label: "About Us", href: "/about" },
+      { label: "Principal's Message", href: "/principal" },
+      { label: "Faculty", href: "/faculty" },
+    ]
+  },
+  {
+    label: "Academics", href: "/academics", mega: [
+      { label: "Civil Technology", href: "/academics/civil-technology" },
+      { label: "Computer Science & Technology", href: "/academics/computer-science-technology" },
+      { label: "Electrical Technology", href: "/academics/electrical-technology" },
+      { label: "Results", href: "/results" },
+      { label: "Syllabus & Curriculum", href: "/syllabus" },
+      { label: "Class Routine", href: "/class-routine" },
+      { label: "Exam Routine", href: "/exam-routine" },
+    ]
+  },
   { label: "Notice Board", href: "/notices" },
-  { label: "Student Life", href: "/clubs", mega: [
-    { label: "Student Clubs", href: "/clubs" },
-    { label: "Library", href: "/library" },
-    { label: "Gallery", href: "/gallery" },
-    { label: "Alumni", href: "/alumni" },
-  ]},
+  {
+    label: "Student Life", href: "/clubs", mega: [
+      { label: "Student Clubs", href: "/clubs" },
+      { label: "Library", href: "/library" },
+      { label: "Gallery", href: "/gallery" },
+      { label: "Alumni", href: "/alumni" },
+    ]
+  },
   { label: "Admission", href: "/admission" },
   { label: "Contact", href: "/contact" },
 ];
@@ -36,8 +47,7 @@ function NavLinkItem({ item }: { item: (typeof navItems)[number] }) {
       <NavLink
         to={item.href}
         className={({ isActive }) =>
-          `inline-flex items-center rounded-sm px-4 py-2 text-sm font-bold transition-colors ${
-            isActive ? "bg-primary text-white" : "text-foreground hover:bg-muted hover:text-primary"
+          `inline-flex items-center rounded-sm px-4 py-2 text-sm font-bold transition-colors ${isActive ? "bg-primary text-white" : "text-foreground hover:bg-muted hover:text-primary"
           }`
         }
       >
@@ -46,7 +56,7 @@ function NavLinkItem({ item }: { item: (typeof navItems)[number] }) {
       {item.mega && (
         <div className="absolute left-0 top-full z-40 hidden w-72 rounded-sm border bg-background p-3 shadow-xl group-hover:block">
           {item.mega.map((megaItem) => (
-              <Link key={megaItem.href} to={megaItem.href} className="block rounded-sm px-3 py-2 text-sm font-medium hover:bg-muted">
+            <Link key={megaItem.href} to={megaItem.href} className="block rounded-sm px-3 py-2 text-sm font-medium hover:bg-muted">
               {megaItem.label}
             </Link>
           ))}
@@ -60,6 +70,15 @@ export function Header() {
   const { data } = useInstituteContext();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+
+  const userStr = typeof window !== "undefined" ? localStorage.getItem("cmpi-user") : null;
+  const user = userStr ? JSON.parse(userStr) : null;
+
+  const handleLogout = () => {
+    localStorage.removeItem("cmpi-token");
+    localStorage.removeItem("cmpi-user");
+    window.location.href = "/login";
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b bg-background/85 backdrop-blur">
@@ -87,12 +106,37 @@ export function Header() {
               <Search className="h-5 w-5" />
             </Button>
             <ThemeToggle />
-            <Button asChild variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-white">
-              <Link to="/login">Sign In</Link>
-            </Button>
-            <Button asChild size="sm">
-              <Link to="/register">Sign Up</Link>
-            </Button>
+            {user ? (
+              <div className="flex items-center gap-3">
+                <Link
+                  to="/dashboard"
+                  className="flex items-center justify-center rounded-full border border-border p-0.5 hover:ring-2 hover:ring-primary/20 transition-all"
+                  title="Go to Dashboard"
+                >
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-sm">
+                    {user.name ? user.name.charAt(0).toUpperCase() : <User className="h-4 w-4" />}
+                  </div>
+                </Link>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleLogout}
+                  className="gap-1.5 border-destructive/20 text-destructive hover:bg-destructive hover:text-white"
+                >
+                  <LogOut className="h-3.5 w-3.5" />
+                  Logout
+                </Button>
+              </div>
+            ) : (
+              <>
+                <Button asChild variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-white">
+                  <Link to="/login">Sign In</Link>
+                </Button>
+                <Button asChild size="sm">
+                  <Link to="/register">Sign Up</Link>
+                </Button>
+              </>
+            )}
           </div>
 
           <Button type="button" variant="outline" size="icon" className="lg:hidden" aria-label="Toggle menu" aria-expanded={mobileOpen} onClick={() => setMobileOpen((open) => !open)}>
@@ -127,14 +171,43 @@ export function Header() {
                   )}
                 </div>
               ))}
-              <div className="mt-4 flex flex-col gap-2 border-t pt-4">
-                <Button asChild variant="outline" className="w-full">
-                  <Link to="/login" onClick={() => setMobileOpen(false)}>Sign In</Link>
-                </Button>
-                <Button asChild className="w-full">
-                  <Link to="/register" onClick={() => setMobileOpen(false)}>Sign Up</Link>
-                </Button>
-              </div>
+              {user ? (
+                <div className="mt-4 flex flex-col gap-3 border-t pt-4">
+                  <Link
+                    to="/dashboard"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center gap-3 rounded-lg border border-border p-2 hover:bg-muted transition-all"
+                  >
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-base">
+                      {user.name ? user.name.charAt(0).toUpperCase() : <User className="h-5 w-5" />}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-bold text-foreground truncate">{user.name}</p>
+                      <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                    </div>
+                  </Link>
+                  <Button
+                    variant="outline"
+                    className="w-full border-destructive/20 text-destructive hover:bg-destructive hover:text-white"
+                    onClick={() => {
+                      setMobileOpen(false);
+                      handleLogout();
+                    }}
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Logout
+                  </Button>
+                </div>
+              ) : (
+                <div className="mt-4 flex flex-col gap-2 border-t pt-4">
+                  <Button asChild variant="outline" className="w-full">
+                    <Link to="/login" onClick={() => setMobileOpen(false)}>Sign In</Link>
+                  </Button>
+                  <Button asChild className="w-full">
+                    <Link to="/register" onClick={() => setMobileOpen(false)}>Sign Up</Link>
+                  </Button>
+                </div>
+              )}
             </div>
           </motion.nav>
         )}

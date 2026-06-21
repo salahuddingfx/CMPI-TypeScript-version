@@ -98,12 +98,12 @@ export function DepartmentPage() {
                     : "bg-card text-muted-foreground border-border hover:bg-muted"
                 }`}
               >
-                {sem} Semester ({groupedSubjects[sem].length})
+                {sem} Semester ({groupedSubjects[sem]?.length ?? 0})
               </button>
             ))}
           </div>
 
-          {groupedSubjects[openSem]?.length > 0 && (
+          {groupedSubjects[openSem] && groupedSubjects[openSem].length > 0 && (
             <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
               <table className="w-full text-sm">
                 <thead>
@@ -118,7 +118,7 @@ export function DepartmentPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {groupedSubjects[openSem].map((sub, i) => (
+                  {groupedSubjects[openSem]!.map((sub, i) => (
                     <tr key={sub.id} className={i % 2 === 0 ? "" : "bg-muted/20"}>
                       <td className="px-4 py-3 text-muted-foreground font-bold">{i + 1}</td>
                       <td className="px-4 py-3 font-mono font-bold text-primary">{sub.subject_code}</td>

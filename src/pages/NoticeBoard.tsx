@@ -5,7 +5,7 @@ import { SEO } from "@/components/common/SEO";
 import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { NoticeCard } from "@/components/features/NoticeCard";
-import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
+import { NoticeBoardSkeleton } from "@/components/common/LoadingSkeleton";
 import { useInstituteContext } from "@/contexts/InstituteDataContext";
 import type { Notice } from "@/services/types";
 
@@ -26,7 +26,7 @@ export function NoticeBoard() {
     });
   }, [data, category, query]);
 
-  if (loading) return <LoadingSkeleton />;
+  if (loading) return <NoticeBoardSkeleton />;
   if (error || !data) return <PageTransition className="container section-pad"><div className="rounded-sm border border-destructive/30 bg-destructive/10 p-6 text-destructive">Unable to load notices.</div></PageTransition>;
 
   return (

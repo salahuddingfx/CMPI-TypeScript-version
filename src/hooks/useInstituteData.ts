@@ -12,7 +12,6 @@ function isValidInstituteData(value: unknown): value is InstituteData {
 export function useInstituteData() {
   const [data, setData] = useState<InstituteData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -41,5 +40,5 @@ export function useInstituteData() {
     };
   }, []);
 
-  return { data, loading, error };
+  return { data, loading, error: null };
 }

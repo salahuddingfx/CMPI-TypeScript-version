@@ -195,7 +195,7 @@ export function Syllabus() {
                       </h3>
                     </div>
                     <span className="rounded-full bg-white/20 px-3.5 py-1 text-xs font-black text-white backdrop-blur-sm">
-                      {hasDbData ? `${semSubjects.length} Courses` : `${mockSemData.courses.length} Courses (Mock)`}
+                      {hasDbData ? `${semSubjects.length} Courses` : `${mockSemData?.courses?.length ?? 0} Courses (Mock)`}
                     </span>
                   </div>
 
@@ -247,8 +247,8 @@ export function Syllabus() {
                             <span>Database record empty for this semester. Displaying standard fallback curriculum.</span>
                           </div>
                           <ul className="divide-y divide-border/40 space-y-0">
-                            {mockSemData.courses.map((c, ci) => (
-                              <li key={c} className="flex items-center gap-3 py-2.5 text-sm font-semibold text-foreground/80">
+                            {mockSemData?.courses?.map((c, ci) => (
+                              <li key={c} className="flex items-center gap-3 py-2.5 text-sm font-semibold text-foreground/80 font-medium">
                                 <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-black text-primary">
                                   {ci + 1}
                                 </span>

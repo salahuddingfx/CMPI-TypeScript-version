@@ -16,6 +16,34 @@ export interface BtebSubjectInfo {
 export const BTEB_SUBJECTS: Record<string, BtebSubjectInfo> = {
 
   // ═══════════════════════════════════════════════════════════════════════════
+  // SHARED / CROSS-DEPARTMENT SUBJECTS — used by multiple departments
+  // These should NOT be used for department detection
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  // 2022 Regulation — Shared
+  "26711": { name: "Basic Electricity", dept: "Shared" },
+  "26811": { name: "Basic Electronics", dept: "Shared" },
+  "27011": { name: "Workshop Technology", dept: "Shared" },
+  "27012": { name: "Basic Workshop Practice", dept: "Shared" },
+  "27041": { name: "Engineering Mechanics", dept: "Shared" },
+  "27051": { name: "Fluid Mechanics", dept: "Shared" },
+  "27061": { name: "Strength of Materials", dept: "Shared" },
+  "26721": { name: "Electrical Circuits-I", dept: "Shared" },
+  "26833": { name: "Industrial Electronics", dept: "Shared" },
+  "26842": { name: "Communication Engineering", dept: "Shared" },
+  "26845": { name: "Digital Electronics", dept: "Shared" },
+  "26853": { name: "Microprocessor & Microcontroller", dept: "Shared" },
+
+  // 2016 Regulation — Shared
+  "67011": { name: "Workshop Technology", dept: "Shared" },
+  "67012": { name: "Basic Workshop Practice", dept: "Shared" },
+  "67041": { name: "Engineering Mechanics", dept: "Shared" },
+  "67051": { name: "Fluid Mechanics", dept: "Shared" },
+  "67061": { name: "Strength of Materials", dept: "Shared" },
+  "66721": { name: "Electrical Circuits-I", dept: "Shared" },
+  "66845": { name: "Digital Electronics", dept: "Shared" },
+
+  // ═══════════════════════════════════════════════════════════════════════════
   // GENERAL / SCIENCE SUBJECTS — shared by all departments
   // ═══════════════════════════════════════════════════════════════════════════
 
@@ -451,14 +479,17 @@ export function getSubjectDepartment(code: string): string {
 
 /**
  * Infer a student's department from their list of referred subject codes.
- * Uses majority-vote across all recognizable (non-General) subject codes.
+ * Uses majority-vote across all recognizable (non-General, non-Shared) subject codes.
+ * Shared codes (like Basic Electricity, Workshop Technology) appear in ALL departments
+ * and should NOT be used for department detection.
  */
 export function detectDepartmentFromSubjects(subjectCodes: string[]): string {
   const counts: Record<string, number> = {};
 
   subjectCodes.forEach((code) => {
     const dept = getSubjectDepartment(code);
-    if (dept !== "General") {
+    // Skip General AND Shared codes — they don't help identify the department
+    if (dept !== "General" && dept !== "Shared") {
       counts[dept] = (counts[dept] ?? 0) + 1;
     }
   });

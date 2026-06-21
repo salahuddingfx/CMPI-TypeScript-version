@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { SEO } from "@/components/common/SEO";
 import { PageTransition } from "@/components/common/PageTransition";
@@ -7,6 +7,7 @@ import { FacultyCard } from "@/components/features/FacultyCard";
 import { CheckList } from "@/components/features/StatCard";
 import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
 import { useInstituteContext } from "@/contexts/InstituteDataContext";
+import { api } from "@/services/api";
 
 interface Subject {
   id: number;
@@ -28,6 +29,17 @@ export function DepartmentPage() {
   const { slug } = useParams();
   const { data, loading, error } = useInstituteContext();
   const [openSem, setOpenSem] = useState<string>("1st");
+  const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [subjectsLoading, setSubjectsLoading] = useState(true);
+
+  useEffect(() => {
+    if (!slug) return;
+    setSubjectsLoading(true);
+    api.get(`/departments/${slug}`)
+      .then((res) => setSubjects(res.data?.subjects ?? []))
+      .catch(() => setSubjects([]))
+      .finally(() => setSubjectsLoading(false));
+  }, [slug]);
 
   if (loading) return <LoadingSkeleton />;
   if (error || !data) return <PageTransition className="container section-pad"><div className="rounded-sm border border-destructive/30 bg-destructive/10 p-6 text-destructive">Unable to load department details.</div></PageTransition>;
@@ -47,7 +59,6 @@ export function DepartmentPage() {
   const facultyIds = department.facultyIds ?? [];
   const facultyMembers = data.faculty.filter((member) => facultyIds.includes(member.id));
 
-  const subjects: Subject[] = (department as any).subjects ?? [];
   const groupedSubjects: Record<string, Subject[]> = {};
   for (const sem of SEM_ORDER) {
     groupedSubjects[sem] = subjects.filter((s) => s.semester === sem);
@@ -83,7 +94,12 @@ export function DepartmentPage() {
       </section>
 
       {/* ── Subjects / Syllabus Section ── */}
-      {availableSemesters.length > 0 && (
+      {subjectsLoading ? (
+        <section className="container section-pad">
+          <SectionHeader eyebrow="Curriculum" title="Subjects by Semester" align="left" className="mb-6" />
+          <div className="rounded-xl border bg-card p-8 text-center text-muted-foreground">Loading subjects...</div>
+        </section>
+      ) : availableSemesters.length > 0 ? (
         <section className="container section-pad">
           <SectionHeader eyebrow="Curriculum" title="Subjects by Semester" align="left" className="mb-6" />
           <div className="flex flex-wrap gap-2 mb-6">
@@ -134,7 +150,7 @@ export function DepartmentPage() {
             </div>
           )}
         </section>
-      )}
+      ) : null}
 
       <section className="container section-pad">
         <SectionHeader eyebrow="Faculty Members" title="Department faculty" align="left" />

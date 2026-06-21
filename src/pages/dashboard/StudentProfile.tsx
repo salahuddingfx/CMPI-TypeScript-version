@@ -3,6 +3,7 @@ import { SectionHeader } from "@/components/common/SectionHeader";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { getStudentProfile, updateStudentProfile } from "@/services/api";
+import { ProfileSkeleton } from "@/components/common/LoadingSkeleton";
 import { Loader2 } from "lucide-react";
 
 function getStoredUser() {
@@ -119,12 +120,7 @@ export function StudentProfile() {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20 gap-2 text-muted-foreground">
-        <Loader2 className="h-5 w-5 animate-spin" />
-        Loading profile...
-      </div>
-    );
+    return <ProfileSkeleton />;
   }
 
   return (

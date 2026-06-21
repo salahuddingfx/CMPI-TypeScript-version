@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { getStudentCourses } from "@/services/api";
-import { Loader2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function StudentCourses() {
   const [courses, setCourses] = useState<any[]>([]);
@@ -16,9 +16,18 @@ export function StudentCourses() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20 gap-2 text-muted-foreground">
-        <Loader2 className="h-5 w-5 animate-spin" />
-        Loading courses...
+      <div className="space-y-6">
+        <SectionHeader eyebrow="Courses" title="Enrolled courses" description="Loading courses..." align="left" />
+        <div className="grid gap-4 sm:grid-cols-2">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="rounded-sm border bg-card p-5 space-y-3">
+              <Skeleton className="h-5 w-3/4" />
+              <Skeleton className="h-4 w-1/2" />
+              <Skeleton className="h-3 w-full" />
+              <Skeleton className="h-2 w-full rounded-full" />
+            </div>
+          ))}
+        </div>
       </div>
     );
   }

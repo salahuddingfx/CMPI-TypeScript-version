@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { getStudentResults } from "@/services/api";
-import { Loader2 } from "lucide-react";
+import { TableSkeleton } from "@/components/common/LoadingSkeleton";
 
 export function StudentResults() {
   const [results, setResults] = useState<any[]>([]);
@@ -17,9 +17,9 @@ export function StudentResults() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20 gap-2 text-muted-foreground">
-        <Loader2 className="h-5 w-5 animate-spin" />
-        Loading results...
+      <div className="space-y-6">
+        <SectionHeader eyebrow="Results" title="Semester results and grades" description="Loading results..." align="left" />
+        <TableSkeleton rows={4} />
       </div>
     );
   }

@@ -94,7 +94,6 @@ export function Home() {
   const { data, loading, error } = useInstituteContext();
   const [heroSlides, setHeroSlides] = useState<HeroSlideData[]>(fallbackSlides);
   const [current, setCurrent] = useState(0);
-  const [heroLoaded, setHeroLoaded] = useState(false);
   const slide = heroSlides[current]!;
   const typedTitle = useTypewriter(slide.title);
 
@@ -105,8 +104,7 @@ export function Home() {
           setHeroSlides(res.data);
         }
       })
-      .catch(() => {})
-      .finally(() => setHeroLoaded(true));
+      .catch(() => {});
   }, []);
 
   const nextSlide = useCallback(() => {

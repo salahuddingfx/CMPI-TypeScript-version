@@ -37,7 +37,7 @@ export function StudentLayout() {
 
   return (
     <PageTransition>
-      <section className="min-h-[72vh] bg-muted/60">
+      <section className="min-h-screen bg-muted/60">
         <div className="container py-10">
           <div className="flex flex-col gap-6 lg:flex-row">
             <aside className="w-full lg:w-64">

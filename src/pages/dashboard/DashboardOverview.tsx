@@ -103,7 +103,7 @@ export default function DashboardOverview() {
               <span>Session: <strong className="text-foreground">{user?.session || "—"}</strong></span>
             </div>
           </div>
-          <Link to="/student-corner/profile" className="text-sm text-primary hover:underline">Edit Profile</Link>
+          <Link to="/dashboard/profile" className="text-sm text-primary hover:underline">Edit Profile</Link>
         </div>
       </div>
 
@@ -183,7 +183,7 @@ export default function DashboardOverview() {
         <div className="rounded-sm border bg-card p-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-bold">Enrolled Courses</h3>
-            <Link to="/student-corner/courses" className="text-xs text-primary hover:underline">View All</Link>
+            <Link to="/dashboard/courses" className="text-xs text-primary hover:underline">View All</Link>
           </div>
           {courses.length === 0 ? (
             <p className="text-sm text-muted-foreground">No courses enrolled yet.</p>
@@ -211,7 +211,7 @@ export default function DashboardOverview() {
         <div className="rounded-sm border bg-card p-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-bold">Recent Results</h3>
-            <Link to="/student-corner/results" className="text-xs text-primary hover:underline">View All</Link>
+            <Link to="/dashboard/results" className="text-xs text-primary hover:underline">View All</Link>
           </div>
           {courseResults.length === 0 ? (
             <p className="text-sm text-muted-foreground">No results published yet.</p>
@@ -235,7 +235,7 @@ export default function DashboardOverview() {
         <div className="rounded-sm border bg-card p-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-bold">Bills & Payments</h3>
-            <Link to="/student-corner/bills" className="text-xs text-primary hover:underline">View All</Link>
+            <Link to="/dashboard/bills" className="text-xs text-primary hover:underline">View All</Link>
           </div>
           {bills.length === 0 ? (
             <p className="text-sm text-muted-foreground">No bills found.</p>

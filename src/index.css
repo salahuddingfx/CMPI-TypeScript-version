@@ -73,6 +73,13 @@
       linear-gradient(180deg, hsl(var(--background)), hsl(210 40% 96%));
   }
 
+  .dark body {
+    background:
+      radial-gradient(circle at 12% 8%, hsl(var(--secondary) / 0.08), transparent 28rem),
+      radial-gradient(circle at 88% 18%, hsl(var(--primary) / 0.06), transparent 32rem),
+      linear-gradient(180deg, hsl(var(--background)), hsl(222 47% 4%));
+  }
+
   h1,
   h2,
   h3,

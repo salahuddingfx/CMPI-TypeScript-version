@@ -182,6 +182,12 @@ export async function fetchSocialLinks() {
 
 // ── Subject & Department API ─────────────────────────────────────────────────
 
+/** Get all subjects from backend, optionally filtered by department and/or semester */
+export async function getSubjects(params?: { department?: string; semester?: string }) {
+  const response = await api.get("/subjects", { params });
+  return response.data;
+}
+
 /** Lookup subjects by codes (batch). Returns { code: { name, department, ... } } */
 export async function lookupSubjects(codes: string[]) {
   const response = await api.get("/subjects/lookup", {

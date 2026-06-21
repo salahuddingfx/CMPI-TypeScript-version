@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, CalendarDays, ChevronLeft, ChevronRight, BookOpen, Monitor, Hammer, Zap, Award, Play, Compass, Users, GraduationCap, Cpu, Flame } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { SEO } from "@/components/common/SEO";
@@ -25,6 +25,7 @@ interface HeroSlideData {
   title: string;
   description: string;
   image: string | null;
+  video_url?: string | null;
   cta_label: string | null;
   cta_href: string | null;
   secondary_label: string | null;
@@ -96,6 +97,7 @@ export function Home() {
   const [current, setCurrent] = useState(0);
   const slide = heroSlides[current]!;
   const typedTitle = useTypewriter(slide.title);
+  const [isPlayingVideo, setIsPlayingVideo] = useState(false);
 
   useEffect(() => {
     api.get("/hero-slides")
@@ -304,13 +306,30 @@ export function Home() {
           description="CMPI provides diploma-level technical education through structured curricula, modern laboratories, and student-centered support."
         />
         <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="rounded-sm bg-primary p-8 text-white shadow-xl">
-            <h2 className="text-3xl font-bold">Principal Message</h2>
-            <p className="mt-5 leading-8 text-white/80">
-              We are committed to nurturing disciplined, skilled, and innovative diploma engineers who can contribute meaningfully to national development. Our campus culture
-              encourages practical learning, ethical conduct, and lifelong growth.
-            </p>
-            <p className="mt-6 font-semibold">Principal, {institute.shortName}</p>
+          <div className="gradient-panel p-8 text-white shadow-xl flex flex-col justify-between">
+            <div>
+              <div className="flex items-center gap-4">
+                <div className="h-16 w-16 overflow-hidden rounded-full border-2 border-secondary bg-white/10 shrink-0">
+                  <img src="/principal.png" alt="Principal" className="h-full w-full object-cover" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-black tracking-tight text-white">Principal Message</h2>
+                  <p className="text-xs font-semibold text-secondary uppercase tracking-wider">Leadership & Vision</p>
+                </div>
+              </div>
+              <p className="mt-6 leading-relaxed text-white/90 text-sm font-medium italic relative pl-4 border-l-2 border-secondary/60">
+                "We are committed to nurturing disciplined, skilled, and innovative diploma engineers who can contribute meaningfully to national development. Our campus culture encourages practical learning, ethical conduct, and lifelong growth."
+              </p>
+            </div>
+            <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
+              <div>
+                <p className="text-sm font-black text-white">Md. Rafiqul Islam</p>
+                <p className="text-xs text-white/60 font-semibold">Principal, {institute.shortName}</p>
+              </div>
+              <span className="text-[10px] bg-secondary/20 text-secondary border border-secondary/30 rounded-full px-2.5 py-0.5 font-bold uppercase tracking-wider">
+                Vision 2026
+              </span>
+            </div>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             {(data.stats && data.stats.length > 0 ? data.stats : [
@@ -326,33 +345,125 @@ export function Home() {
       </section>
 
       {/* ── Institute Introduction Video ── */}
-      <section className="bg-primary py-16 sm:py-20 lg:py-24">
-        <div className="container">
-          <SectionHeader
-            eyebrow="Watch & Learn"
-            title="See CMPI in action"
-            description="Get a glimpse of our campus, laboratories, faculty, and student life through our official introduction video."
-            className="mb-10"
-            eyebrowClassName="text-secondary"
-            titleClassName="text-white"
-            descriptionClassName="text-white/80"
-          />
-          <div className="mx-auto max-w-4xl">
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl ring-4 ring-white/10 aspect-video bg-black">
-              <iframe
-                className="absolute inset-0 w-full h-full"
-                src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0&modestbranding=1"
-                title="CMPI Institute Introduction Video"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+      {(() => {
+        const videoSlide = heroSlides.find((s) => s.video_url) || null;
+        if (!videoSlide) return null;
+
+        return (
+          <section className="bg-primary py-16 sm:py-20 lg:py-24 text-white relative overflow-hidden">
+            {/* Ambient gold glow accent */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--secondary)/0.15),transparent_40rem)]" />
+            <div className="container relative z-10">
+              <div className="grid gap-12 lg:grid-cols-12 items-center">
+                
+                {/* Column 1: Video Player */}
+                <div className="lg:col-span-6 xl:col-span-5">
+                  <div className="relative rounded-2xl overflow-hidden shadow-2xl ring-4 ring-white/10 aspect-video bg-black">
+                    {isPlayingVideo ? (
+                      <iframe
+                        className="absolute inset-0 w-full h-full"
+                        src={videoSlide.video_url?.includes("?") ? `${videoSlide.video_url}&autoplay=1` : `${videoSlide.video_url}?autoplay=1`}
+                        title={videoSlide.title}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                    ) : (
+                      <div
+                        onClick={() => setIsPlayingVideo(true)}
+                        className="group relative cursor-pointer h-full w-full overflow-hidden"
+                      >
+                        <img
+                          src="/video-cover.png"
+                          alt="CMPI Campus Introduction"
+                          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10 flex flex-col justify-between p-6">
+                          {/* Top tag */}
+                          <div className="flex items-center justify-between">
+                            <span className="bg-secondary text-secondary-foreground text-[10px] font-black uppercase px-3 py-1 rounded-full tracking-wider shadow-md">
+                              Featured Video
+                            </span>
+                            <span className="text-white/70 text-xs font-semibold">
+                              Duration: 3:45
+                            </span>
+                          </div>
+
+                          {/* Center play button */}
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="relative flex items-center justify-center">
+                              <div className="absolute h-16 w-16 rounded-full bg-secondary/30 animate-pulse" />
+                              <div className="absolute h-20 w-20 rounded-full bg-secondary/10 animate-ping duration-1000" />
+                              <button className="relative z-10 flex h-14 w-14 items-center justify-center rounded-full bg-secondary text-secondary-foreground shadow-2xl transition-all duration-300 group-hover:scale-110 group-hover:bg-white group-hover:text-primary">
+                                <Play className="h-6 w-6 fill-current ml-1" />
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Bottom caption */}
+                          <p className="text-left text-xs text-white/80 font-bold">
+                            Click to play introduction video
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Column 2: Text details and stats */}
+                <div className="lg:col-span-6 xl:col-span-7 text-left space-y-6">
+                  <div>
+                    <span className="text-xs font-black uppercase tracking-widest text-secondary block mb-2">
+                      {videoSlide.eyebrow}
+                    </span>
+                    <h2 className="text-3xl sm:text-4xl font-black text-white leading-tight tracking-tight">
+                      {videoSlide.title}
+                    </h2>
+                    <p className="mt-4 text-white/80 leading-relaxed text-sm font-medium">
+                      {videoSlide.description}
+                    </p>
+                  </div>
+
+                  {/* Video Stats */}
+                  {videoSlide.stats && videoSlide.stats.length > 0 && (
+                    <div className="grid gap-4 sm:grid-cols-2 pt-2">
+                      {videoSlide.stats.map((stat) => (
+                        <div
+                          key={stat.label}
+                          className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-5 shadow-sm transition-all duration-300 hover:bg-white/10 hover:border-white/20 flex items-center gap-4"
+                        >
+                          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-secondary/20 text-secondary transition-all duration-300 group-hover:bg-secondary group-hover:text-secondary-foreground">
+                            {(() => {
+                              const getStatIcon = (label: string) => {
+                                const l = label.toLowerCase();
+                                if (l.includes("department") || l.includes("academic") || l.includes("technology")) return GraduationCap;
+                                if (l.includes("faculty") || l.includes("teacher")) return Users;
+                                if (l.includes("laborator") || l.includes("lab") || l.includes("seat") || l.includes("capacity")) return Cpu;
+                                if (l.includes("club") || l.includes("student")) return Flame;
+                                return BookOpen;
+                              };
+                              const StatIcon = getStatIcon(stat.label);
+                              return <StatIcon className="h-6 w-6" />;
+                            })()}
+                          </div>
+                          <div>
+                            <p className="text-2xl font-black text-secondary group-hover:text-white transition-all duration-300">
+                              {stat.value}
+                            </p>
+                            <p className="text-xs font-semibold text-white/70 tracking-tight">
+                              {stat.label}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                
+              </div>
             </div>
-            <p className="mt-4 text-center text-sm text-white/60 font-semibold">
-              Cox's Bazar Model Polytechnic Institute — Official Introduction
-            </p>
-          </div>
-        </div>
-      </section>
+          </section>
+        );
+      })()}
 
       <section className="bg-muted/60 py-16 sm:py-20 lg:py-24">
         <div className="container">
@@ -403,9 +514,24 @@ export function Home() {
         <div className="container">
           <SectionHeader eyebrow="Campus Facilities" title="Modern learning spaces for practical education" />
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {data.facilities.map((facility) => (
-              <FacilityCard key={facility.title} icon={CalendarDays} title={facility.title} description={facility.description} />
-            ))}
+            {data.facilities.map((facility) => {
+              const getFacilityIcon = (title: string) => {
+                const t = title.toLowerCase();
+                if (t.includes("library")) return BookOpen;
+                if (t.includes("computer") || t.includes("lab")) return Monitor;
+                if (t.includes("civil") || t.includes("workshop")) return Hammer;
+                if (t.includes("electrical") || t.includes("electronics")) return Zap;
+                return CalendarDays;
+              };
+              return (
+                <FacilityCard
+                  key={facility.title}
+                  icon={getFacilityIcon(facility.title)}
+                  title={facility.title}
+                  description={facility.description}
+                />
+              );
+            })}
           </div>
         </div>
       </section>
@@ -423,12 +549,33 @@ export function Home() {
         <div className="container">
           <SectionHeader eyebrow="Student Achievements" title="Recognizing talent, leadership, and innovation" />
           <div className="grid gap-6 lg:grid-cols-3">
-            {data.achievements.map((achievement) => (
-              <div key={achievement.title} className="rounded-sm border bg-card p-6 shadow-sm">
-                <h3 className="text-xl font-bold">{achievement.title}</h3>
-                <p className="mt-3 leading-7 text-muted-foreground">{achievement.description}</p>
-              </div>
-            ))}
+            {data.achievements.map((achievement) => {
+              const getAchievementIcon = (title: string) => {
+                const t = title.toLowerCase();
+                if (t.includes("skill") || t.includes("competition")) return Award;
+                if (t.includes("industry") || t.includes("linkage")) return Users;
+                return Compass;
+              };
+              const AchievementIcon = getAchievementIcon(achievement.title);
+              return (
+                <div
+                  key={achievement.title}
+                  className="group relative overflow-hidden rounded-2xl border border-border/80 bg-card/60 p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-primary/20 backdrop-blur-md flex gap-4 h-full"
+                >
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary/15 text-secondary-dark transition-all duration-300 group-hover:bg-secondary group-hover:text-secondary-foreground">
+                    <AchievementIcon className="h-5 w-5" />
+                  </div>
+                  <div className="text-left">
+                    <h3 className="text-lg font-bold tracking-tight text-foreground group-hover:text-primary transition-colors duration-300">
+                      {achievement.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground font-medium">
+                      {achievement.description}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>

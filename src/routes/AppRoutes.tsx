@@ -50,6 +50,7 @@ const ClubDetails = lazy(() => import("@/pages/ClubDetails").then((m) => ({ defa
 const Alumni = lazy(() => import("@/pages/Alumni").then((m) => ({ default: m.Alumni })));
 const Placement = lazy(() => import("@/pages/Placement").then((m) => ({ default: m.Placement })));
 const Developer = lazy(() => import("@/pages/Developer").then((m) => ({ default: m.Developer })));
+const VirtualTour = lazy(() => import("@/pages/VirtualTour").then((m) => ({ default: m.VirtualTour })));
 const NotFound = lazy(() => import("@/pages/NotFound").then((m) => ({ default: m.NotFound })));
 
 function LazyPage({ children }: { children: React.ReactNode }) {
@@ -96,6 +97,7 @@ export function AppRoutes() {
         <Route path="accessibility" element={<LazyPage><Accessibility /></LazyPage>} />
         <Route path="sitemap" element={<LazyPage><Sitemap /></LazyPage>} />
         <Route path="developer" element={<LazyPage><Developer /></LazyPage>} />
+        <Route path="virtual-tour" element={<LazyPage><VirtualTour /></LazyPage>} />
         <Route path="login" element={<LazyPage><Login /></LazyPage>} />
         <Route path="register" element={<LazyPage><Register /></LazyPage>} />
         <Route path="forgot-password" element={<LazyPage><ForgotPassword /></LazyPage>} />

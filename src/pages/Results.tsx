@@ -51,6 +51,8 @@ interface BtebResultPayload {
   referred_subjects: string[] | null;
   raw_text: string | null;
   exam_type: string | null;
+  center_code: string | null;
+  institute_name: string | null;
   created_at: string;
 }
 
@@ -417,28 +419,30 @@ export function Results() {
                   .filter(r => r.status === "Referred" && (r.referred_subjects?.length ?? 0) >= 4)
                   .map(r => r.semester);
 
-                const maxDroppedSemIdx = hasSemesterDrop
-                  ? Math.max(
-                      ...deduped
-                        .filter(r => r.status === "Referred" && (r.referred_subjects?.length ?? 0) >= 4)
-                        .map(r => semIndex(r.semester))
-                    )
-                  : -1;
 
                 return (
                   <>
                     {/* ── Student Header Card ── */}
                     <div className="rounded-xl border bg-card shadow-md p-6 flex flex-wrap justify-between items-start gap-4 border-l-4 border-l-primary bg-gradient-to-r from-primary/5 via-transparent to-transparent">
                       <div>
-                        <span className="text-[10px] font-black uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                          BTEB Board Records
-                        </span>
+                        <div className="flex flex-wrap gap-2 items-center">
+                          <span className="text-[10px] font-black uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                            BTEB Board Records
+                          </span>
+                          {btebResults.some(r => (r.exam_type ?? 'regular') !== 'regular') && (
+                            <span className="text-[10px] font-black uppercase tracking-wider text-amber-700 bg-amber-100 border border-amber-200 px-2 py-0.5 rounded-full animate-pulse">
+                              Board Challenge / Correction Result
+                            </span>
+                          )}
+                        </div>
                         <h2 className="text-2xl font-black mt-2">Roll No. {query}</h2>
                         <div className="mt-1 space-y-0.5 text-sm text-muted-foreground">
                           <p>
                             Institute:{" "}
-                            <span className="font-bold text-foreground">
-                              Cox's Bazar Model Polytechnic Institute (CMPI)
+                            <span className="font-bold text-foreground font-sans">
+                              {deduped[0]?.institute_name 
+                                ? `${deduped[0].institute_name}${deduped[0].center_code ? ` (${deduped[0].center_code})` : ''}` 
+                                : "Cox's Bazar Model Polytechnic Institute (CMPI)"}
                             </span>
                           </p>
                           <p>
@@ -468,16 +472,6 @@ export function Results() {
                       </p>
                       <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
                         {SEM_ORDER.map((sem) => {
-                          // Hide past semesters before the dropped semester
-                          if (hasSemesterDrop && semIndex(sem) < maxDroppedSemIdx) {
-                            return (
-                              <div key={sem} className="rounded-lg border border-muted/30 bg-muted/10 p-2 text-center flex flex-col items-center gap-0.5 opacity-30">
-                                <span className="text-[10px] font-black text-muted-foreground uppercase">{sem}</span>
-                                <span className="text-base font-black text-muted-foreground/40">–</span>
-                              </div>
-                            );
-                          }
-
                           // Find regular record first, then rescrutiny
                           const regularRecord = deduped.find(
                             (r) => semIndex(r.semester) === semIndex(sem) && (r.exam_type ?? 'regular') === 'regular'
@@ -638,9 +632,9 @@ export function Results() {
                       {hasSemesterDrop && (
                         <div className="rounded-xl border border-dashed border-red-500/30 p-5 text-center bg-red-50/5 dark:bg-red-950/5">
                           <AlertCircle className="mx-auto h-8 w-8 text-red-600 dark:text-red-400 opacity-80 mb-2" />
-                          <p className="font-extrabold text-sm text-foreground">Past Semester Results Hidden</p>
+                          <p className="font-extrabold text-sm text-foreground">Active Semester Drop Status Detected</p>
                           <p className="mt-1 text-xs text-muted-foreground leading-relaxed max-w-xl mx-auto">
-                            Your past results are not visible due to your active semester drop status in <strong>{droppedSemesters.join(", ")} Semester</strong>.
+                            Under BTEB regulations, having 4 or more referred subjects in a semester examination triggers a <strong>Semester Drop</strong> (in {droppedSemesters.join(", ")} Semester).
                           </p>
                         </div>
                       )}
@@ -648,12 +642,6 @@ export function Results() {
                       {deduped.map((record) => {
                         const referredCount = record.referred_subjects?.length ?? 0;
                         const isSemesterDrop = record.status === "Referred" && referredCount >= 4;
-
-                        // Hide past semesters if they are before the dropped semester
-                        const recSemIdx = semIndex(record.semester);
-                        if (hasSemesterDrop && recSemIdx < maxDroppedSemIdx) {
-                          return null;
-                        }
 
                         const isRescrutiny = record.exam_type === 'rescrutiny';
                         let challengeChanged = false;
@@ -685,7 +673,10 @@ export function Results() {
                                   <BookOpen className="h-5 w-5" />
                                 </div>
                                 <div>
-                                  <h3 className="font-extrabold text-lg">{record.semester} Semester Result</h3>
+                                  <h3 className="font-extrabold text-lg">
+                                    {record.semester} Semester Result
+                                    {record.exam_type && record.exam_type !== 'regular' ? ` (${record.exam_type === 'rescrutiny' ? 'Board Challenge' : record.exam_type})` : ''}
+                                  </h3>
                                   <div className="flex items-center gap-2 mt-0.5">
                                     <p className="text-xs text-muted-foreground">
                                       Regulation: {record.regulation} · Holding Year: {record.holding_year}

@@ -46,15 +46,19 @@ export function ClassRoutine() {
 
   useEffect(() => {
     loadRoutines();
+    const interval = setInterval(() => {
+      loadRoutines(true);
+    }, 15000); // Poll class routines every 15 seconds
+    return () => clearInterval(interval);
   }, []);
 
-  async function loadRoutines() {
-    setLoading(true);
+  async function loadRoutines(isBackground = false) {
+    if (!isBackground) setLoading(true);
     try {
       const response = await api.get("/class-routines");
       setRoutines(response.data);
     } catch {}
-    setLoading(false);
+    if (!isBackground) setLoading(false);
   }
 
   const currentDeptRoutines = routines.filter(

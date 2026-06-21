@@ -1,5 +1,5 @@
 import { useCountUp } from "@/hooks/useCountUp";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, GraduationCap, Users, Cpu, Flame, BookOpen } from "lucide-react";
 
 interface StatCardProps {
   value: string;
@@ -13,12 +13,32 @@ export function StatCard({ value, label }: StatCardProps) {
 
   const { count, ref } = useCountUp(hasNumber ? numericValue : 0, 2000);
 
+  const getIcon = () => {
+    const l = label.toLowerCase();
+    if (l.includes("department") || l.includes("academic")) return GraduationCap;
+    if (l.includes("faculty") || l.includes("teacher")) return Users;
+    if (l.includes("laborator") || l.includes("lab") || l.includes("computer")) return Cpu;
+    if (l.includes("club") || l.includes("student")) return Flame;
+    return BookOpen;
+  };
+
+  const IconComponent = getIcon();
+
   return (
-    <div ref={ref} className="rounded-sm bg-white p-6 text-center shadow-sm dark:bg-card">
-      <p className="text-4xl font-black text-primary sm:text-5xl">
-        {hasNumber ? count : value}{hasNumber ? suffix : ""}
-      </p>
-      <p className="mt-2 font-medium text-muted-foreground">{label}</p>
+    <div
+      ref={ref}
+      className="group relative overflow-hidden rounded-2xl border border-border/80 bg-card/60 p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-primary/20 backdrop-blur-md flex items-center gap-5"
+    >
+      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-white">
+        <IconComponent className="h-7 w-7" />
+      </div>
+      <div>
+        <p className="text-3xl font-black text-primary group-hover:text-primary-dark transition-all duration-300">
+          {hasNumber ? count : value}
+          {hasNumber ? suffix : ""}
+        </p>
+        <p className="mt-1 text-sm font-semibold text-muted-foreground tracking-tight">{label}</p>
+      </div>
     </div>
   );
 }

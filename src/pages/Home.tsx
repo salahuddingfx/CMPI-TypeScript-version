@@ -272,7 +272,10 @@ export function Home() {
             eyebrow="Watch & Learn"
             title="See CMPI in action"
             description="Get a glimpse of our campus, laboratories, faculty, and student life through our official introduction video."
-            className="[&_*]:text-white [&_.eyebrow]:text-secondary mb-10"
+            className="mb-10"
+            eyebrowClassName="text-secondary"
+            titleClassName="text-white"
+            descriptionClassName="text-white/80"
           />
           <div className="mx-auto max-w-4xl">
             <div className="relative rounded-2xl overflow-hidden shadow-2xl ring-4 ring-white/10 aspect-video bg-black">

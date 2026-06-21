@@ -384,7 +384,7 @@ export function Results() {
                 const regulation = deduped[0]?.regulation ?? "2022";
 
                 // Compute summary stats
-                const passedSemesters = deduped.filter(r => r.status === "Passed" && (r.exam_type ?? 'regular') === 'regular');
+                const passedSemesters = deduped.filter(r => r.status === "Passed");
                 const referredSemesters = deduped.filter(r => r.status === "Referred");
                 const totalReferredSubjects = referredSemesters.reduce((sum, r) => sum + (r.referred_subjects?.length ?? 0), 0);
                 const avgGpa = passedSemesters.length > 0

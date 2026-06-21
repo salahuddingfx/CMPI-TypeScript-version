@@ -26,7 +26,8 @@ export function DepartmentPage() {
     );
   }
 
-  const facultyMembers = data.faculty.filter((member) => department.facultyIds.includes(member.id));
+  const facultyIds = department.facultyIds ?? [];
+  const facultyMembers = data.faculty.filter((member) => facultyIds.includes(member.id));
 
   return (
     <PageTransition>

@@ -88,8 +88,25 @@ function parseSubjectSuffix(subjectCode: string): string {
 // Sort semester records 1st → 8th
 const SEM_ORDER = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th"];
 function semIndex(s: string | null | undefined): number {
-  const idx = SEM_ORDER.findIndex((x) => (s ?? "").toLowerCase().startsWith(x.charAt(0)));
-  return idx === -1 ? 99 : idx;
+  const lower = (s ?? "").toLowerCase().trim();
+  // Match "1st", "2nd", "3rd", "4th", etc.
+  const numMatch = lower.match(/^(\d)/);
+  if (numMatch) {
+    const n = parseInt(numMatch[1]);
+    if (n >= 1 && n <= 8) return n - 1;
+  }
+  // Match "Semester 3", "Sem-3", "SEM-III", etc.
+  const semMatch = lower.match(/(?:semester|sem)\s*[-–]?\s*(\d|I{1,3}V?|IX|V?I{0,3})/);
+  if (semMatch) {
+    const val = semMatch[1];
+    if (/^\d+$/.test(val)) {
+      const n = parseInt(val);
+      if (n >= 1 && n <= 8) return n - 1;
+    }
+    const romanMap: Record<string, number> = { 'i': 0, 'ii': 1, 'iii': 2, 'iv': 3, 'v': 4, 'vi': 5, 'vii': 6, 'viii': 7, 'ix': 8 };
+    if (romanMap[val] !== undefined) return romanMap[val];
+  }
+  return 99;
 }
 
 const REGULATION_WEIGHTS = {
@@ -99,7 +116,11 @@ const REGULATION_WEIGHTS = {
 
 // Infer most accurate department from all records for this student
 function computeDepartment(records: BtebResultPayload[]): string {
-  // Collect all referred subjects across all records
+  // PRIORITY 1: Use the API's stored department field (most reliable)
+  const stored = records.find(r => r.department && r.department !== "General Technology" && r.department !== "Auto Detect" && r.department !== "");
+  if (stored) return stored.department;
+
+  // PRIORITY 2: Detect from referred subject codes (fallback)
   const allSubjectCodes: string[] = [];
   records.forEach(r => {
     if (r.referred_subjects) allSubjectCodes.push(...r.referred_subjects);
@@ -108,9 +129,8 @@ function computeDepartment(records: BtebResultPayload[]): string {
     const detected = detectDepartmentFromSubjects(allSubjectCodes);
     if (detected !== "General Technology") return detected;
   }
-  // Fall back to stored department from any record that has a real one
-  const stored = records.find(r => r.department && r.department !== "General Technology" && r.department !== "Auto Detect");
-  return stored?.department ?? records[0]?.department ?? "General Technology";
+
+  return records[0]?.department ?? "General Technology";
 }
 
 // ── Mock data (mimics BTEB profile transcripts) ──────────────────────────────
@@ -354,17 +374,17 @@ export function Results() {
                 // Sort results 1st → 8th
                 const sorted = [...btebResults].sort((a, b) => semIndex(a.semester) - semIndex(b.semester));
 
-                // Group by semester — keep regular and rescrutiny as separate records
-                const semMap = new Map<string, BtebResultPayload[]>();
+                // Group by semester index — keep regular and rescrutiny as separate records
+                const semMap = new Map<number, BtebResultPayload[]>();
                 for (const record of sorted) {
-                  const key = (record.semester ?? "").toLowerCase().trim();
-                  if (!semMap.has(key)) semMap.set(key, []);
-                  semMap.get(key)!.push(record);
+                  const idx = semIndex(record.semester);
+                  if (!semMap.has(idx)) semMap.set(idx, []);
+                  semMap.get(idx)!.push(record);
                 }
                 // For each semester, pick the "display" record: prefer regular Passed, then rescrutiny
                 const deduped: BtebResultPayload[] = [];
-                for (const key of SEM_ORDER.map(s => s.toLowerCase())) {
-                  const records = semMap.get(key);
+                for (let i = 0; i < 8; i++) {
+                  const records = semMap.get(i);
                   if (!records || records.length === 0) continue;
                   // Find regular first, then rescrutiny
                   const regular = records.find(r => (r.exam_type ?? 'regular') === 'regular');
@@ -448,12 +468,22 @@ export function Results() {
                       </p>
                       <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
                         {SEM_ORDER.map((sem) => {
+                          // Hide past semesters before the dropped semester
+                          if (hasSemesterDrop && semIndex(sem) < maxDroppedSemIdx) {
+                            return (
+                              <div key={sem} className="rounded-lg border border-muted/30 bg-muted/10 p-2 text-center flex flex-col items-center gap-0.5 opacity-30">
+                                <span className="text-[10px] font-black text-muted-foreground uppercase">{sem}</span>
+                                <span className="text-base font-black text-muted-foreground/40">–</span>
+                              </div>
+                            );
+                          }
+
                           // Find regular record first, then rescrutiny
                           const regularRecord = deduped.find(
-                            (r) => (r.semester ?? "").toLowerCase().startsWith(sem.charAt(0)) && (r.exam_type ?? 'regular') === 'regular'
+                            (r) => semIndex(r.semester) === semIndex(sem) && (r.exam_type ?? 'regular') === 'regular'
                           );
                           const rescrutinyRecord = deduped.find(
-                            (r) => (r.semester ?? "").toLowerCase().startsWith(sem.charAt(0)) && (r.exam_type ?? 'regular') !== 'regular'
+                            (r) => semIndex(r.semester) === semIndex(sem) && (r.exam_type ?? 'regular') !== 'regular'
                           );
                           const record = regularRecord ?? rescrutinyRecord;
                           return (
@@ -604,7 +634,7 @@ export function Results() {
                         let challengeChanged = false;
                         if (isRescrutiny) {
                           const regularRec = btebResults.find(
-                            (r) => (r.semester ?? "").toLowerCase().trim() === (record.semester ?? "").toLowerCase().trim() && (r.exam_type ?? 'regular') === 'regular'
+                            (r) => semIndex(r.semester) === semIndex(record.semester) && (r.exam_type ?? 'regular') === 'regular'
                           );
                           if (regularRec) {
                             challengeChanged = 

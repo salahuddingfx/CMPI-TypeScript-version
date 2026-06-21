@@ -243,10 +243,11 @@ export function Results() {
     let weightedSum = 0;
     let weightSum = 0;
     for (let i = 0; i < 8; i++) {
-      const val = parseFloat(calculatorGpas[i]);
+      const val = parseFloat(calculatorGpas[i] ?? "");
       if (!isNaN(val) && val > 0 && val <= 4) {
-        weightedSum += val * weights[i];
-        weightSum += weights[i];
+        const w = weights[i] ?? 0;
+        weightedSum += val * w;
+        weightSum += w;
       }
     }
     return weightSum > 0 ? (weightedSum / weightSum) : 0;
@@ -820,7 +821,7 @@ export function Results() {
                       <label className="text-xs font-bold text-muted-foreground flex justify-between">
                         <span>{sem} Semester</span>
                         <span className="font-mono opacity-60">
-                          (Wt: {(REGULATION_WEIGHTS[calculatorReg][idx] * 100)}%)
+                          (Wt: {((REGULATION_WEIGHTS[calculatorReg][idx] ?? 0) * 100)}%)
                         </span>
                       </label>
                       <Input
@@ -829,7 +830,7 @@ export function Results() {
                         max="4.00"
                         step="0.01"
                         placeholder="0.00"
-                        value={calculatorGpas[idx]}
+                        value={calculatorGpas[idx] ?? ""}
                         onChange={(e) => {
                           const newGpas = [...calculatorGpas];
                           newGpas[idx] = e.target.value;
@@ -876,7 +877,7 @@ export function Results() {
                   </h3>
                   <div className="space-y-2 text-xs">
                     {SEM_ORDER.map((sem, idx) => {
-                      const isEntered = parseFloat(calculatorGpas[idx]) > 0;
+                      const isEntered = parseFloat(calculatorGpas[idx] ?? "") > 0;
                       return (
                         <div
                           key={sem}
@@ -885,7 +886,7 @@ export function Results() {
                           }`}
                         >
                           <span>{sem} Semester</span>
-                          <span>{(REGULATION_WEIGHTS[calculatorReg][idx] * 100)}%</span>
+                          <span>{((REGULATION_WEIGHTS[calculatorReg][idx] ?? 0) * 100)}%</span>
                         </div>
                       );
                     })}

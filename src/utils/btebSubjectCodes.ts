@@ -222,9 +222,8 @@ export const BTEB_SUBJECTS: Record<string, BtebSubjectInfo> = {
   // ═══════════════════════════════════════════════════════════════════════════
 
   // 2022 Regulation — Electrical Technology (267xx / 268xx)
-  "26711": { name: "Basic Electricity", dept: "Electrical Technology" },
+  "26711": { name: "Basic Electricity", dept: "Shared" },
   "26712": { name: "Electrical Engineering Materials", dept: "Electrical Technology" },
-  "26721": { name: "Electrical Circuits-I", dept: "Electrical Technology" },
   "26722": { name: "Electrical Engineering Drawing", dept: "Electrical Technology" },
   "26731": { name: "Electrical Circuits-II", dept: "Electrical Technology" },
   "26732": { name: "Electrical Appliances", dept: "Electrical Technology" },

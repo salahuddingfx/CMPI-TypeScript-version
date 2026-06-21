@@ -23,7 +23,7 @@ export function Blog() {
     });
   }, [data, category, query]);
 
-  if (loading) return <LoadingSkeleton />;
+  if (loading) return <BlogSkeleton />;
   if (error || !data) return <PageTransition className="container section-pad"><div className="rounded-sm border border-destructive/30 bg-destructive/10 p-6 text-destructive">Unable to load blog posts.</div></PageTransition>;
 
   const categories = ["All", ...Array.from(new Set(data.blogs.map((post) => post.category)))];

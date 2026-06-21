@@ -5,7 +5,7 @@ import { BlogCard } from "@/components/features/BlogCard";
 import { SEO } from "@/components/common/SEO";
 import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
-import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
+import { BlogSkeleton } from "@/components/common/LoadingSkeleton";
 import { useInstituteContext } from "@/contexts/InstituteDataContext";
 
 export function Blog() {

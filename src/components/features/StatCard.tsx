@@ -28,6 +28,7 @@ interface CheckListProps {
 }
 
 export function CheckList({ items }: CheckListProps) {
+  if (!items?.length) return null;
   return (
     <ul className="space-y-2">
       {items.map((item) => (

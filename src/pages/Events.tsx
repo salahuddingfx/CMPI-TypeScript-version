@@ -3,7 +3,7 @@ import { EventCard } from "@/components/features/EventCard";
 import { SEO } from "@/components/common/SEO";
 import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
-import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
+import { EventsSkeleton } from "@/components/common/LoadingSkeleton";
 import { useInstituteContext } from "@/contexts/InstituteDataContext";
 
 type EventStatus = InstituteEventStatus | "All";
@@ -18,7 +18,7 @@ export function Events() {
     return data.events.filter((event) => status === "All" || event.status === status);
   }, [data, status]);
 
-  if (loading) return <LoadingSkeleton />;
+  if (loading) return <EventsSkeleton />;
   if (error || !data) return <PageTransition className="container section-pad"><div className="rounded-sm border border-destructive/30 bg-destructive/10 p-6 text-destructive">Unable to load events.</div></PageTransition>;
 
   const upcoming = data.events.filter((event) => event.status === "Upcoming");

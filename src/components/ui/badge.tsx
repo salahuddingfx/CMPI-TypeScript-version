@@ -8,7 +8,7 @@ const badgeVariants = cva("inline-flex items-center rounded-sm border px-3 py-1 
       default: "border-primary bg-primary/10 text-primary",
       secondary: "border-secondary bg-secondary/20 text-secondary-foreground",
       outline: "border-border text-foreground",
-      destructive: "border-destructive bg-destructive/10 text-destructive",
+      destructive: "border-destructive bg-destructive/10 text-destructive dark:border-red-800/40 dark:bg-red-950/30 dark:text-red-400",
     },
   },
   defaultVariants: {

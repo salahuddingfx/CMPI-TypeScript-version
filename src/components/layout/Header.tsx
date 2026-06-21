@@ -121,7 +121,7 @@ export function Header() {
                   variant="outline"
                   size="sm"
                   onClick={handleLogout}
-                  className="gap-1.5 border-destructive/20 text-destructive hover:bg-destructive hover:text-white"
+                  className="gap-1.5 border-destructive/20 text-destructive hover:bg-destructive hover:text-white dark:border-red-800/40 dark:text-red-400 dark:hover:bg-red-800 dark:hover:text-red-200"
                 >
                   <LogOut className="h-3.5 w-3.5" />
                   Logout
@@ -188,7 +188,7 @@ export function Header() {
                   </Link>
                   <Button
                     variant="outline"
-                    className="w-full border-destructive/20 text-destructive hover:bg-destructive hover:text-white"
+                    className="w-full border-destructive/20 text-destructive hover:bg-destructive hover:text-white dark:border-red-800/40 dark:text-red-400 dark:hover:bg-red-800 dark:hover:text-red-200"
                     onClick={() => {
                       setMobileOpen(false);
                       handleLogout();

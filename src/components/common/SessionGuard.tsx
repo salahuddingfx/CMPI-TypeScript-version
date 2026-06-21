@@ -48,8 +48,8 @@ export function SessionGuard({ children }: { children: React.ReactNode }) {
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-2xl">
             <div className="flex items-center gap-3 mb-4">
-              <div className="rounded-full bg-destructive/10 p-2">
-                <AlertTriangle className="h-5 w-5 text-destructive" />
+              <div className="rounded-full bg-destructive/10 dark:bg-red-900/20 p-2">
+                <AlertTriangle className="h-5 w-5 text-destructive dark:text-red-400" />
               </div>
               <div>
                 <h3 className="font-black text-foreground">Session Expiring Soon</h3>
@@ -68,7 +68,7 @@ export function SessionGuard({ children }: { children: React.ReactNode }) {
               </button>
               <button
                 onClick={triggerLogout}
-                className="flex items-center gap-2 rounded-xl border border-destructive/20 text-destructive hover:bg-destructive hover:text-white px-4 py-2.5 text-sm font-bold transition"
+                className="flex items-center gap-2 rounded-xl border border-destructive/20 text-destructive hover:bg-destructive hover:text-white dark:border-red-800/40 dark:text-red-400 dark:hover:bg-red-800 dark:hover:text-red-200 px-4 py-2.5 text-sm font-bold transition"
               >
                 <LogOut className="h-4 w-4" />
                 Logout Now

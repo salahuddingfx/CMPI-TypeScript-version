@@ -1,50 +1,49 @@
-# Security Policy
+# 🛡️ Security Policy
+
+We take security issues extremely seriously at **CMPI Client**. We are committed to protecting user and institutional data for the **Cox's Bazar Model Polytechnic Institute** platform. This document outlines our supported versions, reporting procedures, and standard response cycles.
+
+---
 
 ## Supported Versions
 
-| Version | Supported          |
-| ------- | ------------------ |
-| Latest  | :white_check_mark: |
-| < 1.0   | :x:                |
+Only the latest major version of CMPI is actively supported with security updates. We strongly advise all institutional deployments to remain on the latest releases.
 
-## Reporting a Vulnerability
+| Version | Supported | Notes |
+| :--- | :--- | :--- |
+| **v2.x (Latest)** | ✅ Yes | Active development and support. |
+| **v1.x** | ❌ No | Deprecated. Please upgrade to v2.x. |
 
-If you discover a security vulnerability within CMPI Client, please send an email to [salahuddingfx](https://github.com/salahuddingfx). All security vulnerabilities will be promptly addressed.
+---
 
-**Please do not report security vulnerabilities through public GitHub issues.**
+## 📢 Reporting a Security Vulnerability
 
-### What to include
+If you discover a security vulnerability within the CMPI Client project, please do **NOT** open a public issue or draft a public pull request. Doing so exposes the system to exploitation before a patch can be deployed.
 
-When reporting a vulnerability, please include:
+Instead, please report security vulnerabilities directly to the Lead Developer:
+*   **Contact Name**: Salah Uddin Kader
+*   **Email**: **salahuddin.dev@gmail.com**
+*   **Email Subject**: `[SECURITY VULNERABILITY] CMPI Client Security Report`
 
-- A description of the vulnerability
-- Steps to reproduce the issue
-- Potential impact
-- Suggested fix (if any)
+### What to Include in the Report
+To help us triage and resolve the issue quickly, please include:
+1.  **Vulnerability Type**: (e.g., SQL Injection, CSRF, XSS, RBAC Bypass, Privilege Escalation).
+2.  **Affected Component**: (e.g., Client Navbar, results checker forms, routing components).
+3.  **Proof of Concept (PoC)**: Step-by-step instructions to reproduce the issue, including request payloads, screen captures, or code snippets.
+4.  **Impact Analysis**: What data or assets could be accessed or compromised.
 
-### Response Timeline
+---
 
-- **Acknowledgment**: Within 48 hours of your report
-- **Initial Assessment**: Within 1 week
-- **Fix Deployment**: Depending on severity, within 1-4 weeks
+## ⏳ Our Security Process & Timeline
 
-## Security Best Practices
+Once a report is submitted, we follow this coordinated disclosure schedule:
+1.  **Acknowledgement (Within 48 hours)**: We will confirm receipt of your report, verify the details, and assign a severity tier.
+2.  **Triage & Resolution (Within 7-10 days)**: We will work on a patch in a private branch. We may contact you for further details or verification.
+3.  **Deployment & Disclosure (Within 14 days)**: A patch release will be pushed to the main repository. We will credit you in the release notes unless you prefer to remain anonymous.
 
-When using or contributing to this project:
+---
 
-- Never commit sensitive credentials (API keys, tokens) to the repository
-- Use environment variables (`.env`) for all configuration secrets
-- Keep dependencies up to date
-- Validate all user input on both client and server side
-- Use HTTPS in production
-- Implement Content Security Policy (CSP) headers
-- Sanitize any user-generated content before rendering (XSS prevention)
-- Never store sensitive data in localStorage without encryption
+## ⚙️ Security Guidelines for Deployments
 
-## Dependency Security
-
-We regularly audit our dependencies for known vulnerabilities. Run `npm audit` periodically to check for issues. If you discover a vulnerability in a dependency:
-
-1. Report it to us immediately
-2. Do not open a public issue
-3. We will work to update or replace the affected dependency
+If you are hosting CMPI Client:
+*   Verify that API keys or backend tokens stored inside environmental files (`.env`) are not committed to code repository histories.
+*   Enforce HTTPS on all requests to protect Sanctum auth credentials.

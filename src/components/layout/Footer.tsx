@@ -131,6 +131,7 @@ export function Footer() {
             <h3 className="text-xs font-semibold uppercase tracking-wider text-secondary">Quick Links</h3>
             <ul className="mt-3 space-y-2 text-sm text-white/60">
               <li><Link to="/about" className="transition hover:text-secondary">About Us</Link></li>
+              <li><Link to="/principal" className="transition hover:text-secondary">Principal</Link></li>
               <li><Link to="/faculty" className="transition hover:text-secondary">Faculty</Link></li>
               <li><Link to="/events" className="transition hover:text-secondary">Events</Link></li>
               <li><Link to="/gallery" className="transition hover:text-secondary">Gallery</Link></li>

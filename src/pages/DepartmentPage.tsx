@@ -52,7 +52,7 @@ export function DepartmentPage() {
   for (const sem of SEM_ORDER) {
     groupedSubjects[sem] = subjects.filter((s) => s.semester === sem);
   }
-  const availableSemesters = SEM_ORDER.filter((s) => groupedSubjects[s]?.length > 0);
+  const availableSemesters = SEM_ORDER.filter((s) => (groupedSubjects[s]?.length ?? 0) > 0);
 
   return (
     <PageTransition>

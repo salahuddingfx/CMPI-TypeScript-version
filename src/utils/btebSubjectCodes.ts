@@ -236,11 +236,6 @@ export const BTEB_SUBJECTS: Record<string, BtebSubjectInfo> = {
   "26754": { name: "Electrical Engineering Project-II", dept: "Electrical Technology" },
   "26761": { name: "AC Machine-I", dept: "Electrical Technology" },
   "26763": { name: "Electrical & Electronic Measurements-II", dept: "Electrical Technology" },
-  "26811": { name: "Basic Electronics", dept: "Electrical Technology" },
-  "26833": { name: "Industrial Electronics", dept: "Electrical Technology" },
-  "26842": { name: "Communication Engineering", dept: "Electrical Technology" },
-  "26845": { name: "Digital Electronics", dept: "Electrical Technology" },
-  "26853": { name: "Microprocessor & Microcontroller", dept: "Electrical Technology" },
   "26667": { name: "Programming in C", dept: "Electrical Technology" },
 
   // 2016 Regulation — Electrical Technology (667xx)
@@ -321,12 +316,8 @@ export const BTEB_SUBJECTS: Record<string, BtebSubjectInfo> = {
   // MECHANICAL TECHNOLOGY
   // ═══════════════════════════════════════════════════════════════════════════
 
-  "27011": { name: "Workshop Technology", dept: "Mechanical Technology" },
-  "27012": { name: "Basic Workshop Practice", dept: "Mechanical Technology" },
-  "27041": { name: "Engineering Mechanics", dept: "Mechanical Technology" },
+  "27012": { name: "Basic Workshop Practice", dept: "Shared" },
   "27044": { name: "Applied Mechanics", dept: "Mechanical Technology" },
-  "27051": { name: "Fluid Mechanics & Machineries", dept: "Mechanical Technology" },
-  "27061": { name: "Strength of Materials", dept: "Mechanical Technology" },
   "27071": { name: "Design of Machine Elements", dept: "Mechanical Technology" },
   "27131": { name: "Engineering Thermodynamics", dept: "Mechanical Technology" },
   "27161": { name: "Engine Overhauling, Inspection & Testing", dept: "Mechanical Technology" },

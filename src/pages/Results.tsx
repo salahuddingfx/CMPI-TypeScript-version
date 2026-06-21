@@ -393,6 +393,18 @@ export function Results() {
                 const allPassed = referredSemesters.length === 0 && passedSemesters.length > 0;
                 const hasSemesterDrop = deduped.some(r => r.status === "Referred" && (r.referred_subjects?.length ?? 0) >= 4);
 
+                const droppedSemesters = deduped
+                  .filter(r => r.status === "Referred" && (r.referred_subjects?.length ?? 0) >= 4)
+                  .map(r => r.semester);
+
+                const maxDroppedSemIdx = hasSemesterDrop
+                  ? Math.max(
+                      ...deduped
+                        .filter(r => r.status === "Referred" && (r.referred_subjects?.length ?? 0) >= 4)
+                        .map(r => semIndex(r.semester))
+                    )
+                  : -1;
+
                 return (
                   <>
                     {/* ── Student Header Card ── */}
@@ -526,13 +538,20 @@ export function Results() {
                             <p className="text-xs font-black uppercase tracking-wider text-muted-foreground">
                               {hasSemesterDrop ? "Semester Drop Status" : "Referred Summary"}
                             </p>
-                            <div className="flex items-baseline gap-2 mt-0.5">
-                              <p className={`text-3xl font-black ${hasSemesterDrop ? "text-red-600 dark:text-red-400" : "text-amber-600 dark:text-amber-400"}`}>
-                                {hasSemesterDrop ? "Dropped" : referredSemesters.length}
-                              </p>
-                              <p className="text-sm font-bold text-muted-foreground">
-                                {hasSemesterDrop ? "Wait 1 Year (BTEB Rule)" : `semester${referredSemesters.length > 1 ? 's' : ''} referred`}
-                              </p>
+                            <div className="flex flex-col mt-0.5">
+                              <div className="flex items-baseline gap-2">
+                                <p className={`text-3xl font-black ${hasSemesterDrop ? "text-red-600 dark:text-red-400" : "text-amber-600 dark:text-amber-400"}`}>
+                                  {hasSemesterDrop ? `Dropped (${droppedSemesters.join(", ")})` : referredSemesters.length}
+                                </p>
+                                <p className="text-sm font-bold text-muted-foreground">
+                                  {hasSemesterDrop ? "" : `semester${referredSemesters.length > 1 ? 's' : ''} referred`}
+                                </p>
+                              </div>
+                              {hasSemesterDrop && (
+                                <p className="text-xs font-extrabold text-red-600 dark:text-red-400 mt-1 uppercase tracking-wide">
+                                  Wait 1 Year (BTEB Regulation)
+                                </p>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -561,9 +580,42 @@ export function Results() {
 
                     {/* ── Semester Cards ── */}
                     <div className="space-y-4">
+                      {hasSemesterDrop && (
+                        <div className="rounded-xl border border-dashed border-red-500/30 p-5 text-center bg-red-50/5 dark:bg-red-950/5">
+                          <AlertCircle className="mx-auto h-8 w-8 text-red-600 dark:text-red-400 opacity-80 mb-2" />
+                          <p className="font-extrabold text-sm text-foreground">Past Semester Results Hidden</p>
+                          <p className="mt-1 text-xs text-muted-foreground leading-relaxed max-w-xl mx-auto">
+                            Your past results are not visible due to your active semester drop status in <strong>{droppedSemesters.join(", ")} Semester</strong>.
+                          </p>
+                        </div>
+                      )}
+
                       {deduped.map((record) => {
                         const referredCount = record.referred_subjects?.length ?? 0;
                         const isSemesterDrop = record.status === "Referred" && referredCount >= 4;
+
+                        // Hide past semesters if they are before the dropped semester
+                        const recSemIdx = semIndex(record.semester);
+                        if (hasSemesterDrop && recSemIdx < maxDroppedSemIdx) {
+                          return null;
+                        }
+
+                        const isRescrutiny = record.exam_type === 'rescrutiny';
+                        let challengeChanged = false;
+                        if (isRescrutiny) {
+                          const regularRec = btebResults.find(
+                            (r) => (r.semester ?? "").toLowerCase().trim() === (record.semester ?? "").toLowerCase().trim() && (r.exam_type ?? 'regular') === 'regular'
+                          );
+                          if (regularRec) {
+                            challengeChanged = 
+                              regularRec.gpa !== record.gpa || 
+                              regularRec.status !== record.status || 
+                              JSON.stringify(regularRec.referred_subjects) !== JSON.stringify(record.referred_subjects);
+                          } else {
+                            challengeChanged = true;
+                          }
+                        }
+
                         return (
                           <div key={record.id} className={`rounded-xl border bg-card p-6 shadow-sm ${
                             isSemesterDrop
@@ -584,9 +636,23 @@ export function Results() {
                                       Regulation: {record.regulation} · Holding Year: {record.holding_year}
                                     </p>
                                     {record.exam_type && record.exam_type !== 'regular' && (
-                                      <span className="inline-flex items-center rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 border border-amber-200 dark:border-amber-800 px-2 py-0.5 text-[10px] font-black uppercase">
-                                        {record.exam_type === 'rescrutiny' ? 'Board Challenge' : record.exam_type}
-                                      </span>
+                                      <div className="flex flex-wrap gap-1.5 items-center mt-1">
+                                        <span className="inline-flex items-center rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 border border-amber-200 dark:border-amber-800 px-2 py-0.5 text-[10px] font-black uppercase">
+                                          {record.exam_type === 'rescrutiny' ? 'Board Challenge' : record.exam_type}
+                                        </span>
+                                        {record.exam_type === 'rescrutiny' && (
+                                          challengeChanged ? (
+                                            <span className="inline-flex items-center rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800 px-2 py-0.5 text-[10px] font-black uppercase gap-1">
+                                              <span>Result Changed</span>
+                                              <span className="font-bold text-xs">✓</span>
+                                            </span>
+                                          ) : (
+                                            <span className="inline-flex items-center rounded-full bg-slate-100 text-slate-600 dark:bg-slate-900/30 dark:text-slate-400 border border-slate-200 dark:border-slate-800 px-2 py-0.5 text-[10px] font-black uppercase">
+                                              Result Not Changed
+                                            </span>
+                                          )
+                                        )}
+                                      </div>
                                     )}
                                   </div>
                                 </div>

@@ -348,7 +348,7 @@ export function Results() {
 
         {/* ── BTEB Board Result Output ─── */}
         {searched && searchMode === "bteb" && !loading && (
-          <div className="mx-auto mt-10 max-w-3xl space-y-6">
+          <div id="printable-result" className="mx-auto mt-10 max-w-3xl space-y-6">
             {btebResults.length > 0 ? (
               (() => {
                 // Sort results 1st → 8th
@@ -760,7 +760,7 @@ export function Results() {
 
         {/* ── Student Transcript (Mock Profile) Output ─── */}
         {searched && searchMode === "transcript" && (
-          <div className="mx-auto mt-10 max-w-3xl">
+          <div id="printable-result" className="mx-auto mt-10 max-w-3xl">
             {result ? (
               <div className="space-y-6">
                 <div className="rounded-sm border bg-card shadow-sm overflow-hidden">

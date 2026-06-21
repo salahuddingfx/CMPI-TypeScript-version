@@ -6,7 +6,7 @@ import { SEO } from "@/components/common/SEO";
 import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { getSubjectName as getLocalSubjectName, detectDepartmentFromSubjects as localDetectDept } from "@/utils/btebSubjectCodes";
-import { api, lookupSubjects, detectDepartmentFromAPI } from "@/services/api";
+import { api } from "@/services/api";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 interface CourseResult {
@@ -91,20 +91,20 @@ function semIndex(s: string | null | undefined): number {
   const lower = (s ?? "").toLowerCase().trim();
   // Match "1st", "2nd", "3rd", "4th", etc.
   const numMatch = lower.match(/^(\d)/);
-  if (numMatch) {
+  if (numMatch?.[1]) {
     const n = parseInt(numMatch[1]);
     if (n >= 1 && n <= 8) return n - 1;
   }
   // Match "Semester 3", "Sem-3", "SEM-III", etc.
   const semMatch = lower.match(/(?:semester|sem)\s*[-–]?\s*(\d|I{1,3}V?|IX|V?I{0,3})/);
-  if (semMatch) {
+  if (semMatch?.[1]) {
     const val = semMatch[1];
     if (/^\d+$/.test(val)) {
       const n = parseInt(val);
       if (n >= 1 && n <= 8) return n - 1;
     }
     const romanMap: Record<string, number> = { 'i': 0, 'ii': 1, 'iii': 2, 'iv': 3, 'v': 4, 'vi': 5, 'vii': 6, 'viii': 7, 'ix': 8 };
-    if (romanMap[val] !== undefined) return romanMap[val];
+    if (val && romanMap[val] !== undefined) return romanMap[val];
   }
   return 99;
 }
@@ -395,7 +395,7 @@ export function Results() {
                 }
                 // Also include any semesters not in SEM_ORDER
                 for (const [key, records] of semMap) {
-                  if (!SEM_ORDER.some(s => s.toLowerCase() === key)) {
+                  if (key < 0 || key > 7) {
                     deduped.push(...records);
                   }
                 }

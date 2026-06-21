@@ -3,12 +3,6 @@ import { fetchInstituteData } from "@/services/api";
 import { instituteData } from "@/services/mockData";
 import type { InstituteData, Department, FacultyMember } from "@/services/types";
 
-function isValidInstituteData(value: unknown): value is InstituteData {
-  if (!value || typeof value !== "object") return false;
-  const v = value as Record<string, unknown>;
-  return Array.isArray(v.stats) && Array.isArray(v.departments) && Array.isArray(v.faculty);
-}
-
 function normalizeDepartment(raw: any): Department {
   return {
     id: String(raw.id),

@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Calendar, MapPin, Users, CheckCircle2, AlertCircle, Clock } from "lucide-react";
+import { Calendar, Users, CheckCircle2, AlertCircle, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

@@ -33,6 +33,7 @@ export interface Notice {
   summary: string;
   details: string;
   fileUrl?: string;
+  image?: string;
 }
 
 export interface InstituteEvent {
@@ -46,6 +47,7 @@ export interface InstituteEvent {
   status: "Upcoming" | "Past";
   summary: string;
   details: string;
+  image?: string;
 }
 
 export interface BlogPost {
@@ -59,6 +61,7 @@ export interface BlogPost {
   category: string;
   readTime: string;
   relatedIds?: string[];
+  image?: string;
 }
 
 export interface GalleryAlbum {

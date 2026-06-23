@@ -19,6 +19,8 @@ export function IntroLoader({ onComplete, apiLoading = false }: IntroLoaderProps
 
   // Update progress bar and status text smoothly over 2.2 seconds (2200ms)
   useEffect(() => {
+    document.body.style.overflow = "hidden";
+
     const duration = 2200; // total intro animation time
     const intervalTime = 20; // update frequency
     const steps = duration / intervalTime;
@@ -43,6 +45,7 @@ export function IntroLoader({ onComplete, apiLoading = false }: IntroLoaderProps
     return () => {
       clearInterval(timer);
       clearInterval(messageInterval);
+      document.body.style.overflow = "";
     };
   }, []);
 

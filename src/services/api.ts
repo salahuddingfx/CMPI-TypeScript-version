@@ -6,7 +6,6 @@ export const api = axios.create({
   baseURL: API_BASE,
   timeout: 10000,
   headers: {
-    "Content-Type": "application/json",
     Accept: "application/json",
   },
 });
@@ -149,7 +148,6 @@ export async function searchAll(query: string) {
 
 export async function submitAdmission(formData: FormData) {
   const response = await api.post("/admissions", formData, {
-    headers: { "Content-Type": "multipart/form-data" },
     timeout: 30000,
   });
   return response.data;
@@ -193,11 +191,7 @@ export async function uploadFile(file: File, folder: string = "others") {
   const formData = new FormData();
   formData.append("file", file);
   formData.append("folder", folder);
-  const response = await api.post("/upload", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  const response = await api.post("/upload", formData);
   return response.data;
 }
 
@@ -220,5 +214,10 @@ export async function detectDepartmentFromAPI(codes: string[]) {
 /** Get full subject dictionary from backend. Returns { code: { name, dept } } */
 export async function getSubjectDictionary() {
   const response = await api.get("/subjects/dictionary");
+  return response.data;
+}
+
+export async function getGalleryAlbums() {
+  const response = await api.get("/gallery-albums");
   return response.data;
 }

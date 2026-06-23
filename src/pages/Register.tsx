@@ -30,8 +30,23 @@ export function Register() {
     setError("");
     setLoading(true);
 
-    if (!email.endsWith("@cmpi.edu.bd")) {
-      setError("You must register with a valid institute email ending in @cmpi.edu.bd");
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters long.");
+      setLoading(false);
+      return;
+    }
+    if (!/[A-Z]/.test(password)) {
+      setError("Password must contain at least one uppercase letter.");
+      setLoading(false);
+      return;
+    }
+    if (!/[a-z]/.test(password)) {
+      setError("Password must contain at least one lowercase letter.");
+      setLoading(false);
+      return;
+    }
+    if (!/[0-9]/.test(password)) {
+      setError("Password must contain at least one number.");
       setLoading(false);
       return;
     }
@@ -69,7 +84,7 @@ export function Register() {
         <section className="container section-pad">
           <div className="mx-auto max-w-md text-center bg-card border rounded-sm p-8 shadow-sm">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-500/10 text-green-600 animate-bounce">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" className="h-8 w-8">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-8 w-8">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
                 <polyline points="22 4 12 14.01 9 11.01"/>
               </svg>
@@ -109,18 +124,18 @@ export function Register() {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-semibold">Institute Email</label>
-                <Input id="email" type="email" placeholder="name.dept@cmpi.edu.bd" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                <label htmlFor="email" className="text-sm font-semibold">Email</label>
+                <Input id="email" type="email" placeholder="your@email.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
               </div>
 
               <div className="space-y-2">
                 <label htmlFor="password" className="text-sm font-semibold">Password</label>
-                <Input id="password" type="password" placeholder="Min. 6 characters" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                <Input id="password" type="password" placeholder="Min. 8 chars, 1 uppercase, 1 lowercase, 1 number" value={password} onChange={(e) => setPassword(e.target.value)} required />
               </div>
 
               <div className="space-y-2">
                 <label htmlFor="studentId" className="text-sm font-semibold">Student ID / Roll</label>
-                <Input id="studentId" placeholder="e.g. CMPI-2023-0102" value={studentId} onChange={(e) => setStudentId(e.target.value)} required />
+                <Input id="studentId" placeholder="e.g. CMPI-2023-0102 (leave blank if not a student)" value={studentId} onChange={(e) => setStudentId(e.target.value)} />
               </div>
 
               <div className="space-y-2">

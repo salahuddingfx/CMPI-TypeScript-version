@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SEO } from "@/components/common/SEO";
@@ -14,7 +14,16 @@ export function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [remember, setRemember] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const saved = localStorage.getItem("cmpi-remember-email");
+    if (saved) {
+      setEmail(saved);
+      setRemember(true);
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,9 +47,14 @@ export function Login() {
         admissionDate: data.user.admission_date,
         role: data.user.role,
       }));
+      if (remember) {
+        localStorage.setItem("cmpi-remember-email", email);
+      } else {
+        localStorage.removeItem("cmpi-remember-email");
+      }
       navigate("/dashboard");
     } catch {
-      setError("Invalid email or password. Check your institute email credentials.");
+      setError("Invalid email or password.");
     } finally {
       setLoading(false);
     }
@@ -51,16 +65,16 @@ export function Login() {
       <SEO title="Login" description="Login to your CMPI student or faculty portal." />
       <section className="container section-pad">
         <div className="mx-auto max-w-md">
-          <SectionHeader title="Welcome back" description="Login with your institute email to access CMPI dashboard." align="center" className="mb-8" />
+          <SectionHeader title="Welcome back" description="Login to access your CMPI dashboard." align="center" className="mb-8" />
           {error && <p className="mb-4 rounded-sm border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">{error}</p>}
           <form onSubmit={handleSubmit} className="rounded-sm border bg-card p-6 shadow-sm sm:p-8">
             <div className="space-y-4">
               <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-semibold">Institute Email</label>
+                <label htmlFor="email" className="text-sm font-semibold">Email</label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="name.dept@cmpi.edu.bd"
+                  placeholder="your@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -89,10 +103,14 @@ export function Login() {
                 </div>
               </div>
               <div className="flex items-center justify-between text-sm">
-                <label className="flex items-center gap-2">
-                  <input type="checkbox" className="rounded border-border" />
-                  <span className="text-muted-foreground">Remember me</span>
-                </label>
+                <button type="button" onClick={() => setRemember(!remember)} className="flex items-center gap-2 group">
+                  <div className={`flex h-4 w-4 items-center justify-center rounded border-2 transition ${
+                    remember ? "border-primary bg-primary text-white" : "border-muted-foreground/40 bg-transparent group-hover:border-muted-foreground/60"
+                  }`}>
+                    {remember && <Check className="h-3 w-3" />}
+                  </div>
+                  <span className="text-muted-foreground group-hover:text-foreground transition cursor-pointer">Remember me</span>
+                </button>
                 <Link className="text-primary hover:underline" to="/forgot-password">Forgot password?</Link>
               </div>
               <Button type="submit" className="w-full" disabled={loading}>
@@ -100,7 +118,7 @@ export function Login() {
               </Button>
             </div>
             <p className="mt-6 text-center text-sm text-muted-foreground">
-              Don&apos;t have an account? <Link className="text-primary hover:underline" to="/register">Contact admin</Link>
+              Don&apos;t have an account? <Link className="text-primary hover:underline" to="/register">Create Account</Link>
             </p>
           </form>
         </div>

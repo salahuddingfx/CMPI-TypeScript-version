@@ -1,26 +1,123 @@
-import { useState } from "react";
-import { X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { X, ChevronLeft, Loader2, Image as ImageIcon } from "lucide-react";
 import { SEO } from "@/components/common/SEO";
 import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
+import { getGalleryAlbums } from "@/services/api";
 
-const photos = [
-  { id: 1, caption: "Main Campus Building", category: "campus", color: "bg-blue-100 dark:bg-blue-900/30" },
-  { id: 2, caption: "Computer Lab", category: "labs", color: "bg-green-100 dark:bg-green-900/30" },
-  { id: 3, caption: "Annual Sports Day", category: "events", color: "bg-yellow-100 dark:bg-yellow-900/30" },
-  { id: 4, caption: "Civil Engineering Workshop", category: "labs", color: "bg-orange-100 dark:bg-orange-900/30" },
-  { id: 5, caption: "Graduation Ceremony 2025", category: "events", color: "bg-purple-100 dark:bg-purple-900/30" },
-  { id: 6, caption: "Electrical Lab", category: "labs", color: "bg-red-100 dark:bg-red-900/30" },
-  { id: 7, caption: "Campus Entrance", category: "campus", color: "bg-teal-100 dark:bg-teal-900/30" },
-  { id: 8, caption: "Tech Fair 2026", category: "events", color: "bg-indigo-100 dark:bg-indigo-900/30" },
-  { id: 9, caption: "Library", category: "campus", color: "bg-pink-100 dark:bg-pink-900/30" },
-];
+interface GalleryAlbum {
+  id: number;
+  title: string;
+  description: string;
+  accent: string;
+  cover: string | null;
+  count: number;
+  images: GalleryImage[];
+  created_at: string;
+}
+
+interface GalleryImage {
+  id: number;
+  url: string;
+  caption: string | null;
+}
 
 export function Gallery() {
-  const [filter, setFilter] = useState("all");
-  const [lightbox, setLightbox] = useState<typeof photos[number] | null>(null);
+  const [albums, setAlbums] = useState<GalleryAlbum[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedAlbum, setSelectedAlbum] = useState<GalleryAlbum | null>(null);
+  const [lightbox, setLightbox] = useState<GalleryImage | null>(null);
 
-  const filtered = filter === "all" ? photos : photos.filter((p) => p.category === filter);
+  useEffect(() => {
+    getGalleryAlbums()
+      .then(setAlbums)
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
+  function handleBack() {
+    setSelectedAlbum(null);
+    setLightbox(null);
+  }
+
+  if (loading) {
+    return (
+      <PageTransition>
+        <SEO title="Gallery" description="Photo gallery of CMPI campus, labs, and events." />
+        <section className="container section-pad">
+          <div className="flex h-64 items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        </section>
+      </PageTransition>
+    );
+  }
+
+  if (selectedAlbum) {
+    return (
+      <PageTransition>
+        <SEO title={selectedAlbum.title} description={selectedAlbum.description || "Photo album"} />
+        <section className="container section-pad">
+          <button
+            type="button"
+            onClick={handleBack}
+            className="mb-6 flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-foreground transition"
+          >
+            <ChevronLeft className="h-4 w-4" /> Back to Albums
+          </button>
+
+          <SectionHeader
+            eyebrow="Gallery"
+            title={selectedAlbum.title}
+            description={selectedAlbum.description || undefined}
+            align="center"
+            className="mb-10"
+          />
+
+          {selectedAlbum.images.length === 0 ? (
+            <p className="text-center text-sm text-muted-foreground py-12">No images in this album yet.</p>
+          ) : (
+            <div className="mx-auto max-w-6xl">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                {selectedAlbum.images.map((img) => (
+                  <button
+                    key={img.id}
+                    type="button"
+                    className="group relative aspect-[4/3] overflow-hidden rounded-sm bg-muted transition hover:shadow-md"
+                    onClick={() => setLightbox(img)}
+                  >
+                    <img
+                      src={img.url}
+                      alt={img.caption || ""}
+                      className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                    {img.caption && (
+                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-3 opacity-0 group-hover:opacity-100 transition">
+                        <p className="text-xs font-bold text-white">{img.caption}</p>
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
+
+        {lightbox && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4" onClick={() => setLightbox(null)}>
+            <button type="button" className="absolute right-4 top-4 z-10 text-white/80 hover:text-white transition" onClick={() => setLightbox(null)}>
+              <X className="h-8 w-8" />
+            </button>
+            <div className="max-h-[90vh] max-w-[90vw]" onClick={(e) => e.stopPropagation()}>
+              <img src={lightbox.url} alt={lightbox.caption || ""} className="max-h-[85vh] w-auto rounded-sm object-contain" />
+              {lightbox.caption && <p className="mt-3 text-center text-sm font-semibold text-white">{lightbox.caption}</p>}
+            </div>
+          </div>
+        )}
+      </PageTransition>
+    );
+  }
 
   return (
     <PageTransition>
@@ -28,45 +125,44 @@ export function Gallery() {
       <section className="container section-pad">
         <SectionHeader eyebrow="Gallery" title="Campus Gallery" description="A glimpse of life at Cox's Bazar Model Polytechnic Institute." align="center" className="mb-10" />
 
-        <div className="mx-auto max-w-4xl">
-          <div className="mb-6 flex justify-center gap-2">
-            {["all", "campus", "labs", "events"].map((f) => (
-              <button key={f} type="button" className={`rounded-sm px-4 py-2 text-sm font-bold transition ${filter === f ? "bg-primary text-white" : "bg-muted text-muted-foreground hover:bg-muted/80"}`} onClick={() => setFilter(f)}>
-                {f === "all" ? "All" : f.charAt(0).toUpperCase() + f.slice(1)}
-              </button>
-            ))}
+        {albums.length === 0 ? (
+          <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-border bg-muted/30 p-12">
+            <ImageIcon className="h-12 w-12 text-muted-foreground/40 mb-3" />
+            <p className="text-sm font-semibold text-muted-foreground">No albums yet</p>
           </div>
-
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {filtered.map((photo) => (
-              <button key={photo.id} type="button" className={`group relative aspect-[4/3] ${photo.color} rounded-sm overflow-hidden transition hover:shadow-md`} onClick={() => setLightbox(photo)}>
-                <div className="absolute inset-0 flex items-center justify-center text-3xl font-bold text-muted-foreground/30 group-hover:text-muted-foreground/50 transition">
-                  {photo.id}
-                </div>
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-3 opacity-0 group-hover:opacity-100 transition">
-                  <p className="text-xs font-bold text-white">{photo.caption}</p>
-                  <p className="text-[10px] text-white/70 capitalize">{photo.category}</p>
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {lightbox && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={() => setLightbox(null)}>
-          <button type="button" className="absolute right-4 top-4 text-white" onClick={() => setLightbox(null)}>
-            <X className="h-8 w-8" />
-          </button>
-          <div className={`${lightbox.color} flex aspect-video max-h-[80vh] w-full max-w-2xl items-center justify-center rounded-sm`} onClick={(e) => e.stopPropagation()}>
-            <div className="text-center">
-              <p className="text-6xl font-bold text-muted-foreground/20">{lightbox.id}</p>
-              <p className="mt-4 font-bold">{lightbox.caption}</p>
-              <p className="text-sm text-muted-foreground capitalize">{lightbox.category}</p>
+        ) : (
+          <div className="mx-auto max-w-6xl">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {albums.map((album) => (
+                <button
+                  key={album.id}
+                  type="button"
+                  className="group relative overflow-hidden rounded-sm border border-border bg-card transition hover:shadow-md text-left"
+                  onClick={() => setSelectedAlbum(album)}
+                >
+                  <div className="aspect-video w-full overflow-hidden bg-muted" style={{ backgroundColor: album.accent + "20" }}>
+                    {album.cover ? (
+                      <img src={album.cover} alt={album.title} className="h-full w-full object-cover transition duration-300 group-hover:scale-105" loading="lazy" />
+                    ) : (
+                      <div className="flex h-full items-center justify-center">
+                        <ImageIcon className="h-12 w-12 text-muted-foreground/30" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-4">
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className="h-2 w-2 rounded-full" style={{ backgroundColor: album.accent }} />
+                      <h3 className="text-sm font-black text-foreground truncate">{album.title}</h3>
+                    </div>
+                    {album.description && <p className="text-xs text-muted-foreground line-clamp-2 mb-2">{album.description}</p>}
+                    <p className="text-[10px] font-semibold text-muted-foreground">{album.count} image{album.count !== 1 ? "s" : ""}</p>
+                  </div>
+                </button>
+              ))}
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </section>
     </PageTransition>
   );
 }

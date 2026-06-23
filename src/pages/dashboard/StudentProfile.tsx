@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { getStudentProfile, updateStudentProfile } from "@/services/api";
+import { getStudentProfile, updateStudentProfile, uploadFile } from "@/services/api";
 import { ProfileSkeleton } from "@/components/common/LoadingSkeleton";
-import { Loader2 } from "lucide-react";
+import { Loader2, Camera, User } from "lucide-react";
 
 function getStoredUser() {
   if (typeof window === "undefined") return null;
@@ -26,10 +26,13 @@ export function StudentProfile() {
     guardian: "",
     bloodGroup: "",
     address: "",
+    avatar: "",
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     getStudentProfile()
@@ -47,6 +50,7 @@ export function StudentProfile() {
           guardian: user.guardian || "",
           bloodGroup: user.blood_group || "",
           address: user.address || "",
+          avatar: user.avatar || "",
         });
       })
       .catch(() => {
@@ -64,6 +68,7 @@ export function StudentProfile() {
             guardian: storedUser.guardian || "",
             bloodGroup: storedUser.blood_group || "",
             address: storedUser.address || "",
+            avatar: storedUser.avatar || "",
           });
         }
       })
@@ -73,6 +78,41 @@ export function StudentProfile() {
   const update = (field: keyof typeof profile, value: string) => {
     setProfile((prev) => ({ ...prev, [field]: value }));
     setSaved(false);
+  };
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      return;
+    }
+
+    setUploadingAvatar(true);
+    try {
+      const result = await uploadFile(file, "users");
+      const avatarUrl = result.url;
+
+      await updateStudentProfile({ avatar: avatarUrl });
+
+      setProfile((prev) => ({ ...prev, avatar: avatarUrl }));
+
+      if (storedUser) {
+        const updatedUser = { ...storedUser, avatar: avatarUrl };
+        localStorage.setItem("cmpi-user", JSON.stringify(updatedUser));
+        window.dispatchEvent(new Event("storage"));
+      }
+    } catch (err: any) {
+      console.error("Avatar upload failed:", err.response?.data || err.message);
+      console.error("Full error:", err);
+    } finally {
+      setUploadingAvatar(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
   };
 
   const handleSave = async () => {
@@ -95,6 +135,7 @@ export function StudentProfile() {
           guardian: profile.guardian,
           blood_group: profile.bloodGroup,
           address: profile.address,
+          avatar: profile.avatar,
         };
         localStorage.setItem("cmpi-user", JSON.stringify(updatedUser));
         window.dispatchEvent(new Event("storage"));
@@ -110,6 +151,7 @@ export function StudentProfile() {
           guardian: profile.guardian,
           blood_group: profile.bloodGroup,
           address: profile.address,
+          avatar: profile.avatar,
         };
         localStorage.setItem("cmpi-user", JSON.stringify(updatedUser));
         window.dispatchEvent(new Event("storage"));
@@ -126,6 +168,43 @@ export function StudentProfile() {
   return (
     <div className="space-y-6">
       <SectionHeader eyebrow="Profile" title="Personal information" description="View and update your basic student details." align="left" />
+
+      {/* Avatar */}
+      <div className="flex items-center gap-6 pb-4">
+        <div className="relative group">
+          <div className="h-20 w-20 rounded-full overflow-hidden bg-primary/10 flex items-center justify-center ring-2 ring-border">
+            {profile.avatar ? (
+              <img src={profile.avatar} alt={profile.name} className="h-full w-full object-cover" />
+            ) : (
+              <User className="h-8 w-8 text-muted-foreground" />
+            )}
+            {uploadingAvatar && (
+              <div className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center">
+                <Loader2 className="h-5 w-5 text-white animate-spin" />
+              </div>
+            )}
+          </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleAvatarChange}
+          />
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploadingAvatar}
+            className="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-0 cursor-pointer"
+          >
+            <Camera className="h-5 w-5 text-white" />
+          </button>
+        </div>
+        <div className="text-sm text-muted-foreground">
+          <p className="font-semibold text-foreground">Profile photo</p>
+          <p>Click the camera icon to upload. Max 5MB.</p>
+        </div>
+      </div>
+
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <label htmlFor="name" className="text-sm font-semibold">Full name</label>

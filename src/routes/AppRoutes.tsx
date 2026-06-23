@@ -4,6 +4,7 @@ import { MainLayout } from "@/layouts/MainLayout";
 import { StudentLayout } from "@/layouts/StudentLayout";
 import { AuthGuard } from "@/components/common/AuthGuard";
 import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
+import { VisitTracker } from "@/components/common/VisitTracker";
 
 const Home = lazy(() => import("@/pages/Home").then((m) => ({ default: m.Home })));
 const About = lazy(() => import("@/pages/About").then((m) => ({ default: m.About })));
@@ -59,7 +60,9 @@ function LazyPage({ children }: { children: React.ReactNode }) {
 
 export function AppRoutes() {
   return (
-    <Routes>
+    <>
+      <VisitTracker />
+      <Routes>
       <Route element={<MainLayout />}>
         <Route path="/" element={<LazyPage><Home /></LazyPage>} />
         <Route path="about" element={<LazyPage><About /></LazyPage>} />
@@ -116,5 +119,6 @@ export function AppRoutes() {
 
       <Route path="*" element={<LazyPage><NotFound /></LazyPage>} />
     </Routes>
+    </>
   );
 }

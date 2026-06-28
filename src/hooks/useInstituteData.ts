@@ -88,37 +88,37 @@ export function useInstituteData() {
   useEffect(() => {
     let mounted = true;
 
-    async function load(isBackground = false) {
-      if (!isBackground) {
-        setLoading(true);
-      }
+    async function load(showSpinner = false) {
+      if (showSpinner) setLoading(true);
       try {
         const result = await fetchInstituteData();
-        if (mounted) {
-          setData(normalizeData(result));
-        }
+        if (mounted) setData(normalizeData(result));
       } catch {
-        if (mounted && !isBackground) {
-          setData(instituteData);
-        }
+        // On error: keep existing data (or fall back to mock on first load)
+        if (mounted && !data) setData(instituteData);
       } finally {
-        if (mounted && !isBackground) {
-          setLoading(false);
-        }
+        if (mounted && showSpinner) setLoading(false);
       }
     }
 
-    void load();
+    void load(true);
 
-    const interval = setInterval(() => {
-      void load(true);
-    }, 15000); // Silent check for updates every 15 seconds
+    // Refresh silently when the user returns to this tab after being away.
+    // This is far lighter than polling every 15 seconds.
+    function handleVisibilityChange() {
+      if (document.visibilityState === "visible" && mounted) {
+        void load(false);
+      }
+    }
 
+    document.addEventListener("visibilitychange", handleVisibilityChange);
     return () => {
       mounted = false;
-      clearInterval(interval);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { data, loading, error: null };
 }
+

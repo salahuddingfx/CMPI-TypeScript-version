@@ -23,6 +23,7 @@
     "react-helmet-async": "latest",
     "react-router-dom": "latest",
     "recharts": "^3.8.1",
+    "sonner": "^2.0.7",
     "tailwind-merge": "latest"
   },
   "devDependencies": {

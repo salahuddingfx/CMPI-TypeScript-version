@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Check } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SEO } from "@/components/common/SEO";
@@ -12,7 +13,6 @@ export function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [remember, setRemember] = useState(false);
   const navigate = useNavigate();
@@ -27,7 +27,6 @@ export function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
     setLoading(true);
     try {
       const data = await apiLogin(email, password);
@@ -52,9 +51,10 @@ export function Login() {
       } else {
         localStorage.removeItem("cmpi-remember-email");
       }
+      toast.success("Successfully logged in!");
       navigate("/dashboard");
     } catch {
-      setError("Invalid email or password.");
+      toast.error("Invalid email or password.");
     } finally {
       setLoading(false);
     }
@@ -66,7 +66,6 @@ export function Login() {
       <section className="container section-pad">
         <div className="mx-auto max-w-md">
           <SectionHeader title="Welcome back" description="Login to access your CMPI dashboard." align="center" className="mb-8" />
-          {error && <p className="mb-4 rounded-sm border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">{error}</p>}
           <form onSubmit={handleSubmit} className="rounded-sm border bg-card p-6 shadow-sm sm:p-8">
             <div className="space-y-4">
               <div className="space-y-2">

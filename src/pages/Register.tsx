@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SEO } from "@/components/common/SEO";
@@ -22,31 +23,29 @@ export function Register() {
   const [admissionDate, setAdmissionDate] = useState("");
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
     setLoading(true);
 
     if (password.length < 8) {
-      setError("Password must be at least 8 characters long.");
+      toast.error("Password must be at least 8 characters long.");
       setLoading(false);
       return;
     }
     if (!/[A-Z]/.test(password)) {
-      setError("Password must contain at least one uppercase letter.");
+      toast.error("Password must contain at least one uppercase letter.");
       setLoading(false);
       return;
     }
     if (!/[a-z]/.test(password)) {
-      setError("Password must contain at least one lowercase letter.");
+      toast.error("Password must contain at least one lowercase letter.");
       setLoading(false);
       return;
     }
     if (!/[0-9]/.test(password)) {
-      setError("Password must contain at least one number.");
+      toast.error("Password must contain at least one number.");
       setLoading(false);
       return;
     }
@@ -68,10 +67,11 @@ export function Register() {
 
     try {
       await apiRegister(payload);
+      toast.success("Registration submitted! Pending admin approval.");
       setSuccess(true);
     } catch (err: any) {
       console.error(err);
-      setError(err.response?.data?.message || "Registration failed. Please make sure email/student ID are unique.");
+      toast.error(err.response?.data?.message || "Registration failed. Please make sure email/student ID are unique.");
     } finally {
       setLoading(false);
     }
@@ -113,8 +113,6 @@ export function Register() {
       <section className="container section-pad">
         <div className="mx-auto max-w-2xl">
           <SectionHeader title="Student Registration" description="Enter your details to create an account. Admin approval is required for activation." align="center" className="mb-8" />
-          
-          {error && <p className="mb-4 rounded-sm border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">{error}</p>}
           
           <form onSubmit={handleSubmit} className="rounded-sm border bg-card p-6 shadow-sm sm:p-8 space-y-6">
             <div className="grid gap-4 sm:grid-cols-2">

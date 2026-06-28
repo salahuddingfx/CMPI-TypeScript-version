@@ -13,7 +13,7 @@ const navItems = [
   {
     label: "About", href: "/about", mega: [
       { label: "About Us", href: "/about" },
-      { label: "Principal's Message", href: "/principal" },
+      { label: "Administration Messages", href: "/principal" },
       { label: "Faculty", href: "/faculty" },
     ]
   },

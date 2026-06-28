@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
+import { Toaster } from "sonner";
 import { AppRoutes } from "@/routes/AppRoutes";
 import { CookieConsent } from "@/components/common/CookieConsent";
 import { IntroLoader } from "@/components/common/IntroLoader";
@@ -13,14 +14,15 @@ export function App() {
     <>
       <AnimatePresence>
         {showLoader && (
-          <IntroLoader 
-            apiLoading={loading} 
-            onComplete={() => setShowLoader(false)} 
+          <IntroLoader
+            apiLoading={loading}
+            onComplete={() => setShowLoader(false)}
           />
         )}
       </AnimatePresence>
       <AppRoutes />
       <CookieConsent />
+      <Toaster richColors position="top-right" closeButton />
     </>
   );
 }

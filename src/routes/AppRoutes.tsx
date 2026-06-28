@@ -52,6 +52,8 @@ const Alumni = lazy(() => import("@/pages/Alumni").then((m) => ({ default: m.Alu
 const Placement = lazy(() => import("@/pages/Placement").then((m) => ({ default: m.Placement })));
 const Developer = lazy(() => import("@/pages/Developer").then((m) => ({ default: m.Developer })));
 const VirtualTour = lazy(() => import("@/pages/VirtualTour").then((m) => ({ default: m.VirtualTour })));
+const AcademicCalendar = lazy(() => import("@/pages/AcademicCalendar").then((m) => ({ default: m.AcademicCalendar })));
+const ResetPassword = lazy(() => import("@/pages/ResetPassword").then((m) => ({ default: m.ResetPassword })));
 const NotFound = lazy(() => import("@/pages/NotFound").then((m) => ({ default: m.NotFound })));
 
 function LazyPage({ children }: { children: React.ReactNode }) {
@@ -104,6 +106,8 @@ export function AppRoutes() {
         <Route path="login" element={<LazyPage><Login /></LazyPage>} />
         <Route path="register" element={<LazyPage><Register /></LazyPage>} />
         <Route path="forgot-password" element={<LazyPage><ForgotPassword /></LazyPage>} />
+        <Route path="reset-password" element={<LazyPage><ResetPassword /></LazyPage>} />
+        <Route path="academic-calendar" element={<LazyPage><AcademicCalendar /></LazyPage>} />
       </Route>
 
       <Route element={<AuthGuard />}>

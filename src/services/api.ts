@@ -66,6 +66,12 @@ export async function updateStudentProfile(data: Record<string, string>) {
   return response.data;
 }
 
+export async function verifyStudent(studentId: string) {
+  const response = await api.get(`/verify-student/${studentId}`);
+  return response.data;
+}
+
+
 export async function getStudentCourses() {
   const response = await api.get("/dashboard/courses");
   return response.data;

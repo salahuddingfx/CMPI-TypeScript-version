@@ -103,8 +103,12 @@ export default function DashboardOverview() {
       {/* Enrollment Card */}
       <div className="rounded-sm border bg-card p-4 sm:p-6 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary shrink-0">
-            <User className="h-7 w-7" />
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary shrink-0 overflow-hidden border border-border">
+            {user?.avatar ? (
+              <img src={user.avatar} alt={user.name} className="h-full w-full object-cover" />
+            ) : (
+              <User className="h-7 w-7" />
+            )}
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2">

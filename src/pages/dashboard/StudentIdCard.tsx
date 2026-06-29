@@ -361,7 +361,7 @@ export function StudentIdCard() {
                   </div>
 
                   {/* Back Details Content: QR Code, Signatures & Info */}
-                  <div className="flex items-center justify-between border-t border-emerald-800/80 pt-2">
+                  <div className="flex items-end justify-between border-t border-emerald-800/80 pt-2">
                     {/* Contact Details */}
                     <div className="space-y-0.5 font-mono text-[8px] text-emerald-400">
                       <p>Emergency: +880 1888-000000</p>
@@ -379,9 +379,9 @@ export function StudentIdCard() {
                     {/* Signature */}
                     <div className="flex flex-col items-center">
                       <div className="h-6 w-20 flex items-center justify-center opacity-90">
-                        <span className="font-sans italic text-xs font-bold text-yellow-400 tracking-wide">DidarUllah</span>
+                        <img src="/Principal_Signature.png" alt="Signature" className="h-6 object-contain" />
                       </div>
-                      <div className="w-24 border-t border-emerald-700 mt-1 text-center">
+                      <div className="w-24 border-t border-emerald-700 mt-1 pt-1 text-center">
                         <p className="text-[7px] font-black text-white leading-tight">Ln. Md. Didar Ullah</p>
                         <p className="text-[6px] text-emerald-400 leading-tight">Principal</p>
                       </div>
@@ -487,7 +487,7 @@ export function StudentIdCard() {
                   <li>If found, please return to the institute administrative office.</li>
                 </ul>
               </div>
-              <div className="flex items-center justify-between border-t border-emerald-800/80 pt-2">
+              <div className="flex items-end justify-between border-t border-emerald-800/80 pt-2">
                 <div className="space-y-0.5 font-mono text-[8px] text-emerald-400">
                   <p>Emergency: +880 1888-000000</p>
                   <p>Email: admin@cmpi.edu.bd</p>
@@ -500,9 +500,9 @@ export function StudentIdCard() {
                 </div>
                 <div className="flex flex-col items-center">
                   <div className="h-6 w-20 flex items-center justify-center opacity-90">
-                    <span className="sig-text font-sans italic text-xs font-bold text-yellow-400 tracking-wide">DidarUllah</span>
+                    <img src="/Principal_Signature.png" alt="Signature" className="h-6 object-contain" />
                   </div>
-                  <div className="w-24 border-t border-emerald-700 mt-1 text-center">
+                  <div className="w-24 border-t border-emerald-700 mt-1 pt-1 text-center">
                     <p className="text-[7px] font-black text-white leading-tight">Ln. Md. Didar Ullah</p>
                     <p className="text-[6px] text-emerald-400 leading-tight">Principal</p>
                   </div>

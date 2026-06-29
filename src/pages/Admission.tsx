@@ -224,7 +224,18 @@ export function Admission() {
                   Application ID: <span className="font-mono font-bold text-foreground">{serverAppId}</span>
                 </p>
                 <p className="mt-1 text-xs text-muted-foreground">Save this ID to track your application status.</p>
-                <div className="mt-4 flex flex-col gap-2">
+
+                {/* What's Next Notice Box */}
+                <div className="mt-6 rounded-md border border-yellow-250 bg-yellow-50/50 p-4 text-left text-xs leading-relaxed text-yellow-800 dark:border-yellow-900/40 dark:bg-yellow-955/20 dark:text-yellow-400">
+                  <p className="font-extrabold text-sm uppercase mb-1.5">What to do next?</p>
+                  <ol className="list-decimal pl-4 space-y-1.5">
+                    <li>Use your <strong>Application ID</strong> above to track your application status.</li>
+                    <li>Wait for admin review. Once your application status is updated to <strong>Approved</strong>, you must contact the college/institute to finalize your admission.</li>
+                    <li>Visit the college office or contact administration to submit the main Admission Fee and complete your board registration processes.</li>
+                  </ol>
+                </div>
+
+                <div className="mt-6 flex flex-col gap-2">
                   <Button
                     onClick={() => {
                       setSubmitted(false);

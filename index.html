@@ -13,6 +13,20 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="CMPI" />
     <title>Cox's Bazar Model Polytechnic Institute</title>
+    <!-- Prevent theme flash before React boot -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('cmpi-theme');
+          var theme = stored === 'dark' || stored === 'light'
+            ? stored
+            : window.matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light';
+          document.documentElement.classList.toggle('dark', theme === 'dark');
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

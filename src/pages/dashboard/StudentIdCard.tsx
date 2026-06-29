@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { getStudentProfile } from "@/services/api";
 import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
 import { Printer, RefreshCw, CreditCard, ShieldCheck, User } from "lucide-react";
@@ -114,33 +115,28 @@ export function StudentIdCard() {
           }
 
           @media print {
+            #root {
+              display: none !important;
+            }
             body {
               background: white !important;
               color: black !important;
               margin: 0 !important;
               padding: 0 !important;
             }
-            header, footer, aside, nav, button, .print\\:hidden {
-              display: none !important;
-            }
-            section, .container, .min-w-0, .flex-1, .bg-card, .shadow-sm, .rounded-sm, .border {
-              background: transparent !important;
-              border: none !important;
-              box-shadow: none !important;
-              padding: 0 !important;
-              margin: 0 !important;
-              width: auto !important;
-              min-height: 0 !important;
-            }
             #print-layout-container {
               display: flex !important;
               flex-direction: row !important;
-              flex-wrap: wrap !important;
+              flex-wrap: nowrap !important;
               justify-content: center !important;
               align-items: center !important;
               gap: 20px !important;
-              padding: 20px !important;
+              padding: 10px !important;
               background: white !important;
+              position: absolute !important;
+              left: 50% !important;
+              top: 50% !important;
+              transform: translate(-50%, -50%) !important;
               width: 100% !important;
             }
             .print-card-box {
@@ -148,8 +144,6 @@ export function StudentIdCard() {
               border: 1px solid #064e3b !important;
               -webkit-print-color-adjust: exact !important;
               print-color-adjust: exact !important;
-              page-break-inside: avoid !important;
-              break-inside: avoid !important;
             }
           }
         `
@@ -323,117 +317,120 @@ export function StudentIdCard() {
         </div>
       </div>
 
-      {/* Hidden Print Layout (Shows Front & Back side-by-side for card cutting/laminating) */}
-      <div id="print-layout-container" className="hidden flex-row gap-8 items-center justify-center p-6 bg-white min-h-screen">
-        
-        {/* Front Card Print */}
-        <div className="print-card-box w-[480px] h-[300px] flex flex-col overflow-hidden rounded-2xl id-card-green-bg text-white relative shadow-none border border-emerald-800">
-          <div className="id-card-banner flex items-center justify-center gap-3">
-            <img src="/CMPI.png" alt="CMPI Logo" className="h-9 w-9 object-contain" />
-            <div className="text-left">
-              <h3 className="text-[11px] font-black tracking-wider text-yellow-400 uppercase">COX'S BAZAR MODEL POLYTECHNIC INSTITUTE</h3>
-              <p className="text-[8px] font-semibold text-emerald-300 mt-0.5">Approved by BTEB & Government of Bangladesh</p>
-            </div>
-          </div>
-          <div className="id-card-content flex flex-1 gap-4 items-center">
-            <div className="flex flex-col items-center justify-center">
-              <div className="h-24 w-24 overflow-hidden rounded-lg border-2 border-yellow-500/50 bg-emerald-950/40">
-                {profile.avatar ? (
-                  <img src={profile.avatar} alt={profile.name} className="h-full w-full object-cover" />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-emerald-900/50 text-emerald-300">
-                    <User className="h-10 w-10" />
-                  </div>
-                )}
-              </div>
-              <span className="mt-2 rounded bg-yellow-400/20 px-3 py-0.5 text-[9px] font-black uppercase tracking-wider text-yellow-400 border border-yellow-400/30">
-                STUDENT
-              </span>
-            </div>
-            <div className="flex-1 space-y-1.5 text-xs text-emerald-100">
-              <div>
-                <p className="text-[8px] text-emerald-400 uppercase tracking-wider font-bold">Name</p>
-                <p className="font-extrabold text-white text-sm leading-tight">{profile.name}</p>
-              </div>
-              <div className="grid grid-cols-3 gap-1">
-                <div>
-                  <p className="text-[8px] text-emerald-400 uppercase tracking-wider font-bold">Class ID/Roll</p>
-                  <p className="font-bold text-white font-mono">{profile.studentId}</p>
-                </div>
-                <div>
-                  <p className="text-[8px] text-emerald-400 uppercase tracking-wider font-bold">Board Roll</p>
-                  <p className="font-bold text-white font-mono">{profile.boardRoll || "N/A"}</p>
-                </div>
-                <div>
-                  <p className="text-[8px] text-emerald-400 uppercase tracking-wider font-bold">Reg No</p>
-                  <p className="font-bold text-white font-mono">{profile.regNo || "N/A"}</p>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <p className="text-[8px] text-emerald-400 uppercase tracking-wider font-bold">Technology/Dept</p>
-                  <p className="font-bold text-white truncate text-[11px]">{profile.department}</p>
-                </div>
-                <div>
-                  <p className="text-[8px] text-emerald-400 uppercase tracking-wider font-bold">Session</p>
-                  <p className="font-bold text-white font-mono">{profile.session}</p>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <p className="text-[8px] text-emerald-400 uppercase tracking-wider font-bold">Semester</p>
-                  <p className="font-bold text-white">{profile.semester}</p>
-                </div>
-                <div>
-                  <p className="text-[8px] text-emerald-400 uppercase tracking-wider font-bold">Blood Group</p>
-                  <p className="font-extrabold text-red-400 uppercase">{profile.bloodGroup}</p>
-                </div>
+      {/* Hidden Print Layout rendered outside #root to avoid parent wrapper page breaks */}
+      {typeof window !== "undefined" && createPortal(
+        <div id="print-layout-container" className="hidden print:flex flex-row gap-8 items-center justify-center p-6 bg-white min-h-screen">
+          
+          {/* Front Card Print */}
+          <div className="print-card-box w-[480px] h-[300px] flex flex-col overflow-hidden rounded-2xl id-card-green-bg text-white relative shadow-none border border-emerald-800">
+            <div className="id-card-banner flex items-center justify-center gap-3">
+              <img src="/CMPI.png" alt="CMPI Logo" className="h-9 w-9 object-contain" />
+              <div className="text-left">
+                <h3 className="text-[11px] font-black tracking-wider text-yellow-400 uppercase">COX'S BAZAR MODEL POLYTECHNIC INSTITUTE</h3>
+                <p className="text-[8px] font-semibold text-emerald-300 mt-0.5">Approved by BTEB & Government of Bangladesh</p>
               </div>
             </div>
-          </div>
-          <div className="h-1.5 w-full bg-gradient-to-r from-emerald-500 via-yellow-400 to-green-600"></div>
-        </div>
-
-        {/* Back Card Print */}
-        <div className="print-card-box w-[480px] h-[300px] flex flex-col overflow-hidden rounded-2xl id-card-green-bg text-white relative shadow-none border border-emerald-800">
-          <div className="id-card-banner text-center">
-            <h4 className="text-[10px] font-extrabold tracking-widest text-yellow-400 uppercase">CMPI CAMPUS</h4>
-          </div>
-          <div className="id-card-content flex flex-1 flex-col justify-between text-[9px] text-emerald-200">
-            <div className="space-y-1">
-              <p className="font-extrabold text-white text-xs uppercase tracking-wider border-b border-emerald-800 pb-1">INSTRUCTIONS</p>
-              <ul className="list-decimal pl-4 space-y-0.5 leading-tight text-emerald-300 font-medium">
-                <li>This card is the property of Cox's Bazar Model Polytechnic Institute.</li>
-                <li>The holder must wear and display this card visibly on campus at all times.</li>
-                <li>If found, please return to the institute administrative office.</li>
-              </ul>
-            </div>
-            <div className="flex items-center justify-between border-t border-emerald-800/80 pt-2">
-              <div className="space-y-0.5 font-mono text-[8px] text-emerald-400">
-                <p>Emergency: +880 1888-000000</p>
-                <p>Email: admin@cmpi.edu.bd</p>
-              </div>
-              <div className="flex flex-col items-center gap-0.5 justify-center rounded bg-white p-1 shadow-sm border border-emerald-800">
-                <img src={qrCodeUrl} alt="Verification QR" className="h-12 w-12" />
-                <span className="text-[6px] text-emerald-955 font-black uppercase tracking-widest flex items-center gap-0.5">
-                  <ShieldCheck className="h-1.5 w-1.5 text-green-600" /> Verify
+            <div className="id-card-content flex flex-1 gap-4 items-center">
+              <div className="flex flex-col items-center justify-center">
+                <div className="h-24 w-24 overflow-hidden rounded-lg border-2 border-yellow-500/50 bg-emerald-950/40">
+                  {profile.avatar ? (
+                    <img src={profile.avatar} alt={profile.name} className="h-full w-full object-cover" />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-emerald-900/50 text-emerald-300">
+                      <User className="h-10 w-10" />
+                    </div>
+                  )}
+                </div>
+                <span className="mt-2 rounded bg-yellow-400/20 px-3 py-0.5 text-[9px] font-black uppercase tracking-wider text-yellow-400 border border-yellow-400/30">
+                  STUDENT
                 </span>
               </div>
-              <div className="flex flex-col items-center">
-                <div className="h-6 w-20 flex items-center justify-center opacity-90">
-                  <span className="font-serif italic text-xs text-yellow-400 tracking-wide">DidarUllah</span>
+              <div className="flex-1 space-y-1.5 text-xs text-emerald-100">
+                <div>
+                  <p className="text-[8px] text-emerald-400 uppercase tracking-wider font-bold">Name</p>
+                  <p className="font-extrabold text-white text-sm leading-tight">{profile.name}</p>
                 </div>
-                <div className="w-24 border-t border-emerald-700 mt-1 text-center">
-                  <p className="text-[7px] font-black text-white leading-tight">Ln. Md. Didar Ullah</p>
-                  <p className="text-[6px] text-emerald-400 leading-tight">Principal</p>
+                <div className="grid grid-cols-3 gap-1">
+                  <div>
+                    <p className="text-[8px] text-emerald-400 uppercase tracking-wider font-bold">Class ID/Roll</p>
+                    <p className="font-bold text-white font-mono">{profile.studentId}</p>
+                  </div>
+                  <div>
+                    <p className="text-[8px] text-emerald-400 uppercase tracking-wider font-bold">Board Roll</p>
+                    <p className="font-bold text-white font-mono">{profile.boardRoll || "N/A"}</p>
+                  </div>
+                  <div>
+                    <p className="text-[8px] text-emerald-400 uppercase tracking-wider font-bold">Reg No</p>
+                    <p className="font-bold text-white font-mono">{profile.regNo || "N/A"}</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <p className="text-[8px] text-emerald-400 uppercase tracking-wider font-bold">Technology/Dept</p>
+                    <p className="font-bold text-white truncate text-[11px]">{profile.department}</p>
+                  </div>
+                  <div>
+                    <p className="text-[8px] text-emerald-400 uppercase tracking-wider font-bold">Session</p>
+                    <p className="font-bold text-white font-mono">{profile.session}</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <p className="text-[8px] text-emerald-400 uppercase tracking-wider font-bold">Semester</p>
+                    <p className="font-bold text-white">{profile.semester}</p>
+                  </div>
+                  <div>
+                    <p className="text-[8px] text-emerald-400 uppercase tracking-wider font-bold">Blood Group</p>
+                    <p className="font-extrabold text-red-400 uppercase">{profile.bloodGroup}</p>
+                  </div>
                 </div>
               </div>
             </div>
+            <div className="h-1.5 w-full bg-gradient-to-r from-emerald-500 via-yellow-400 to-green-600"></div>
           </div>
-          <div className="h-1.5 w-full bg-gradient-to-r from-emerald-500 via-yellow-400 to-green-600"></div>
-        </div>
 
-      </div>
+          {/* Back Card Print */}
+          <div className="print-card-box w-[480px] h-[300px] flex flex-col overflow-hidden rounded-2xl id-card-green-bg text-white relative shadow-none border border-emerald-800">
+            <div className="id-card-banner text-center">
+              <h4 className="text-[10px] font-extrabold tracking-widest text-yellow-400 uppercase">CMPI CAMPUS</h4>
+            </div>
+            <div className="id-card-content flex flex-1 flex-col justify-between text-[9px] text-emerald-200">
+              <div className="space-y-1">
+                <p className="font-extrabold text-white text-xs uppercase tracking-wider border-b border-emerald-800 pb-1">INSTRUCTIONS</p>
+                <ul className="list-decimal pl-4 space-y-0.5 leading-tight text-emerald-300 font-medium">
+                  <li>This card is the property of Cox's Bazar Model Polytechnic Institute.</li>
+                  <li>The holder must wear and display this card visibly on campus at all times.</li>
+                  <li>If found, please return to the institute administrative office.</li>
+                </ul>
+              </div>
+              <div className="flex items-center justify-between border-t border-emerald-800/80 pt-2">
+                <div className="space-y-0.5 font-mono text-[8px] text-emerald-400">
+                  <p>Emergency: +880 1888-000000</p>
+                  <p>Email: admin@cmpi.edu.bd</p>
+                </div>
+                <div className="flex flex-col items-center gap-0.5 justify-center rounded bg-white p-1 shadow-sm border border-emerald-800">
+                  <img src={qrCodeUrl} alt="Verification QR" className="h-12 w-12" />
+                  <span className="text-[6px] text-emerald-955 font-black uppercase tracking-widest flex items-center gap-0.5">
+                    <ShieldCheck className="h-1.5 w-1.5 text-green-600" /> Verify
+                  </span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <div className="h-6 w-20 flex items-center justify-center opacity-90">
+                    <span className="font-serif italic text-xs text-yellow-400 tracking-wide">DidarUllah</span>
+                  </div>
+                  <div className="w-24 border-t border-emerald-700 mt-1 text-center">
+                    <p className="text-[7px] font-black text-white leading-tight">Ln. Md. Didar Ullah</p>
+                    <p className="text-[6px] text-emerald-400 leading-tight">Principal</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="h-1.5 w-full bg-gradient-to-r from-emerald-500 via-yellow-400 to-green-600"></div>
+          </div>
+
+        </div>,
+        document.body
+      )}
     </>
   );
 }

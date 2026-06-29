@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Outlet, NavLink, Link, useNavigate, useLocation } from "react-router-dom";
-import { LayoutDashboard, Mail, CreditCard, Menu, X } from "lucide-react";
+import { LayoutDashboard, Mail, CreditCard, Menu, X, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageTransition } from "@/components/common/PageTransition";
 import { Header } from "@/components/layout/Header";
@@ -81,13 +81,26 @@ export function StudentLayout() {
               }`}
             >
               <div className="flex h-full flex-col rounded-sm border bg-card p-5 shadow-sm overflow-auto">
-                {/* Desktop header */}
                 <div className="mb-6 hidden lg:block">
-                  <p className="text-sm text-muted-foreground">Student Portal</p>
-                  <h2 className="text-xl font-bold">Dashboard</h2>
-                  {user?.email && <p className="mt-1 truncate text-xs font-mono text-primary">{user.email}</p>}
+                  <div className="flex items-center gap-3 mb-4 p-3 bg-muted/40 rounded-lg border border-border/50">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-sm overflow-hidden border border-border">
+                      {user?.avatar ? (
+                        <img src={user.avatar} alt={user.name} className="h-full w-full object-cover" />
+                      ) : user?.name ? (
+                        user.name.charAt(0).toUpperCase()
+                      ) : (
+                        <User className="h-4 w-4" />
+                      )}
+                    </div>
+                    <div className="overflow-hidden">
+                      <p className="text-sm font-black text-foreground truncate">{user?.name || "Student"}</p>
+                      <p className="text-[10px] text-muted-foreground truncate">{user?.email}</p>
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground">Student Portal</p>
+                  <h2 className="text-lg font-bold">Dashboard</h2>
                   {user?.status && (
-                    <span className={`inline-block mt-2 rounded-full px-2 py-0.5 text-[10px] font-black uppercase border ${
+                    <span className={`inline-block mt-1.5 rounded-full px-2 py-0.5 text-[10px] font-black uppercase border ${
                       user.status === "active"
                         ? "bg-green-500/10 text-green-600 border-green-500/20"
                         : user.status === "suspended"
@@ -101,9 +114,20 @@ export function StudentLayout() {
 
                 {/* Mobile close button */}
                 <div className="mb-4 flex items-center justify-between lg:hidden">
-                  <div>
-                    <p className="text-sm text-muted-foreground">Student Portal</p>
-                    <h2 className="text-lg font-bold">Dashboard</h2>
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-xs overflow-hidden border border-border">
+                      {user?.avatar ? (
+                        <img src={user.avatar} alt={user.name} className="h-full w-full object-cover" />
+                      ) : user?.name ? (
+                        user.name.charAt(0).toUpperCase()
+                      ) : (
+                        <User className="h-3 w-3" />
+                      )}
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Student Portal</p>
+                      <h2 className="text-sm font-bold truncate max-w-[120px]">{user?.name || "Student"}</h2>
+                    </div>
                   </div>
                   <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setSidebarOpen(false)}>
                     <X className="h-4 w-4" />

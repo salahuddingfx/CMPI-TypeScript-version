@@ -182,11 +182,17 @@ export function Admission() {
                   <div><span className="text-muted-foreground">Session:</span> {trackResult.session || "N/A"}</div>
                   <div><span className="text-muted-foreground">Applied:</span> {new Date(trackResult.created_at).toLocaleDateString()}</div>
                   
-                  {/* Payment Details */}
+                  {/* Form Submission Details */}
+                  <div className="col-span-2 mt-2 pt-2 border-t font-semibold text-xs text-primary uppercase">Form Submission Details</div>
                   <div><span className="text-muted-foreground">Payment Method:</span> {trackResult.payment_method || "N/A"}</div>
                   <div><span className="text-muted-foreground">TxnID:</span> <strong className="font-mono text-foreground">{trackResult.txn_id || "N/A"}</strong></div>
-                  <div><span className="text-muted-foreground">Payment Status:</span> <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${paymentStatusColor(trackResult.payment_status)}`}>{trackResult.payment_status || "Pending"}</span></div>
-                  <div><span className="text-muted-foreground">Admission Status:</span> <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${statusColor(trackResult.status)}`}>{trackResult.status}</span></div>
+                  <div><span className="text-muted-foreground">Form Fee Status:</span> <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${paymentStatusColor(trackResult.payment_status)}`}>{trackResult.payment_status || "Pending"}</span></div>
+                  <div><span className="text-muted-foreground">Review Status:</span> <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${statusColor(trackResult.status)}`}>{trackResult.status}</span></div>
+                  
+                  {/* College Admission & Board Confirmation Details */}
+                  <div className="col-span-2 mt-2 pt-2 border-t font-semibold text-xs text-primary uppercase">College Admission & Board Confirmation</div>
+                  <div><span className="text-muted-foreground">Admission Fee Status:</span> <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${paymentStatusColor(trackResult.admission_fee_status)}`}>{trackResult.admission_fee_status || "Unpaid"}</span></div>
+                  <div><span className="text-muted-foreground">Board Confirmation:</span> <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${trackResult.board_confirmation === 'confirmed' ? 'text-green-600 bg-green-50 border-green-200' : 'text-yellow-600 bg-yellow-50 border-yellow-200'}`}>{trackResult.board_confirmation || "Pending"}</span></div>
                 </div>
                 {trackResult.documents?.length > 0 && (
                   <div className="mt-3 text-sm border-t pt-2"><span className="text-muted-foreground">Documents uploaded:</span> {trackResult.documents.length}/6</div>

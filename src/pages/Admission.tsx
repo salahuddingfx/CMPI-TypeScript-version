@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Check, ArrowLeft, ArrowRight, Upload, Search, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -223,7 +223,7 @@ export function Admission() {
                     onClick={() => {
                       setSubmitted(false);
                       setStep(1);
-                      setForm({ name: "", email: "", phone: "", department: "", session: "", sscGpa: "", hscGpa: "", fatherName: "", motherName: "", address: "", bloodGroup: "" });
+                      setForm({ name: "", email: "", phone: "", department: "", session: "", sscGpa: "", hscGpa: "", fatherName: "", motherName: "", address: "", bloodGroup: "", paymentMethod: "", txnId: "" });
                       setDocs({});
                     }}
                   >

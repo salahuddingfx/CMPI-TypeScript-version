@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { BookOpen, Award, AlertTriangle, TrendingUp, DollarSign, User, Search, AlertCircle, Trophy } from "lucide-react";
+import { BookOpen, Award, AlertTriangle, TrendingUp, DollarSign, User, Search, Trophy } from "lucide-react";
 import { XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, LineChart, Line, PieChart, Pie, Cell } from "recharts";
 import { getDashboard, getNotices } from "@/services/api";
 import { DashboardSkeleton } from "@/components/common/LoadingSkeleton";

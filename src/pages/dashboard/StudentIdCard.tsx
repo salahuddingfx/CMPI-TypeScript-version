@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { getStudentProfile } from "@/services/api";
+import { getStudentProfile, downloadStudentIdCard } from "@/services/api";
 import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
 import { Printer, RefreshCw, CreditCard, ShieldCheck, User, Download, Loader2 } from "lucide-react";
 import { SEO } from "@/components/common/SEO";
@@ -31,57 +31,29 @@ export function StudentIdCard() {
   const [loading, setLoading] = useState(true);
   const [isFlipped, setIsFlipped] = useState(false);
 
-  const [downloadingFront, setDownloadingFront] = useState(false);
-  const [downloadingBack, setDownloadingBack] = useState(false);
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
 
-  const handleDownloadFront = async () => {
-    const element = document.getElementById("print-card-front");
-    if (!element) return;
-    setDownloadingFront(true);
+  const handleDownloadPdf = async () => {
+    setDownloadingPdf(true);
     try {
-      const { toPng } = await import("html-to-image");
-      const dataUrl = await toPng(element, { 
-        cacheBust: true, 
-        pixelRatio: 3,
-        style: {
-          transform: "none",
-          boxShadow: "none",
-        }
-      });
+      const blob = await downloadStudentIdCard();
+      const url = window.URL.createObjectURL(new Blob([blob], { type: "application/pdf" }));
       const link = document.createElement("a");
-      link.download = `student-id-front-${profile?.studentId || "card"}.png`;
-      link.href = dataUrl;
+      link.href = url;
+      link.setAttribute("download", `student-id-card-${profile?.studentId || "card"}.pdf`);
+      document.body.appendChild(link);
       link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
     } catch (err) {
-      console.error("Failed to download front card", err);
+      console.error("Failed to download PDF ID card", err);
     } finally {
-      setDownloadingFront(false);
+      setDownloadingPdf(false);
     }
   };
 
-  const handleDownloadBack = async () => {
-    const element = document.getElementById("print-card-back");
-    if (!element) return;
-    setDownloadingBack(true);
-    try {
-      const { toPng } = await import("html-to-image");
-      const dataUrl = await toPng(element, { 
-        cacheBust: true, 
-        pixelRatio: 3,
-        style: {
-          transform: "none",
-          boxShadow: "none",
-        }
-      });
-      const link = document.createElement("a");
-      link.download = `student-id-back-${profile?.studentId || "card"}.png`;
-      link.href = dataUrl;
-      link.click();
-    } catch (err) {
-      console.error("Failed to download back card", err);
-    } finally {
-      setDownloadingBack(false);
-    }
+  const handlePrint = () => {
+    window.print();
   };
 
   useEffect(() => {
@@ -137,10 +109,6 @@ export function StudentIdCard() {
   const verificationUrl = `${window.location.origin}/verify-student/${profile.studentId}`;
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verificationUrl)}`;
 
-  const handlePrint = () => {
-    window.print();
-  };
-
   return (
     <>
       <SEO title="Digital Student ID Card" description="View and print your Cox's Bazar Model Polytechnic Institute digital ID card." />
@@ -188,10 +156,6 @@ export function StudentIdCard() {
               width: 100% !important;
               margin: 0 auto !important;
             }
-            #print-layout-container * {
-              -webkit-print-color-adjust: exact !important;
-              print-color-adjust: exact !important;
-            }
             .print-card-box {
               box-shadow: none !important;
               border: 1px solid #064e3b !important;
@@ -214,33 +178,21 @@ export function StudentIdCard() {
               <RefreshCw className="h-4 w-4" />
               Flip Card
             </Button>
-            <Button onClick={handlePrint} className="gap-2 bg-emerald-700 hover:bg-emerald-800 text-white">
+            <Button onClick={handlePrint} disabled={downloadingPdf} className="gap-2 bg-emerald-700 hover:bg-emerald-800 text-white">
               <Printer className="h-4 w-4" />
               Print ID Card
             </Button>
             <Button 
-              onClick={handleDownloadFront} 
-              disabled={downloadingFront || downloadingBack}
+              onClick={handleDownloadPdf} 
+              disabled={downloadingPdf}
               className="gap-2 bg-blue-700 hover:bg-blue-800 text-white"
             >
-              {downloadingFront ? (
+              {downloadingPdf ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
                 <Download className="h-4 w-4" />
               )}
-              Download Front (PNG)
-            </Button>
-            <Button 
-              onClick={handleDownloadBack} 
-              disabled={downloadingFront || downloadingBack}
-              className="gap-2 bg-blue-700 hover:bg-blue-800 text-white"
-            >
-              {downloadingBack ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Download className="h-4 w-4" />
-              )}
-              Download Back (PNG)
+              Download ID Card (PDF)
             </Button>
           </div>
         </div>

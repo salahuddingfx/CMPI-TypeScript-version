@@ -61,6 +61,13 @@ export async function getStudentProfile() {
   return response.data;
 }
 
+export async function downloadStudentIdCard() {
+  const response = await api.get("/dashboard/id-card/download", {
+    responseType: "blob",
+  });
+  return response.data;
+}
+
 export async function updateStudentProfile(data: Record<string, string>) {
   const response = await api.put("/dashboard/profile", data);
   return response.data;

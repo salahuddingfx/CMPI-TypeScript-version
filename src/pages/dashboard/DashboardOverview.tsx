@@ -5,6 +5,7 @@ import { XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, LineChart, L
 import { getDashboard, getNotices } from "@/services/api";
 import { DashboardSkeleton } from "@/components/common/LoadingSkeleton";
 import { SEM_ORDER, semIndex } from "@/components/results/ResultHelpers";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 function getStoredUser() {
   try {
@@ -14,6 +15,7 @@ function getStoredUser() {
 }
 
 export default function DashboardOverview() {
+  const { language, t } = useLanguage();
   const [dashboard, setDashboard] = useState<any>(null);
   const [notices, setNotices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -112,15 +114,15 @@ export default function DashboardOverview() {
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2">
-              <h2 className="text-xl font-bold truncate">{user?.name || "Student"}</h2>
-              <Link to="/dashboard/profile" className="text-sm text-primary hover:underline shrink-0">Edit Profile</Link>
+              <h2 className="text-xl font-bold truncate">{user?.name || (language === 'en' ? "Student" : "শিক্ষার্থী")}</h2>
+              <Link to="/dashboard/profile" className="text-sm text-primary hover:underline shrink-0">{language === 'en' ? "Edit Profile" : "প্রোফাইল পরিবর্তন"}</Link>
             </div>
             <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
-              <span className="truncate">ID: <strong className="text-foreground font-mono">{user?.student_id || "—"}</strong></span>
-              {user?.board_roll && <span className="truncate">Board Roll: <strong className="text-foreground font-mono">{user.board_roll}</strong></span>}
-              <span className="truncate">Dept: <strong className="text-foreground">{user?.department || "—"}</strong></span>
-              <span className="truncate">Semester: <strong className="text-foreground">{user?.semester || "—"}</strong></span>
-              <span className="truncate">Session: <strong className="text-foreground">{user?.session || "—"}</strong></span>
+              <span className="truncate">{language === 'en' ? "ID" : "আইডি"}: <strong className="text-foreground font-mono">{user?.student_id || "—"}</strong></span>
+              {user?.board_roll && <span className="truncate">{language === 'en' ? "Board Roll" : "বোর্ড রোল"}: <strong className="text-foreground font-mono">{user.board_roll}</strong></span>}
+              <span className="truncate">{language === 'en' ? "Dept" : "বিভাগ"}: <strong className="text-foreground">{user?.department || "—"}</strong></span>
+              <span className="truncate">{language === 'en' ? "Semester" : "সেমিস্টার"}: <strong className="text-foreground">{user?.semester || "—"}</strong></span>
+              <span className="truncate">{language === 'en' ? "Session" : "সেশন"}: <strong className="text-foreground">{user?.session || "—"}</strong></span>
             </div>
           </div>
         </div>
@@ -130,35 +132,35 @@ export default function DashboardOverview() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
         <div className="rounded-sm border bg-card p-3 sm:p-4 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-xs font-medium text-muted-foreground">Enrolled Courses</span>
+            <span className="text-[10px] sm:text-xs font-medium text-muted-foreground">{t("db_enrolled_courses")}</span>
             <BookOpen className="h-4 w-4 text-primary" />
           </div>
           <div className="mt-2 text-2xl font-bold">{courses.length}</div>
         </div>
         <div className="rounded-sm border bg-card p-3 sm:p-4 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-xs font-medium text-muted-foreground">Institute CGPA</span>
+            <span className="text-[10px] sm:text-xs font-medium text-muted-foreground">{t("db_cgpa")}</span>
             <TrendingUp className="h-4 w-4 text-green-500" />
           </div>
           <div className="mt-2 text-2xl font-bold">{cgpa}</div>
         </div>
         <div className="rounded-sm border bg-card p-3 sm:p-4 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-xs font-medium text-muted-foreground">Pending Bills</span>
+            <span className="text-[10px] sm:text-xs font-medium text-muted-foreground">{t("db_pending_bills")}</span>
             <DollarSign className="h-4 w-4 text-yellow-500" />
           </div>
           <div className="mt-2 text-2xl font-bold">{pendingBills.length}</div>
           {totalPending > 0 && (
-            <div className="text-[10px] sm:text-xs text-yellow-600 mt-1">Bdt {totalPending.toLocaleString()} due</div>
+            <div className="text-[10px] sm:text-xs text-yellow-600 mt-1">{language === 'en' ? 'due' : 'বকেয়া'} BDT {totalPending.toLocaleString()}</div>
           )}
         </div>
         <div className="rounded-sm border bg-card p-3 sm:p-4 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-xs font-medium text-muted-foreground">Results Published</span>
+            <span className="text-[10px] sm:text-xs font-medium text-muted-foreground">{t("db_results_pub")}</span>
             <Award className="h-4 w-4 text-blue-500" />
           </div>
           <div className="mt-2 text-2xl font-bold">{courseResults.length}</div>
-          <div className="text-[10px] sm:text-xs text-muted-foreground mt-1">semesters</div>
+          <div className="text-[10px] sm:text-xs text-muted-foreground mt-1">{language === 'en' ? 'semesters' : 'সেমিস্টার'}</div>
         </div>
       </div>
 
@@ -168,9 +170,9 @@ export default function DashboardOverview() {
           <div className="flex items-center justify-between gap-2">
             <h3 className="text-sm font-bold flex items-center gap-2">
               <Trophy className="h-4 w-4 text-primary" />
-              BTEB Board Results
+              {t("db_board_results")}
             </h3>
-            <Link to="/dashboard/results" className="text-xs text-primary hover:underline shrink-0">View Full Results</Link>
+            <Link to="/dashboard/results" className="text-xs text-primary hover:underline shrink-0">{t("db_view_all_results")}</Link>
           </div>
 
           {/* Board GPA Grid */}
@@ -207,22 +209,22 @@ export default function DashboardOverview() {
           {/* Board Summary Stats */}
           <div className="flex flex-wrap gap-4 sm:gap-6 pt-2 border-t">
             <div>
-              <span className="text-[10px] uppercase font-black tracking-wider text-muted-foreground">Board CGPA</span>
+              <span className="text-[10px] uppercase font-black tracking-wider text-muted-foreground">{language === 'en' ? "Board CGPA" : "বোর্ড CGPA"}</span>
               <p className="text-xl font-black text-primary">{boardCgpa > 0 ? boardCgpa.toFixed(2) : "—"}</p>
             </div>
             <div>
-              <span className="text-[10px] uppercase font-black tracking-wider text-muted-foreground">Passed</span>
+              <span className="text-[10px] uppercase font-black tracking-wider text-muted-foreground">{language === 'en' ? "Passed" : "উত্তীর্ণ"}</span>
               <p className="text-xl font-black text-green-600">{passedSemesters.length}</p>
             </div>
             <div>
-              <span className="text-[10px] uppercase font-black tracking-wider text-muted-foreground">Referred</span>
+              <span className="text-[10px] uppercase font-black tracking-wider text-muted-foreground">{language === 'en' ? "Referred" : "রেফার্ড"}</span>
               <p className={`text-xl font-black ${totalReferredSubjects > 0 ? "text-red-600" : "text-green-600"}`}>
                 {totalReferredSubjects > 0 ? `${referredSemesters.length} sem (${totalReferredSubjects} subs)` : "None"}
               </p>
             </div>
             {totalReferredSubjects > 0 && (
               <div className="flex-1">
-                <span className="text-[10px] uppercase font-black tracking-wider text-muted-foreground">Referred Subjects</span>
+                <span className="text-[10px] uppercase font-black tracking-wider text-muted-foreground">{language === 'en' ? "Referred Subjects" : "রেফার্ড বিষয়সমূহ"}</span>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {referredSemesters.flatMap((r: any) =>
                     (r.referred_subjects || []).map((sub: string, i: number) => (

@@ -6,6 +6,7 @@ import { SEO } from "@/components/common/SEO";
 import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { submitAdmission, trackAdmission, fetchInstituteData } from "@/services/api";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const departments = [
   "Civil Technology",
@@ -17,19 +18,51 @@ const departments = [
   "Marine Technology",
 ];
 
-const requiredDocs = [
-  { key: "ssc_certificate", label: "SSC Certificate + Marksheat" },
-  { key: "nid_birth", label: "National ID Card (NID) / Birth Certificate" },
-  { key: "photos", label: "4 Passport-size Photographs" },
-  { key: "guardian_nid", label: "Guardian's NID Copy" },
-  { key: "transfer_cert", label: "Transfer Certificate" },
-  { key: "character_cert", label: "Proshongso Potro (Character Certificate)" },
-];
+
 
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1";
 
 export function Admission() {
+  const { language, t } = useLanguage();
   const [step, setStep] = useState(1);
+
+  const localizedDocs = [
+    { key: "ssc_certificate", label: language === "en" ? "SSC Certificate + Marksheet" : "এসএসসি সার্টিফিকেট + মার্কশিট" },
+    { key: "nid_birth", label: language === "en" ? "National ID/Birth Certificate" : "জাতীয় পরিচয়পত্র/জন্ম নিবন্ধন" },
+    { key: "photos", label: language === "en" ? "4 Passport-size Photographs" : "৪ কপি পাসপোর্ট সাইজের ছবি" },
+    { key: "guardian_nid", label: language === "en" ? "Guardian's NID Copy" : "অভিভাবকের এনআইডি কার্ডের কপি" },
+    { key: "transfer_cert", label: language === "en" ? "Transfer Certificate" : "প্রশংসাপত্র / ট্রান্সফার সার্টিফিকেট" },
+    { key: "character_cert", label: language === "en" ? "Character Certificate" : "চারিত্রিক সনদপত্র" },
+  ];
+
+  const localizedDepts = departments.map(d => ({
+    value: d,
+    label: language === "en" ? d : (
+      d === "Civil Technology" ? "সিভিল টেকনোলজি" :
+      d === "Computer Science & Technology" ? "কম্পিউটার সায়েন্স অ্যান্ড টেকনোলজি" :
+      d === "Electrical Technology" ? "ইলেকট্রিক্যাল টেকনোলজি" :
+      d === "Electronics Technology" ? "ইলেকট্রনিক্স টেকনোলজি" :
+      d === "Telecommunications Technology" ? "টেলিকমিউনিকেশনস টেকনোলজি" :
+      d === "Mechanical Technology" ? "মেকানিক্যাল টেকনোলজি" :
+      d === "Marine Technology" ? "মেরিন টেকনোলজি" : d
+    )
+  }));
+
+  const getLocalizedPayStatus = (status: string) => {
+    switch (status?.toLowerCase()) {
+      case "paid": return t("tr_paid");
+      case "unpaid": return t("tr_unpaid");
+      default: return t("tr_pending");
+    }
+  };
+
+  const getLocalizedReviewStatus = (status: string) => {
+    switch (status?.toLowerCase()) {
+      case "approved": return t("tr_confirmed");
+      case "rejected": return "Rejected";
+      default: return t("tr_pending");
+    }
+  };
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [serverAppId, setServerAppId] = useState("");
@@ -102,7 +135,7 @@ export function Admission() {
       setTrackResult(res);
     } catch {
       setTrackResult(null);
-      setError("Application not found. Check your Application ID.");
+      setError(t("adm_track_not_found"));
     } finally {
       setTrackLoading(false);
     }
@@ -126,12 +159,12 @@ export function Admission() {
 
   return (
     <PageTransition>
-      <SEO title="Apply for Admission" description="Online admission application for CMPI diploma programs." />
+      <SEO title={t("nav_admission")} description="Online admission application for CMPI diploma programs." />
       <section className="container section-pad">
         <SectionHeader
-          eyebrow={`Admission ${new Date().getFullYear()}-${new Date().getFullYear() + 1}`}
-          title="Apply for diploma programs"
-          description="Fill in the application form below. You can also download the form and submit it physically."
+          eyebrow={t("adm_eyebrow")}
+          title={t("adm_title")}
+          description={t("adm_desc")}
           align="center"
           className="mb-10"
         />
@@ -142,30 +175,30 @@ export function Admission() {
             href={`${API_BASE}/admissions/download-form`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-sm border border-primary/30 bg-primary/5 px-4 py-2 text-sm font-medium text-primary hover:bg-primary/10"
+            className="inline-flex items-center gap-2 rounded-sm border border-primary/30 bg-primary/5 px-4 py-2 text-sm font-medium text-primary hover:bg-primary/10 animate-fade-in"
           >
-            <Download className="h-4 w-4" /> Download PDF Form
+            <Download className="h-4 w-4" /> {t("adm_download_pdf")}
           </a>
           <button
             onClick={() => { setTrackMode(!trackMode); setTrackResult(null); setError(null); }}
             className="inline-flex items-center gap-2 rounded-sm border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
           >
-            <Search className="h-4 w-4" /> Track Application
+            <Search className="h-4 w-4" /> {t("adm_track_app")}
           </button>
         </div>
 
         {/* Status Tracking */}
         {trackMode && (
           <div className="mx-auto mb-10 max-w-lg rounded-sm border bg-card p-6 shadow-sm">
-            <h3 className="mb-4 text-lg font-bold">Track Your Application</h3>
+            <h3 className="mb-4 text-lg font-bold">{t("adm_track_header")}</h3>
             <div className="flex gap-3">
               <Input
                 value={trackId}
                 onChange={(e) => setTrackId(e.target.value)}
-                placeholder="Enter Application ID (e.g. CMPI-ADM-000123)"
+                placeholder={t("adm_track_placeholder")}
               />
               <Button onClick={handleTrack} disabled={!trackId || trackLoading}>
-                {trackLoading ? "Checking..." : "Track"}
+                {trackLoading ? t("btn_loading") : t("adm_track_btn")}
               </Button>
             </div>
             {trackResult && (
@@ -173,30 +206,30 @@ export function Admission() {
                 <div className="flex items-center justify-between border-b pb-2 mb-2">
                   <span className="font-mono font-bold">{trackResult.application_id}</span>
                   <span className={`rounded-full border px-3 py-1 text-xs font-semibold ${statusColor(trackResult.status)}`}>
-                    {trackResult.status}
+                    {getLocalizedReviewStatus(trackResult.status)}
                   </span>
                 </div>
                 <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                  <div><span className="text-muted-foreground">Name:</span> {trackResult.name}</div>
-                  <div><span className="text-muted-foreground">Department:</span> {trackResult.department}</div>
-                  <div><span className="text-muted-foreground">Session:</span> {trackResult.session || "N/A"}</div>
-                  <div><span className="text-muted-foreground">Applied:</span> {new Date(trackResult.created_at).toLocaleDateString()}</div>
+                  <div><span className="text-muted-foreground">{t("tr_name")}:</span> {trackResult.name}</div>
+                  <div><span className="text-muted-foreground">{t("tr_dept")}:</span> {trackResult.department}</div>
+                  <div><span className="text-muted-foreground">{t("tr_session")}:</span> {trackResult.session || "N/A"}</div>
+                  <div><span className="text-muted-foreground">{t("tr_applied")}:</span> {new Date(trackResult.created_at).toLocaleDateString()}</div>
                   
                   {/* Form Submission Details */}
-                  <div className="col-span-2 mt-2 pt-2 border-t font-semibold text-xs text-primary uppercase">Form Submission Details</div>
-                  <div><span className="text-muted-foreground">Payment Method:</span> {trackResult.payment_method || "N/A"}</div>
-                  <div><span className="text-muted-foreground">Sender's No:</span> <strong className="text-foreground">{trackResult.sender_number || "N/A"}</strong></div>
-                  <div><span className="text-muted-foreground">TxnID:</span> <strong className="font-mono text-foreground">{trackResult.txn_id || "N/A"}</strong></div>
-                  <div><span className="text-muted-foreground">Form Fee Status:</span> <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${paymentStatusColor(trackResult.payment_status)}`}>{trackResult.payment_status || "Pending"}</span></div>
-                  <div><span className="text-muted-foreground">Review Status:</span> <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${statusColor(trackResult.status)}`}>{trackResult.status}</span></div>
+                  <div className="col-span-2 mt-2 pt-2 border-t font-semibold text-xs text-primary uppercase">{t("tr_form_section")}</div>
+                  <div><span className="text-muted-foreground">{t("tr_pay_method")}:</span> {trackResult.payment_method || "N/A"}</div>
+                  <div><span className="text-muted-foreground">{t("tr_sender_no")}:</span> <strong className="text-foreground">{trackResult.sender_number || "N/A"}</strong></div>
+                  <div><span className="text-muted-foreground">{t("tr_txnid")}:</span> <strong className="font-mono text-foreground">{trackResult.txn_id || "N/A"}</strong></div>
+                  <div><span className="text-muted-foreground">{t("tr_form_fee")}:</span> <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${paymentStatusColor(trackResult.payment_status)}`}>{getLocalizedPayStatus(trackResult.payment_status)}</span></div>
+                  <div><span className="text-muted-foreground">{t("tr_review_status")}:</span> <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${statusColor(trackResult.status)}`}>{getLocalizedReviewStatus(trackResult.status)}</span></div>
                   
                   {/* College Admission & Board Confirmation Details */}
-                  <div className="col-span-2 mt-2 pt-2 border-t font-semibold text-xs text-primary uppercase">College Admission & Board Confirmation</div>
-                  <div><span className="text-muted-foreground">Admission Fee Status:</span> <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${paymentStatusColor(trackResult.admission_fee_status)}`}>{trackResult.admission_fee_status || "Unpaid"}</span></div>
-                  <div><span className="text-muted-foreground">Board Confirmation:</span> <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${trackResult.board_confirmation === 'confirmed' ? 'text-green-600 bg-green-50 border-green-200' : 'text-yellow-600 bg-yellow-50 border-yellow-200'}`}>{trackResult.board_confirmation || "Pending"}</span></div>
+                  <div className="col-span-2 mt-2 pt-2 border-t font-semibold text-xs text-primary uppercase">{t("tr_college_section")}</div>
+                  <div><span className="text-muted-foreground">{t("tr_adm_fee")}:</span> <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${paymentStatusColor(trackResult.admission_fee_status)}`}>{getLocalizedPayStatus(trackResult.admission_fee_status)}</span></div>
+                  <div><span className="text-muted-foreground">{t("tr_board_conf")}:</span> <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${trackResult.board_confirmation === 'confirmed' ? 'text-green-600 bg-green-50 border-green-200' : 'text-yellow-600 bg-yellow-50 border-yellow-200'}`}>{trackResult.board_confirmation === 'confirmed' ? t("tr_confirmed") : t("tr_pending")}</span></div>
                 </div>
                 {trackResult.documents?.length > 0 && (
-                  <div className="mt-3 text-sm border-t pt-2"><span className="text-muted-foreground">Documents uploaded:</span> {trackResult.documents.length}/6</div>
+                  <div className="mt-3 text-sm border-t pt-2"><span className="text-muted-foreground">{language === 'en' ? 'Documents uploaded' : 'আপলোডকৃত কাগজপত্র'}:</span> {trackResult.documents.length}/6</div>
                 )}
               </div>
             )}
@@ -213,26 +246,26 @@ export function Admission() {
         {!trackMode && (
           <>
             {submitted ? (
-              <div className="mx-auto max-w-lg rounded-sm border border-green-200 bg-green-50 p-8 text-center dark:border-green-800 dark:bg-green-950/30">
+              <div className="mx-auto max-w-lg rounded-sm border border-green-200 bg-green-50 p-8 text-center dark:border-green-800 dark:bg-green-955/30">
                 <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/50">
                   <Check className="h-8 w-8 text-green-600" />
                 </div>
-                <h2 className="text-2xl font-bold text-green-700 dark:text-green-400">Application Submitted!</h2>
+                <h2 className="text-2xl font-bold text-green-700 dark:text-green-400">{t("success_title")}</h2>
                 <p className="mt-3 text-sm text-green-600 dark:text-green-500">
-                  Your application has been received. A confirmation email was sent to <span className="font-semibold">{form.email}</span>.
+                  {t("success_body")} <span className="font-semibold">{form.email}</span>.
                 </p>
                 <p className="mt-2 text-sm text-green-600 dark:text-green-500">
-                  Application ID: <span className="font-mono font-bold text-foreground">{serverAppId}</span>
+                  {t("success_appid")}: <span className="font-mono font-bold text-foreground">{serverAppId}</span>
                 </p>
-                <p className="mt-1 text-xs text-muted-foreground">Save this ID to track your application status.</p>
+                <p className="mt-1 text-xs text-muted-foreground">{t("success_save_id")}</p>
 
                 {/* What's Next Notice Box */}
                 <div className="mt-6 rounded-md border border-yellow-250 bg-yellow-50/50 p-4 text-left text-xs leading-relaxed text-yellow-800 dark:border-yellow-900/40 dark:bg-yellow-955/20 dark:text-yellow-400">
-                  <p className="font-extrabold text-sm uppercase mb-1.5">What to do next?</p>
+                  <p className="font-extrabold text-sm uppercase mb-1.5">{t("next_steps_title")}</p>
                   <ol className="list-decimal pl-4 space-y-1.5">
-                    <li>Use your <strong>Application ID</strong> above to track your application status.</li>
-                    <li>Wait for admin review. Once your application status is updated to <strong>Approved</strong>, you must contact the college/institute to finalize your admission.</li>
-                    <li>Visit the college office or contact administration to submit the main Admission Fee and complete your board registration processes.</li>
+                    <li>{t("next_steps_1")}</li>
+                    <li>{t("next_steps_2")}</li>
+                    <li>{t("next_steps_3")}</li>
                   </ol>
                 </div>
 
@@ -245,7 +278,7 @@ export function Admission() {
                       setDocs({});
                     }}
                   >
-                    Submit Another Application
+                    {t("success_btn_new")}
                   </Button>
                 </div>
               </div>
@@ -264,68 +297,68 @@ export function Admission() {
                 <form onSubmit={handleSubmit} className="rounded-sm border bg-card p-6 shadow-sm sm:p-8">
                   {/* Step 1: Personal Info */}
                   {step === 1 && (
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-bold">Personal Information</h3>
+                    <div className="space-y-4 animate-fade-in">
+                      <h3 className="text-lg font-bold">{t("step_personal")}</h3>
                       <div className="grid gap-4 sm:grid-cols-2">
-                        <div className="space-y-2"><label className="text-sm font-semibold">Full Name</label><Input value={form.name} onChange={(e) => update("name", e.target.value)} placeholder="Your full name" required /></div>
-                        <div className="space-y-2"><label className="text-sm font-semibold">Email</label><Input type="email" value={form.email} onChange={(e) => update("email", e.target.value)} placeholder="you@example.com" required /></div>
-                        <div className="space-y-2"><label className="text-sm font-semibold">Phone</label><Input value={form.phone} onChange={(e) => update("phone", e.target.value)} placeholder="+880 1XXX-XXXXXX" required /></div>
-                        <div className="space-y-2"><label className="text-sm font-semibold">Blood Group</label><Input value={form.bloodGroup} onChange={(e) => update("bloodGroup", e.target.value)} placeholder="A+, B+, O+, etc." /></div>
-                        <div className="space-y-2"><label className="text-sm font-semibold">Father's Name</label><Input value={form.fatherName} onChange={(e) => update("fatherName", e.target.value)} required /></div>
-                        <div className="space-y-2"><label className="text-sm font-semibold">Mother's Name</label><Input value={form.motherName} onChange={(e) => update("motherName", e.target.value)} required /></div>
+                        <div className="space-y-2"><label className="text-sm font-semibold">{t("lbl_fullname")}</label><Input value={form.name} onChange={(e) => update("name", e.target.value)} placeholder={language === "en" ? "Your full name" : "আপনার পূর্ণ নাম"} required /></div>
+                        <div className="space-y-2"><label className="text-sm font-semibold">{t("lbl_email")}</label><Input type="email" value={form.email} onChange={(e) => update("email", e.target.value)} placeholder="you@example.com" required /></div>
+                        <div className="space-y-2"><label className="text-sm font-semibold">{t("lbl_phone")}</label><Input value={form.phone} onChange={(e) => update("phone", e.target.value)} placeholder="+880 1XXX-XXXXXX" required /></div>
+                        <div className="space-y-2"><label className="text-sm font-semibold">{t("lbl_blood")}</label><Input value={form.bloodGroup} onChange={(e) => update("bloodGroup", e.target.value)} placeholder="A+, B+, O+, etc." /></div>
+                        <div className="space-y-2"><label className="text-sm font-semibold">{t("lbl_father")}</label><Input value={form.fatherName} onChange={(e) => update("fatherName", e.target.value)} required /></div>
+                        <div className="space-y-2"><label className="text-sm font-semibold">{t("lbl_mother")}</label><Input value={form.motherName} onChange={(e) => update("motherName", e.target.value)} required /></div>
                       </div>
-                      <div className="space-y-2"><label className="text-sm font-semibold">Address</label><Input value={form.address} onChange={(e) => update("address", e.target.value)} placeholder="Village/Thana/District" required /></div>
-                      <Button type="button" className="w-full" onClick={() => setStep(2)}>Next <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                      <div className="space-y-2"><label className="text-sm font-semibold">{t("lbl_address")}</label><Input value={form.address} onChange={(e) => update("address", e.target.value)} placeholder={language === "en" ? "Village/Thana/District" : "গ্রাম/থানা/জেলা"} required /></div>
+                      <Button type="button" className="w-full font-bold" onClick={() => setStep(2)}>{t("btn_next")} <ArrowRight className="ml-2 h-4 w-4" /></Button>
                     </div>
                   )}
 
                   {/* Step 2: Academic Info */}
                   {step === 2 && (
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-bold">Academic Information</h3>
+                    <div className="space-y-4 animate-fade-in">
+                      <h3 className="text-lg font-bold">{t("step_academic")}</h3>
                       <div className="grid gap-4 sm:grid-cols-2">
                         <div className="space-y-2">
-                          <label className="text-sm font-semibold">Admission Session</label>
+                          <label className="text-sm font-semibold">{t("lbl_session")}</label>
                           <select value={form.session} onChange={(e) => update("session", e.target.value)} className="flex h-11 w-full rounded-sm border border-input bg-background px-4 py-2 text-sm" required>
-                            <option value="">Select session</option>
+                            <option value="">{language === 'en' ? "Select session" : "সেশন সিলেক্ট করুন"}</option>
                             <option value="2025-26">2025-26</option>
                             <option value="2026-27">2026-27</option>
                             <option value="2027-28">2027-28</option>
                           </select>
                         </div>
-                        <div className="space-y-2"><label className="text-sm font-semibold">Preferred Department</label>
+                        <div className="space-y-2"><label className="text-sm font-semibold">{t("lbl_dept")}</label>
                           <select value={form.department} onChange={(e) => update("department", e.target.value)} className="flex h-11 w-full rounded-sm border border-input bg-background px-4 py-2 text-sm" required>
-                            <option value="">Select department</option>
-                            {departments.map((d) => <option key={d} value={d}>{d}</option>)}
+                            <option value="">{language === 'en' ? "Select department" : "বিভাগ সিলেক্ট করুন"}</option>
+                            {localizedDepts.map((d) => <option key={d.value} value={d.value}>{d.label}</option>)}
                           </select>
                         </div>
-                        <div className="space-y-2"><label className="text-sm font-semibold">SSC/Equivalent GPA</label><Input value={form.sscGpa} onChange={(e) => update("sscGpa", e.target.value)} placeholder="e.g. 4.50" required /></div>
-                        <div className="space-y-2"><label className="text-sm font-semibold">HSC/Equivalent GPA (if any)</label><Input value={form.hscGpa} onChange={(e) => update("hscGpa", e.target.value)} placeholder="e.g. 4.00" /></div>
+                        <div className="space-y-2"><label className="text-sm font-semibold">{t("lbl_ssc_gpa")}</label><Input value={form.sscGpa} onChange={(e) => update("sscGpa", e.target.value)} placeholder="e.g. 4.50" required /></div>
+                        <div className="space-y-2"><label className="text-sm font-semibold">{t("lbl_hsc_gpa")}</label><Input value={form.hscGpa} onChange={(e) => update("hscGpa", e.target.value)} placeholder="e.g. 4.00" /></div>
                       </div>
 
                       <div className="rounded-sm bg-muted/60 p-4 text-sm text-muted-foreground">
-                        <p className="font-semibold text-foreground">Required Documents</p>
+                        <p className="font-semibold text-foreground">{t("lbl_req_docs")}</p>
                         <ul className="mt-2 list-disc space-y-1 pl-4">
-                          {requiredDocs.map((d) => <li key={d.key}>{d.label}</li>)}
+                          {localizedDocs.map((d) => <li key={d.key}>{d.label}</li>)}
                         </ul>
-                        <p className="mt-2 text-xs">Upload scanned copies below, or download the PDF form and bring documents physically.</p>
+                        <p className="mt-2 text-xs">{language === 'en' ? "Upload scanned copies below, or download the PDF form and bring documents physically." : "নিচের ধাপে স্ক্যান কপি আপলোড করুন, অথবা পিডিএফ ফরমটি ডাউনলোড করে সশরীরে কাগজপত্র জমা দিন।"}</p>
                       </div>
 
                       <div className="flex gap-3">
-                        <Button type="button" variant="outline" className="w-full" onClick={() => setStep(1)}><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
-                        <Button type="button" className="w-full" onClick={() => setStep(3)}>Next <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                        <Button type="button" variant="outline" className="w-full font-bold" onClick={() => setStep(1)}><ArrowLeft className="mr-2 h-4 w-4" /> {t("btn_back")}</Button>
+                        <Button type="button" className="w-full font-bold" onClick={() => setStep(3)}>{t("btn_next")} <ArrowRight className="ml-2 h-4 w-4" /></Button>
                       </div>
                     </div>
                   )}
 
                   {/* Step 3: Document Upload */}
                   {step === 3 && (
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-bold">Upload Documents</h3>
-                      <p className="text-sm text-muted-foreground">Upload scanned copies of required documents. All fields are optional — you can also submit documents physically at the institute.</p>
+                    <div className="space-y-4 animate-fade-in">
+                      <h3 className="text-lg font-bold">{t("step_docs")}</h3>
+                      <p className="text-sm text-muted-foreground">{t("lbl_doc_upload_desc")}</p>
 
                       <div className="grid gap-3">
-                        {requiredDocs.map((doc) => (
+                        {localizedDocs.map((doc) => (
                           <div key={doc.key} className="flex items-center gap-3 rounded-sm border p-3">
                             <Upload className="h-4 w-4 shrink-0 text-muted-foreground" />
                             <div className="flex-1 min-w-0">
@@ -334,8 +367,8 @@ export function Admission() {
                                 <div className="text-xs text-green-600 mt-1">{docs[doc.key]!.name}</div>
                               )}
                             </div>
-                            <label className="cursor-pointer shrink-0 rounded-sm border border-primary/30 bg-primary/5 px-3 py-1 text-xs font-medium text-primary hover:bg-primary/10">
-                              Choose File
+                            <label className="cursor-pointer shrink-0 rounded-sm border border-primary/30 bg-primary/5 px-3 py-1 text-xs font-medium text-primary hover:bg-primary/10 transition">
+                              {language === 'en' ? 'Choose File' : 'ফাইল নির্বাচন করুন'}
                               <input
                                 type="file"
                                 className="hidden"
@@ -348,60 +381,58 @@ export function Admission() {
                       </div>
 
                       <div className="flex gap-3">
-                        <Button type="button" variant="outline" className="w-full" onClick={() => setStep(2)}><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
-                        <Button type="button" className="w-full" onClick={() => setStep(4)}>Next <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                        <Button type="button" variant="outline" className="w-full font-bold" onClick={() => setStep(2)}><ArrowLeft className="mr-2 h-4 w-4" /> {t("btn_back")}</Button>
+                        <Button type="button" className="w-full font-bold" onClick={() => setStep(4)}>{t("btn_next")} <ArrowRight className="ml-2 h-4 w-4" /></Button>
                       </div>
                     </div>
                   )}
 
                   {/* Step 4: Payment & Submit */}
                   {step === 4 && (
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-bold">Admission Application Fee Payment</h3>
+                    <div className="space-y-4 animate-fade-in">
+                      <h3 className="text-lg font-bold">{t("adm_payment_submit")}</h3>
                       
                       <div className="rounded-sm border border-yellow-250 bg-yellow-50/50 p-4 text-sm text-yellow-800 dark:border-yellow-800 dark:bg-yellow-955/30 dark:text-yellow-300">
-                        <p className="font-extrabold">Notice: BDT 500 Application Fee Required</p>
-                        <p className="mt-1 leading-relaxed">
-                          Please <strong>Send Money</strong> of BDT 500 to our official Personal Numbers using bKash or Nagad. Enter your payment details below to complete your admission application.
-                        </p>
+                        <p className="font-extrabold">{t("lbl_pay_notice_title")}</p>
+                        <p className="mt-1 leading-relaxed">{t("lbl_pay_notice_body")}</p>
                         <div className="mt-2 grid grid-cols-2 gap-2 text-xs font-mono">
-                          <p>bKash Personal: <strong>{paymentNumbers.bkash}</strong></p>
-                          <p>Nagad Personal: <strong>{paymentNumbers.nagad}</strong></p>
+                          <p>{language === 'en' ? 'bKash Personal' : 'বিকাশ পার্সোনাল'}: <strong>{paymentNumbers.bkash}</strong></p>
+                          <p>{language === 'en' ? 'Nagad Personal' : 'নগদ পার্সোনাল'}: <strong>{paymentNumbers.nagad}</strong></p>
                         </div>
                       </div>
 
                       <div className="grid gap-4 sm:grid-cols-3">
                         <div className="space-y-2">
-                          <label className="text-sm font-semibold">Payment Method</label>
+                          <label className="text-sm font-semibold">{t("lbl_pay_method")}</label>
                           <select value={form.paymentMethod} onChange={(e) => update("paymentMethod", e.target.value)} className="flex h-11 w-full rounded-sm border border-input bg-background px-4 py-2 text-sm" required>
-                            <option value="">Select Method</option>
+                            <option value="">{language === 'en' ? "Select Method" : "পদ্ধতি সিলেক্ট করুন"}</option>
                             <option value="bKash">bKash</option>
                             <option value="Nagad">Nagad</option>
                           </select>
                         </div>
                         <div className="space-y-2">
-                          <label className="text-sm font-semibold">Sender's Mobile No</label>
+                          <label className="text-sm font-semibold">{t("lbl_sender_mobile")}</label>
                           <Input value={form.senderNumber} onChange={(e) => update("senderNumber", e.target.value)} placeholder="e.g. 017XXXXXXXX" required />
                         </div>
                         <div className="space-y-2">
-                          <label className="text-sm font-semibold">Transaction ID (TxnID)</label>
+                          <label className="text-sm font-semibold">{t("lbl_txnid")}</label>
                           <Input value={form.txnId} onChange={(e) => update("txnId", e.target.value)} placeholder="e.g. BK12X98A0L" required />
                         </div>
                       </div>
 
-                      <h3 className="text-md font-bold pt-2 border-t">Review Information</h3>
+                      <h3 className="text-md font-bold pt-2 border-t">{t("lbl_review_info")}</h3>
                       <div className="grid gap-1.5 text-xs">
-                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-1.5"><span className="text-muted-foreground">Name</span><span className="font-semibold">{form.name || "-"}</span></div>
-                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-1.5"><span className="text-muted-foreground">Preferred Department</span><span className="font-semibold">{form.department || "-"}</span></div>
-                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-1.5"><span className="text-muted-foreground">Session</span><span className="font-semibold">{form.session || "-"}</span></div>
-                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-1.5"><span className="text-muted-foreground">SSC GPA</span><span className="font-semibold">{form.sscGpa || "-"}</span></div>
-                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-1.5"><span className="text-muted-foreground">Documents</span><span className="font-semibold">{Object.values(docs).filter(Boolean).length} / {requiredDocs.length} uploaded</span></div>
+                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-1.5"><span className="text-muted-foreground">{t("tr_name")}</span><span className="font-semibold">{form.name || "-"}</span></div>
+                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-1.5"><span className="text-muted-foreground">{t("tr_dept")}</span><span className="font-semibold">{form.department ? localizedDepts.find(d => d.value === form.department)?.label : "-"}</span></div>
+                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-1.5"><span className="text-muted-foreground">{t("tr_session")}</span><span className="font-semibold">{form.session || "-"}</span></div>
+                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-1.5"><span className="text-muted-foreground">{t("lbl_ssc_gpa")}</span><span className="font-semibold">{form.sscGpa || "-"}</span></div>
+                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-1.5"><span className="text-muted-foreground">{language === 'en' ? 'Documents' : 'কাগজপত্র'}</span><span className="font-semibold">{Object.values(docs).filter(Boolean).length} / {localizedDocs.length} {language === 'en' ? 'uploaded' : 'আপলোড করা হয়েছে'}</span></div>
                       </div>
 
                       <div className="flex gap-3">
-                        <Button type="button" variant="outline" className="w-full" onClick={() => setStep(3)}><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
-                        <Button type="submit" className="w-full" disabled={submitting}>
-                          {submitting ? "Submitting..." : "Submit & Complete"}
+                        <Button type="button" variant="outline" className="w-full font-bold" onClick={() => setStep(3)}><ArrowLeft className="mr-2 h-4 w-4" /> {t("btn_back")}</Button>
+                        <Button type="submit" className="w-full font-black shadow-lg shadow-primary/20" disabled={submitting}>
+                          {submitting ? t("btn_submitting") : t("btn_complete")}
                         </Button>
                       </div>
                     </div>

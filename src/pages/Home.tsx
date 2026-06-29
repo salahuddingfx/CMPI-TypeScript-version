@@ -10,7 +10,7 @@ import { EventCard } from "@/components/features/EventCard";
 import { GalleryAlbumCard } from "@/components/features/GalleryAlbumCard";
 import { NoticeCard } from "@/components/features/NoticeCard";
 import { StatCard } from "@/components/features/StatCard";
-import { BlogCard } from "@/components/features/BlogCard";
+import { BlogCard } from "@/components/features/BlogCard";    
 import { FacilityCard } from "@/components/features/FacilityCard";
 import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
@@ -323,7 +323,7 @@ export function Home() {
             </div>
             <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
               <div>
-                <p className="text-sm font-black text-white">Md. Rafiqul Islam</p>
+                <p className="text-sm font-black text-white">Md. Didar Ullah mc</p>
                 <p className="text-xs text-white/60 font-semibold">Principal, {institute.shortName}</p>
               </div>
               <span className="text-[10px] bg-secondary/20 text-secondary border border-secondary/30 rounded-full px-2.5 py-0.5 font-bold uppercase tracking-wider">

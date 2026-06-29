@@ -1,47 +1,54 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, Search, X, User, LogOut, ChevronDown } from "lucide-react";
+import { Menu, Search, X, User, LogOut, ChevronDown, Languages } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
 import { SearchPanel } from "@/components/features/SearchPanel";
 import { useInstituteContext } from "@/contexts/InstituteDataContext";
 import { institute } from "@/utils/constants";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-const navItems = [
-  { label: "Home", href: "/" },
+interface NavItem {
+  label: string;
+  href: string;
+  mega?: { label: string; href: string }[];
+}
+
+const getLocalizedNavItems = (t: (key: string) => string): NavItem[] => [
+  { label: t("nav_home"), href: "/" },
   {
-    label: "About", href: "/about", mega: [
-      { label: "About Us", href: "/about" },
-      { label: "Administration Messages", href: "/principal" },
-      { label: "Faculty", href: "/faculty" },
+    label: t("nav_about"), href: "/about", mega: [
+      { label: t("nav_about_us") || "About Us", href: "/about" },
+      { label: t("nav_admin_messages") || "Administration Messages", href: "/principal" },
+      { label: t("nav_faculty") || "Faculty", href: "/faculty" },
     ]
   },
   {
-    label: "Academics", href: "/academics", mega: [
-      { label: "Civil Technology", href: "/academics/civil-technology" },
-      { label: "Computer Science & Technology", href: "/academics/computer-science-technology" },
-      { label: "Electrical Technology", href: "/academics/electrical-technology" },
-      { label: "Results", href: "/results" },
-      { label: "Syllabus & Curriculum", href: "/syllabus" },
-      { label: "Class Routine", href: "/class-routine" },
-      { label: "Exam Routine", href: "/exam-routine" },
+    label: t("nav_academics"), href: "/academics", mega: [
+      { label: t("nav_civil") || "Civil Technology", href: "/academics/civil-technology" },
+      { label: t("nav_computer") || "Computer Science & Technology", href: "/academics/computer-science-technology" },
+      { label: t("nav_electrical") || "Electrical Technology", href: "/academics/electrical-technology" },
+      { label: t("nav_results") || "Results", href: "/results" },
+      { label: t("nav_syllabus") || "Syllabus & Curriculum", href: "/syllabus" },
+      { label: t("nav_class_routine") || "Class Routine", href: "/class-routine" },
+      { label: t("nav_exam_routine") || "Exam Routine", href: "/exam-routine" },
     ]
   },
-  { label: "Notice Board", href: "/notices" },
+  { label: t("nav_notice_board") || "Notice Board", href: "/notices" },
   {
-    label: "Student Life", href: "/clubs", mega: [
-      { label: "Student Clubs", href: "/clubs" },
-      { label: "Library", href: "/library" },
-      { label: "Gallery", href: "/gallery" },
-      { label: "Alumni", href: "/alumni" },
+    label: t("nav_student_life") || "Student Life", href: "/clubs", mega: [
+      { label: t("nav_clubs") || "Student Clubs", href: "/clubs" },
+      { label: t("nav_library") || "Library", href: "/library" },
+      { label: t("nav_gallery") || "Gallery", href: "/gallery" },
+      { label: t("nav_alumni") || "Alumni", href: "/alumni" },
     ]
   },
-  { label: "Admission", href: "/admission" },
-  { label: "Contact", href: "/contact" },
+  { label: t("nav_admission"), href: "/admission" },
+  { label: t("nav_contact"), href: "/contact" },
 ];
 
-function NavLinkItem({ item }: { item: (typeof navItems)[number] }) {
+function NavLinkItem({ item }: { item: NavItem }) {
   return (
     <div className="group relative">
       <NavLink
@@ -68,6 +75,7 @@ function NavLinkItem({ item }: { item: (typeof navItems)[number] }) {
 
 export function Header() {
   const { data } = useInstituteContext();
+  const { language, toggleLanguage, t } = useLanguage();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
@@ -84,6 +92,8 @@ export function Header() {
     localStorage.removeItem("cmpi-user");
     window.location.href = "/login";
   };
+
+  const navItems = getLocalizedNavItems(t);
 
   return (
     <>
@@ -107,11 +117,26 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-2">
+            {/* Language Switcher - Visible on all screens */}
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={toggleLanguage}
+              className="font-bold text-xs h-9 px-2.5 gap-1.5 hover:bg-muted shrink-0"
+              title={language === "en" ? "বাংলা করুন" : "Switch to English"}
+            >
+              <Languages className="h-4 w-4 text-muted-foreground" />
+              <span>{language === "en" ? "বাংলা" : "EN"}</span>
+            </Button>
+
+            {/* Theme Toggle - Visible on all screens */}
+            <ThemeToggle />
+
             <div className="hidden items-center gap-2 lg:flex">
               <Button type="button" variant="outline" size="icon" aria-label="Open search" onClick={() => setSearchOpen(true)}>
                 <Search className="h-5 w-5" />
               </Button>
-              <ThemeToggle />
               {user ? (
                 <div className="flex items-center gap-3">
                   <Link
@@ -136,16 +161,13 @@ export function Header() {
                     className="gap-1.5 border-destructive/20 text-destructive hover:!bg-destructive hover:!text-white dark:border-red-800/40 dark:text-red-400 dark:hover:!bg-red-800 dark:hover:!text-red-200"
                   >
                     <LogOut className="h-3.5 w-3.5" />
-                    Logout
+                    {t("nav_logout")}
                   </Button>
                 </div>
               ) : (
                 <>
                   <Button asChild variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-white">
-                    <Link to="/login">Sign In</Link>
-                  </Button>
-                  <Button asChild size="sm">
-                    <Link to="/register">Sign Up</Link>
+                    <Link to="/login">{t("nav_login")}</Link>
                   </Button>
                 </>
               )}
@@ -190,12 +212,22 @@ export function Header() {
                   </Button>
                 </div>
 
-                {/* Quick actions for Mobile: Theme switch + Search */}
+                {/* Quick actions for Mobile: Theme switch + Search + Language */}
                 <div className="flex items-center justify-between gap-3 mb-6 p-2 rounded-2xl bg-muted/40 border border-border/50">
                   <span className="text-xs font-bold text-muted-foreground pl-2">Quick Settings</span>
                   <div className="flex items-center gap-2">
                     <Button type="button" variant="ghost" size="icon" className="rounded-xl h-8 w-8 text-foreground" onClick={() => { setMobileOpen(false); setSearchOpen(true); }}>
                       <Search className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={toggleLanguage}
+                      className="font-bold text-xs h-8 px-2 gap-1 text-foreground"
+                    >
+                      <Languages className="h-4 w-4 text-muted-foreground" />
+                      <span>{language === "en" ? "বাংলা" : "EN"}</span>
                     </Button>
                     <ThemeToggle />
                   </div>
@@ -268,8 +300,14 @@ export function Header() {
                       onClick={() => setMobileOpen(false)}
                       className="flex items-center gap-3 rounded-2xl border border-border/65 p-3 bg-muted/20 hover:bg-muted transition-all"
                     >
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-base border">
-                        {user.name ? user.name.charAt(0).toUpperCase() : <User className="h-5 w-5" />}
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-base border overflow-hidden">
+                        {user.avatar ? (
+                          <img src={user.avatar} alt={user.name} className="h-full w-full object-cover" />
+                        ) : user.name ? (
+                          user.name.charAt(0).toUpperCase()
+                        ) : (
+                          <User className="h-5 w-5" />
+                        )}
                       </div>
                       <div className="min-w-0 flex-1">
                         <p className="text-sm font-black text-foreground truncate">{user.name}</p>
@@ -285,16 +323,13 @@ export function Header() {
                       }}
                     >
                       <LogOut className="mr-2 h-4 w-4" />
-                      Logout
+                      {t("nav_logout")}
                     </Button>
                   </div>
                 ) : (
                   <div className="flex flex-col gap-2">
                     <Button asChild variant="outline" className="w-full rounded-xl font-bold">
-                      <Link to="/login" onClick={() => setMobileOpen(false)}>Sign In</Link>
-                    </Button>
-                    <Button asChild className="w-full rounded-xl font-black shadow-md shadow-primary/20">
-                      <Link to="/register" onClick={() => setMobileOpen(false)}>Sign Up</Link>
+                      <Link to="/login" onClick={() => setMobileOpen(false)}>{t("nav_login")}</Link>
                     </Button>
                   </div>
                 )}

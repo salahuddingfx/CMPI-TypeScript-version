@@ -91,9 +91,19 @@ export function StudentIdCard() {
     <>
       <SEO title="Digital Student ID Card" description="View and print your Cox's Bazar Model Polytechnic Institute digital ID card." />
       
-      {/* CSS Styles for Print Customization */}
+      {/* CSS Styles for Print and Mode-Independent Card Styling */}
       <style dangerouslySetInnerHTML={{
         __html: `
+          /* Card backgrounds forced to green even in light mode */
+          .id-card-green-bg {
+            background: linear-gradient(135deg, #022c22 0%, #064e3b 50%, #022c22 100%) !important;
+            color: #ffffff !important;
+          }
+          .id-card-banner-bg {
+            background-color: #022c22 !important;
+            border-bottom: 1px solid rgba(234, 179, 8, 0.3) !important;
+          }
+
           @media print {
             body {
               background: white !important;
@@ -164,12 +174,12 @@ export function StudentIdCard() {
             className="group relative h-[300px] w-full max-w-[480px] cursor-pointer [perspective:1000px]"
             title="Click to Flip Card"
           >
-            <div className={`relative h-full w-full rounded-2xl shadow-xl border border-emerald-855 transition-transform duration-500 [transform-style:preserve-3d] ${isFlipped ? '[transform:rotateY(180deg)]' : ''}`}>
+            <div className={`relative h-full w-full rounded-2xl shadow-xl border border-emerald-800 transition-transform duration-500 [transform-style:preserve-3d] ${isFlipped ? '[transform:rotateY(180deg)]' : ''}`}>
               
               {/* CARD FRONT */}
-              <div className="absolute inset-0 flex h-full w-full flex-col overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-950 via-green-900 to-emerald-950 text-white [backface-visibility:hidden]">
+              <div className="absolute inset-0 flex h-full w-full flex-col overflow-hidden rounded-2xl id-card-green-bg text-white [backface-visibility:hidden]">
                 {/* ID Card Top Banner */}
-                <div className="bg-emerald-955 px-4 py-3 flex items-center justify-center gap-3 border-b border-yellow-500/30">
+                <div className="id-card-banner-bg px-4 py-3 flex items-center justify-center gap-3">
                   <img src="/CMPI.png" alt="CMPI Logo" className="h-9 w-9 object-contain" />
                   <div className="text-left">
                     <h3 className="text-[11px] font-black tracking-wider text-yellow-400 uppercase">COX'S BAZAR MODEL POLYTECHNIC INSTITUTE</h3>
@@ -246,9 +256,9 @@ export function StudentIdCard() {
               </div>
 
               {/* CARD BACK */}
-              <div className="absolute inset-0 flex h-full w-full flex-col overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-950 via-green-900 to-emerald-950 text-white [backface-visibility:hidden] [transform:rotateY(180deg)]">
+              <div className="absolute inset-0 flex h-full w-full flex-col overflow-hidden rounded-2xl id-card-green-bg text-white [backface-visibility:hidden] [transform:rotateY(180deg)]">
                 {/* ID Card Top Banner (Back) */}
-                <div className="bg-emerald-955 px-4 py-2 border-b border-yellow-500/30 text-center">
+                <div className="id-card-banner-bg px-4 py-2 text-center">
                   <h4 className="text-[10px] font-extrabold tracking-widest text-yellow-400 uppercase">CMPI CAMPUS</h4>
                 </div>
 
@@ -308,8 +318,8 @@ export function StudentIdCard() {
       <div id="print-layout-container" className="hidden flex-row gap-8 items-center justify-center p-6 bg-white min-h-screen">
         
         {/* Front Card Print */}
-        <div className="print-card-box w-[480px] h-[300px] flex flex-col overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-950 via-green-900 to-emerald-950 text-white relative shadow-none border border-emerald-800">
-          <div className="bg-emerald-955 px-4 py-3 flex items-center justify-center gap-3 border-b border-yellow-500/30">
+        <div className="print-card-box w-[480px] h-[300px] flex flex-col overflow-hidden rounded-2xl id-card-green-bg text-white relative shadow-none border border-emerald-800">
+          <div className="id-card-banner-bg px-4 py-3 flex items-center justify-center gap-3">
             <img src="/CMPI.png" alt="CMPI Logo" className="h-9 w-9 object-contain" />
             <div className="text-left">
               <h3 className="text-[11px] font-black tracking-wider text-yellow-400 uppercase">COX'S BAZAR MODEL POLYTECHNIC INSTITUTE</h3>
@@ -318,7 +328,7 @@ export function StudentIdCard() {
           </div>
           <div className="flex flex-1 p-4 gap-4 items-center">
             <div className="flex flex-col items-center justify-center">
-              <div className="h-24 w-24 overflow-hidden rounded-lg border-2 border-yellow-500/50 bg-emerald-955/40">
+              <div className="h-24 w-24 overflow-hidden rounded-lg border-2 border-yellow-500/50 bg-emerald-950/40">
                 {profile.avatar ? (
                   <img src={profile.avatar} alt={profile.name} className="h-full w-full object-cover" />
                 ) : (
@@ -376,8 +386,8 @@ export function StudentIdCard() {
         </div>
 
         {/* Back Card Print */}
-        <div className="print-card-box w-[480px] h-[300px] flex flex-col overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-950 via-green-900 to-emerald-950 text-white relative shadow-none border border-emerald-800">
-          <div className="bg-emerald-955 px-4 py-2 border-b border-yellow-500/30 text-center">
+        <div className="print-card-box w-[480px] h-[300px] flex flex-col overflow-hidden rounded-2xl id-card-green-bg text-white relative shadow-none border border-emerald-800">
+          <div className="id-card-banner-bg px-4 py-2 text-center">
             <h4 className="text-[10px] font-extrabold tracking-widest text-yellow-400 uppercase">CMPI CAMPUS</h4>
           </div>
           <div className="flex flex-1 flex-col justify-between p-4 text-[9px] text-emerald-200">

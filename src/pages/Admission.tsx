@@ -39,6 +39,7 @@ export function Admission() {
     name: "", email: "", phone: "", department: "", session: "",
     sscGpa: "", hscGpa: "", fatherName: "", motherName: "",
     address: "", bloodGroup: "",
+    paymentMethod: "", txnId: "",
   });
 
   const [docs, setDocs] = useState<Record<string, File | null>>({});
@@ -100,6 +101,14 @@ export function Admission() {
     }
   };
 
+  const paymentStatusColor = (s: string) => {
+    switch (s?.toLowerCase()) {
+      case "paid": return "text-green-600 bg-green-50 border-green-200";
+      case "unpaid": return "text-red-600 bg-red-50 border-red-200";
+      default: return "text-yellow-600 bg-yellow-50 border-yellow-200";
+    }
+  };
+
   return (
     <PageTransition>
       <SEO title="Apply for Admission" description="Online admission application for CMPI diploma programs." />
@@ -146,20 +155,26 @@ export function Admission() {
             </div>
             {trackResult && (
               <div className="mt-4 rounded-sm border p-4">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between border-b pb-2 mb-2">
                   <span className="font-mono font-bold">{trackResult.application_id}</span>
                   <span className={`rounded-full border px-3 py-1 text-xs font-semibold ${statusColor(trackResult.status)}`}>
                     {trackResult.status}
                   </span>
                 </div>
-                <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
+                <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
                   <div><span className="text-muted-foreground">Name:</span> {trackResult.name}</div>
                   <div><span className="text-muted-foreground">Department:</span> {trackResult.department}</div>
                   <div><span className="text-muted-foreground">Session:</span> {trackResult.session || "N/A"}</div>
                   <div><span className="text-muted-foreground">Applied:</span> {new Date(trackResult.created_at).toLocaleDateString()}</div>
+                  
+                  {/* Payment Details */}
+                  <div><span className="text-muted-foreground">Payment Method:</span> {trackResult.payment_method || "N/A"}</div>
+                  <div><span className="text-muted-foreground">TxnID:</span> <strong className="font-mono text-foreground">{trackResult.txn_id || "N/A"}</strong></div>
+                  <div><span className="text-muted-foreground">Payment Status:</span> <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${paymentStatusColor(trackResult.payment_status)}`}>{trackResult.payment_status || "Pending"}</span></div>
+                  <div><span className="text-muted-foreground">Admission Status:</span> <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${statusColor(trackResult.status)}`}>{trackResult.status}</span></div>
                 </div>
                 {trackResult.documents?.length > 0 && (
-                  <div className="mt-3 text-sm"><span className="text-muted-foreground">Documents uploaded:</span> {trackResult.documents.length}/6</div>
+                  <div className="mt-3 text-sm border-t pt-2"><span className="text-muted-foreground">Documents uploaded:</span> {trackResult.documents.length}/6</div>
                 )}
               </div>
             )}
@@ -306,28 +321,50 @@ export function Admission() {
                     </div>
                   )}
 
-                  {/* Step 4: Review & Submit */}
+                  {/* Step 4: Payment & Submit */}
                   {step === 4 && (
                     <div className="space-y-4">
-                      <h3 className="text-lg font-bold">Review & Submit</h3>
-                      <div className="grid gap-2 text-sm">
-                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">Name</span><span className="font-semibold">{form.name || "-"}</span></div>
-                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">Email</span><span className="font-semibold">{form.email || "-"}</span></div>
-                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">Phone</span><span className="font-semibold">{form.phone || "-"}</span></div>
-                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">Session</span><span className="font-semibold">{form.session || "-"}</span></div>
-                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">Department</span><span className="font-semibold">{form.department || "-"}</span></div>
-                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">SSC GPA</span><span className="font-semibold">{form.sscGpa || "-"}</span></div>
-                        {form.hscGpa && <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">HSC GPA</span><span className="font-semibold">{form.hscGpa}</span></div>}
-                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2"><span className="text-muted-foreground">Address</span><span className="font-semibold">{form.address || "-"}</span></div>
-                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-2">
-                          <span className="text-muted-foreground">Documents</span>
-                          <span className="font-semibold">{Object.values(docs).filter(Boolean).length} / {requiredDocs.length} uploaded</span>
+                      <h3 className="text-lg font-bold">Admission Application Fee Payment</h3>
+                      
+                      <div className="rounded-sm border border-yellow-250 bg-yellow-50/50 p-4 text-sm text-yellow-800 dark:border-yellow-800 dark:bg-yellow-955/30 dark:text-yellow-300">
+                        <p className="font-extrabold">Notice: BDT 500 Application Fee Required</p>
+                        <p className="mt-1 leading-relaxed">
+                          Please send BDT 500 to our official Merchant Account using Bkash or Nagad. Enter your payment details below to complete your admission application.
+                        </p>
+                        <div className="mt-2 grid grid-cols-2 gap-2 text-xs font-mono">
+                          <p>Bkash Personal: <strong>+880 1888-000000</strong></p>
+                          <p>Nagad Personal: <strong>+880 1888-111111</strong></p>
                         </div>
                       </div>
+
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <div className="space-y-2">
+                          <label className="text-sm font-semibold">Payment Method</label>
+                          <select value={form.paymentMethod} onChange={(e) => update("paymentMethod", e.target.value)} className="flex h-11 w-full rounded-sm border border-input bg-background px-4 py-2 text-sm" required>
+                            <option value="">Select Method</option>
+                            <option value="bKash">bKash</option>
+                            <option value="Nagad">Nagad</option>
+                          </select>
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-semibold">Transaction ID (TxnID)</label>
+                          <Input value={form.txnId} onChange={(e) => update("txnId", e.target.value)} placeholder="e.g. BK12X98A0L" required />
+                        </div>
+                      </div>
+
+                      <h3 className="text-md font-bold pt-2 border-t">Review Information</h3>
+                      <div className="grid gap-1.5 text-xs">
+                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-1.5"><span className="text-muted-foreground">Name</span><span className="font-semibold">{form.name || "-"}</span></div>
+                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-1.5"><span className="text-muted-foreground">Preferred Department</span><span className="font-semibold">{form.department || "-"}</span></div>
+                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-1.5"><span className="text-muted-foreground">Session</span><span className="font-semibold">{form.session || "-"}</span></div>
+                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-1.5"><span className="text-muted-foreground">SSC GPA</span><span className="font-semibold">{form.sscGpa || "-"}</span></div>
+                        <div className="flex justify-between rounded-sm bg-muted/60 px-4 py-1.5"><span className="text-muted-foreground">Documents</span><span className="font-semibold">{Object.values(docs).filter(Boolean).length} / {requiredDocs.length} uploaded</span></div>
+                      </div>
+
                       <div className="flex gap-3">
                         <Button type="button" variant="outline" className="w-full" onClick={() => setStep(3)}><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button>
                         <Button type="submit" className="w-full" disabled={submitting}>
-                          {submitting ? "Submitting..." : "Submit Application"}
+                          {submitting ? "Submitting..." : "Submit & Complete"}
                         </Button>
                       </div>
                     </div>

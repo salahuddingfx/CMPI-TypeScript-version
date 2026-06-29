@@ -39,7 +39,7 @@ export function Admission() {
     name: "", email: "", phone: "", department: "", session: "",
     sscGpa: "", hscGpa: "", fatherName: "", motherName: "",
     address: "", bloodGroup: "",
-    paymentMethod: "", txnId: "",
+    paymentMethod: "", txnId: "", senderNumber: "",
   });
 
   const [docs, setDocs] = useState<Record<string, File | null>>({});
@@ -185,6 +185,7 @@ export function Admission() {
                   {/* Form Submission Details */}
                   <div className="col-span-2 mt-2 pt-2 border-t font-semibold text-xs text-primary uppercase">Form Submission Details</div>
                   <div><span className="text-muted-foreground">Payment Method:</span> {trackResult.payment_method || "N/A"}</div>
+                  <div><span className="text-muted-foreground">Sender's No:</span> <strong className="text-foreground">{trackResult.sender_number || "N/A"}</strong></div>
                   <div><span className="text-muted-foreground">TxnID:</span> <strong className="font-mono text-foreground">{trackResult.txn_id || "N/A"}</strong></div>
                   <div><span className="text-muted-foreground">Form Fee Status:</span> <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${paymentStatusColor(trackResult.payment_status)}`}>{trackResult.payment_status || "Pending"}</span></div>
                   <div><span className="text-muted-foreground">Review Status:</span> <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${statusColor(trackResult.status)}`}>{trackResult.status}</span></div>
@@ -240,7 +241,7 @@ export function Admission() {
                     onClick={() => {
                       setSubmitted(false);
                       setStep(1);
-                      setForm({ name: "", email: "", phone: "", department: "", session: "", sscGpa: "", hscGpa: "", fatherName: "", motherName: "", address: "", bloodGroup: "", paymentMethod: "", txnId: "" });
+                      setForm({ name: "", email: "", phone: "", department: "", session: "", sscGpa: "", hscGpa: "", fatherName: "", motherName: "", address: "", bloodGroup: "", paymentMethod: "", txnId: "", senderNumber: "" });
                       setDocs({});
                     }}
                   >
@@ -361,15 +362,15 @@ export function Admission() {
                       <div className="rounded-sm border border-yellow-250 bg-yellow-50/50 p-4 text-sm text-yellow-800 dark:border-yellow-800 dark:bg-yellow-955/30 dark:text-yellow-300">
                         <p className="font-extrabold">Notice: BDT 500 Application Fee Required</p>
                         <p className="mt-1 leading-relaxed">
-                          Please send BDT 500 to our official Merchant Account using Bkash or Nagad. Enter your payment details below to complete your admission application.
+                          Please <strong>Send Money</strong> of BDT 500 to our official Personal Numbers using bKash or Nagad. Enter your payment details below to complete your admission application.
                         </p>
                         <div className="mt-2 grid grid-cols-2 gap-2 text-xs font-mono">
-                          <p>Bkash Personal: <strong>{paymentNumbers.bkash}</strong></p>
+                          <p>bKash Personal: <strong>{paymentNumbers.bkash}</strong></p>
                           <p>Nagad Personal: <strong>{paymentNumbers.nagad}</strong></p>
                         </div>
                       </div>
 
-                      <div className="grid gap-4 sm:grid-cols-2">
+                      <div className="grid gap-4 sm:grid-cols-3">
                         <div className="space-y-2">
                           <label className="text-sm font-semibold">Payment Method</label>
                           <select value={form.paymentMethod} onChange={(e) => update("paymentMethod", e.target.value)} className="flex h-11 w-full rounded-sm border border-input bg-background px-4 py-2 text-sm" required>
@@ -377,6 +378,10 @@ export function Admission() {
                             <option value="bKash">bKash</option>
                             <option value="Nagad">Nagad</option>
                           </select>
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-semibold">Sender's Mobile No</label>
+                          <Input value={form.senderNumber} onChange={(e) => update("senderNumber", e.target.value)} placeholder="e.g. 017XXXXXXXX" required />
                         </div>
                         <div className="space-y-2">
                           <label className="text-sm font-semibold">Transaction ID (TxnID)</label>

@@ -37,6 +37,8 @@ const StudentResults = lazy(() => import("@/pages/dashboard/StudentResults").the
 const StudentBills = lazy(() => import("@/pages/dashboard/StudentBills").then((m) => ({ default: m.StudentBills })));
 const StudentProfile = lazy(() => import("@/pages/dashboard/StudentProfile").then((m) => ({ default: m.StudentProfile })));
 const StudentWebmail = lazy(() => import("@/pages/dashboard/StudentWebmail").then((m) => ({ default: m.StudentWebmail })));
+const StudentIdCard = lazy(() => import("@/pages/dashboard/StudentIdCard").then((m) => ({ default: m.StudentIdCard })));
+const VerifyStudent = lazy(() => import("@/pages/VerifyStudent").then((m) => ({ default: m.VerifyStudent })));
 const Results = lazy(() => import("@/pages/Results").then((m) => ({ default: m.Results })));
 const ExamRoutine = lazy(() => import("@/pages/ExamRoutine").then((m) => ({ default: m.ExamRoutine })));
 const ClassRoutine = lazy(() => import("@/pages/ClassRoutine").then((m) => ({ default: m.ClassRoutine })));
@@ -108,6 +110,7 @@ export function AppRoutes() {
         <Route path="forgot-password" element={<LazyPage><ForgotPassword /></LazyPage>} />
         <Route path="reset-password" element={<LazyPage><ResetPassword /></LazyPage>} />
         <Route path="academic-calendar" element={<LazyPage><AcademicCalendar /></LazyPage>} />
+        <Route path="verify-student/:studentId" element={<LazyPage><VerifyStudent /></LazyPage>} />
       </Route>
 
       <Route element={<AuthGuard />}>
@@ -118,6 +121,7 @@ export function AppRoutes() {
           <Route path="bills" element={<LazyPage><StudentBills /></LazyPage>} />
           <Route path="webmail" element={<LazyPage><StudentWebmail /></LazyPage>} />
           <Route path="profile" element={<LazyPage><StudentProfile /></LazyPage>} />
+          <Route path="id-card" element={<LazyPage><StudentIdCard /></LazyPage>} />
         </Route>
       </Route>
 

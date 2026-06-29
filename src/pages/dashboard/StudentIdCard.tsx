@@ -106,6 +106,14 @@ export function StudentIdCard() {
     );
   }
 
+  const getExpiryDate = (session: string) => {
+    if (!session) return "N/A";
+    const match = session.match(/(\d{4})/);
+    if (!match || !match[1]) return "N/A";
+    const startYear = parseInt(match[1]);
+    return `${startYear + 4}`;
+  };
+
   const verificationUrl = `${window.location.origin}/verify-student/${profile.studentId}`;
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verificationUrl)}`;
 
@@ -319,12 +327,12 @@ export function StudentIdCard() {
 
                     <div className="grid grid-cols-2 gap-2">
                       <div>
-                        <p className="text-[8px] text-emerald-400 uppercase tracking-wider font-bold">Semester</p>
-                        <p className="font-bold text-white">{profile.semester}</p>
+                        <p className="text-[8px] text-emerald-400 uppercase tracking-wider font-bold">Expiry Date</p>
+                        <p className="font-bold text-white font-mono">{getExpiryDate(profile.session)}</p>
                       </div>
                       <div>
                         <p className="text-[8px] text-emerald-400 uppercase tracking-wider font-bold">Blood Group</p>
-                        <p className="font-extrabold text-red-400 uppercase">{profile.bloodGroup}</p>
+                        <p className="font-extrabold text-yellow-400 uppercase">{profile.bloodGroup}</p>
                       </div>
                     </div>
                   </div>
@@ -452,12 +460,12 @@ export function StudentIdCard() {
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <p className="text-[8px] text-emerald-400 uppercase tracking-wider font-bold">Semester</p>
-                    <p className="font-bold text-white">{profile.semester}</p>
+                    <p className="text-[8px] text-emerald-400 uppercase tracking-wider font-bold">Expiry Date</p>
+                    <p className="font-bold text-white font-mono">{getExpiryDate(profile.session)}</p>
                   </div>
                   <div>
                     <p className="text-[8px] text-emerald-400 uppercase tracking-wider font-bold">Blood Group</p>
-                    <p className="font-extrabold text-red-400 uppercase">{profile.bloodGroup}</p>
+                    <p className="font-extrabold text-yellow-400 uppercase">{profile.bloodGroup}</p>
                   </div>
                 </div>
               </div>

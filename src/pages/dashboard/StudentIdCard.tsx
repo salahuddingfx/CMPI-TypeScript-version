@@ -379,7 +379,7 @@ export function StudentIdCard() {
                     {/* Signature */}
                     <div className="flex flex-col items-center">
                       <div className="h-6 w-20 flex items-center justify-center opacity-90">
-                        <img src="/Principal_Signature.png" alt="Signature" className="h-6 object-contain" />
+                        <img src="/Principal_Signature_White.png" alt="Signature" className="h-6 object-contain" />
                       </div>
                       <div className="w-24 border-t border-emerald-700 mt-1 pt-1 text-center">
                         <p className="text-[7px] font-black text-white leading-tight">Ln. Md. Didar Ullah</p>
@@ -500,7 +500,7 @@ export function StudentIdCard() {
                 </div>
                 <div className="flex flex-col items-center">
                   <div className="h-6 w-20 flex items-center justify-center opacity-90">
-                    <img src="/Principal_Signature.png" alt="Signature" className="h-6 object-contain" />
+                    <img src="/Principal_Signature_White.png" alt="Signature" className="h-6 object-contain" />
                   </div>
                   <div className="w-24 border-t border-emerald-700 mt-1 pt-1 text-center">
                     <p className="text-[7px] font-black text-white leading-tight">Ln. Md. Didar Ullah</p>

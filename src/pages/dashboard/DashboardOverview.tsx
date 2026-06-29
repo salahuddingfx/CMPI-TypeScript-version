@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { BookOpen, Award, AlertTriangle, TrendingUp, DollarSign, User } from "lucide-react";
+import { BookOpen, Award, AlertTriangle, TrendingUp, DollarSign, User, Search, AlertCircle, Trophy } from "lucide-react";
 import { XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, LineChart, Line, PieChart, Pie, Cell } from "recharts";
 import { getDashboard, getNotices } from "@/services/api";
 import { DashboardSkeleton } from "@/components/common/LoadingSkeleton";
+import { SEM_ORDER, semIndex } from "@/components/results/ResultHelpers";
 
 function getStoredUser() {
   try {
@@ -32,7 +33,11 @@ export default function DashboardOverview() {
         getNotices(),
       ]);
       if (dashData.status === "fulfilled") setDashboard(dashData.value);
-      if (noticeData.status === "fulfilled") setNotices(noticeData.value.slice(0, 5));
+      if (noticeData.status === "fulfilled") {
+        const raw = noticeData.value;
+        const list = Array.isArray(raw) ? raw : raw?.data || [];
+        setNotices(list.slice(0, 5));
+      }
     } catch (e: any) {
       console.error("Failed to load dashboard data", e);
     }
@@ -41,12 +46,23 @@ export default function DashboardOverview() {
 
   const user = dashboard?.user || storedUser;
   const courses = dashboard?.courses || [];
-  const courseResults = dashboard?.courseResults || [];
+  const courseResults = dashboard?.results || dashboard?.courseResults || [];
+  const boardResults = dashboard?.board_results || [];
   const bills = dashboard?.bills || [];
 
   const pendingBills = bills.filter((b: any) => b.status === "pending");
   const totalPending = pendingBills.reduce((sum: number, b: any) => sum + parseFloat(b.amount || 0), 0);
 
+  // Board results calculations
+  const sortedBoard = [...boardResults].sort((a: any, b: any) => semIndex(a.semester) - semIndex(b.semester));
+  const passedSemesters = sortedBoard.filter((r: any) => r.status === "Passed");
+  const referredSemesters = sortedBoard.filter((r: any) => r.status === "Referred");
+  const totalReferredSubjects = referredSemesters.reduce((sum: number, r: any) => sum + (r.referred_subjects?.length ?? 0), 0);
+  const boardCgpa = passedSemesters.length > 0
+    ? passedSemesters.reduce((sum: number, r: any) => sum + parseFloat(r.gpa || "0"), 0) / passedSemesters.length
+    : 0;
+
+  // Institute CGPA
   const latestSemester = courseResults.length > 0 ? courseResults[courseResults.length - 1] : null;
   const cgpa = latestSemester?.sgpa || "—";
 
@@ -85,64 +101,160 @@ export default function DashboardOverview() {
   return (
     <div className="space-y-6">
       {/* Enrollment Card */}
-      <div className="rounded-sm border bg-card p-6 shadow-sm">
-        <div className="flex items-start gap-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
+      <div className="rounded-sm border bg-card p-4 sm:p-6 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary shrink-0">
             <User className="h-7 w-7" />
           </div>
-          <div className="flex-1">
-            <h2 className="text-xl font-bold">{user?.name || "Student"}</h2>
-            <div className="mt-1 flex flex-wrap gap-x-6 gap-y-1 text-sm text-muted-foreground">
-              <span>ID: <strong className="text-foreground font-mono">{user?.student_id || "—"}</strong></span>
-              <span>Dept: <strong className="text-foreground">{user?.department || "—"}</strong></span>
-              <span>Semester: <strong className="text-foreground">{user?.semester || "—"}</strong></span>
-              <span>Session: <strong className="text-foreground">{user?.session || "—"}</strong></span>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start justify-between gap-2">
+              <h2 className="text-xl font-bold truncate">{user?.name || "Student"}</h2>
+              <Link to="/dashboard/profile" className="text-sm text-primary hover:underline shrink-0">Edit Profile</Link>
+            </div>
+            <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
+              <span className="truncate">ID: <strong className="text-foreground font-mono">{user?.student_id || "—"}</strong></span>
+              {user?.board_roll && <span className="truncate">Board Roll: <strong className="text-foreground font-mono">{user.board_roll}</strong></span>}
+              <span className="truncate">Dept: <strong className="text-foreground">{user?.department || "—"}</strong></span>
+              <span className="truncate">Semester: <strong className="text-foreground">{user?.semester || "—"}</strong></span>
+              <span className="truncate">Session: <strong className="text-foreground">{user?.session || "—"}</strong></span>
             </div>
           </div>
-          <Link to="/dashboard/profile" className="text-sm text-primary hover:underline">Edit Profile</Link>
         </div>
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="rounded-sm border bg-card p-4 shadow-sm">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+        <div className="rounded-sm border bg-card p-3 sm:p-4 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-muted-foreground">Enrolled Courses</span>
+            <span className="text-[10px] sm:text-xs font-medium text-muted-foreground">Enrolled Courses</span>
             <BookOpen className="h-4 w-4 text-primary" />
           </div>
           <div className="mt-2 text-2xl font-bold">{courses.length}</div>
         </div>
-        <div className="rounded-sm border bg-card p-4 shadow-sm">
+        <div className="rounded-sm border bg-card p-3 sm:p-4 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-muted-foreground">Current CGPA</span>
+            <span className="text-[10px] sm:text-xs font-medium text-muted-foreground">Institute CGPA</span>
             <TrendingUp className="h-4 w-4 text-green-500" />
           </div>
           <div className="mt-2 text-2xl font-bold">{cgpa}</div>
         </div>
-        <div className="rounded-sm border bg-card p-4 shadow-sm">
+        <div className="rounded-sm border bg-card p-3 sm:p-4 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-muted-foreground">Pending Bills</span>
+            <span className="text-[10px] sm:text-xs font-medium text-muted-foreground">Pending Bills</span>
             <DollarSign className="h-4 w-4 text-yellow-500" />
           </div>
           <div className="mt-2 text-2xl font-bold">{pendingBills.length}</div>
           {totalPending > 0 && (
-            <div className="text-xs text-yellow-600 mt-1">৳{totalPending.toLocaleString()} due</div>
+            <div className="text-[10px] sm:text-xs text-yellow-600 mt-1">Bdt {totalPending.toLocaleString()} due</div>
           )}
         </div>
-        <div className="rounded-sm border bg-card p-4 shadow-sm">
+        <div className="rounded-sm border bg-card p-3 sm:p-4 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-muted-foreground">Results Published</span>
+            <span className="text-[10px] sm:text-xs font-medium text-muted-foreground">Results Published</span>
             <Award className="h-4 w-4 text-blue-500" />
           </div>
           <div className="mt-2 text-2xl font-bold">{courseResults.length}</div>
-          <div className="text-xs text-muted-foreground mt-1">semesters</div>
+          <div className="text-[10px] sm:text-xs text-muted-foreground mt-1">semesters</div>
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      {/* Board Results Summary */}
+      {boardResults.length > 0 && (
+        <div className="rounded-sm border bg-card p-4 sm:p-6 shadow-sm space-y-4">
+          <div className="flex items-center justify-between gap-2">
+            <h3 className="text-sm font-bold flex items-center gap-2">
+              <Trophy className="h-4 w-4 text-primary" />
+              BTEB Board Results
+            </h3>
+            <Link to="/dashboard/results" className="text-xs text-primary hover:underline shrink-0">View Full Results</Link>
+          </div>
+
+          {/* Board GPA Grid */}
+          <div className="grid grid-cols-4 sm:grid-cols-8 gap-1.5 sm:gap-2">
+            {SEM_ORDER.map((sem) => {
+              const record = sortedBoard.find((r: any) => semIndex(r.semester) === semIndex(sem));
+              const isDropped = record?.status === "Referred" && (record.referred_subjects?.length ?? 0) >= 4;
+              return (
+                <div key={sem} className={`rounded-lg border p-2 text-center flex flex-col items-center gap-0.5 ${
+                  !record ? "border-muted/30 bg-muted/10 opacity-40" :
+                  isDropped ? "border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-900/30" :
+                  record.status === "Passed" ? "border-green-200 bg-green-50 dark:bg-green-950/20 dark:border-green-900/30" :
+                  "border-red-200 bg-red-50 dark:bg-red-950/20 dark:border-red-200"
+                }`}>
+                  <span className="text-[10px] font-black text-muted-foreground uppercase">{sem}</span>
+                  {record ? (
+                    isDropped ? (
+                      <span className="text-[10px] font-black text-amber-600 dark:text-amber-400">Drop</span>
+                    ) : record.status === "Passed" ? (
+                      <span className="text-base font-black text-green-700 dark:text-green-400">
+                        {parseFloat(record.gpa || "0").toFixed(2)}
+                      </span>
+                    ) : (
+                      <span className="text-xs font-black text-red-600 dark:text-red-400">Ref</span>
+                    )
+                  ) : (
+                    <span className="text-base font-black text-muted-foreground/40">-</span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Board Summary Stats */}
+          <div className="flex flex-wrap gap-4 sm:gap-6 pt-2 border-t">
+            <div>
+              <span className="text-[10px] uppercase font-black tracking-wider text-muted-foreground">Board CGPA</span>
+              <p className="text-xl font-black text-primary">{boardCgpa > 0 ? boardCgpa.toFixed(2) : "—"}</p>
+            </div>
+            <div>
+              <span className="text-[10px] uppercase font-black tracking-wider text-muted-foreground">Passed</span>
+              <p className="text-xl font-black text-green-600">{passedSemesters.length}</p>
+            </div>
+            <div>
+              <span className="text-[10px] uppercase font-black tracking-wider text-muted-foreground">Referred</span>
+              <p className={`text-xl font-black ${totalReferredSubjects > 0 ? "text-red-600" : "text-green-600"}`}>
+                {totalReferredSubjects > 0 ? `${referredSemesters.length} sem (${totalReferredSubjects} subs)` : "None"}
+              </p>
+            </div>
+            {totalReferredSubjects > 0 && (
+              <div className="flex-1">
+                <span className="text-[10px] uppercase font-black tracking-wider text-muted-foreground">Referred Subjects</span>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {referredSemesters.flatMap((r: any) =>
+                    (r.referred_subjects || []).map((sub: string, i: number) => (
+                      <span key={`${r.semester}-${i}`} className="text-[10px] font-mono font-bold bg-red-500/10 text-red-600 border border-red-500/20 px-1.5 py-0.5 rounded">
+                        {sub.replace(/\([^)]+\)/g, "")}
+                      </span>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* No Board Roll Set */}
+      {boardResults.length === 0 && !user?.board_roll && (
+        <div className="rounded-sm border border-dashed bg-card p-4 sm:p-6 shadow-sm">
+          <div className="flex items-start sm:items-center gap-4">
+            <div className="p-3 bg-muted rounded-xl shrink-0">
+              <Search className="h-6 w-6 text-muted-foreground" />
+            </div>
+            <div>
+              <h3 className="font-bold text-sm">No Board Roll Linked</h3>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Add your BTEB board roll number in <Link to="/dashboard/profile" className="text-primary hover:underline font-bold">Profile Settings</Link> to auto-display your board exam results here.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
         {/* GPA Trend Chart */}
         {gradeTrend.length > 0 && (
-          <div className="rounded-sm border bg-card p-6 shadow-sm">
+          <div className="rounded-sm border bg-card p-4 sm:p-6 shadow-sm">
             <h3 className="mb-4 text-sm font-bold">GPA Trend</h3>
             <ResponsiveContainer width="100%" height={200}>
               <LineChart data={gradeTrend}>
@@ -158,7 +270,7 @@ export default function DashboardOverview() {
 
         {/* Course Progress Pie */}
         {courseProgress.length > 0 && (
-          <div className="rounded-sm border bg-card p-6 shadow-sm">
+          <div className="rounded-sm border bg-card p-4 sm:p-6 shadow-sm">
             <h3 className="mb-4 text-sm font-bold">Course Progress</h3>
             <ResponsiveContainer width="100%" height={200}>
               <PieChart>
@@ -174,9 +286,9 @@ export default function DashboardOverview() {
         )}
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
         {/* Enrolled Courses */}
-        <div className="rounded-sm border bg-card p-6 shadow-sm">
+        <div className="rounded-sm border bg-card p-4 sm:p-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-bold">Enrolled Courses</h3>
             <Link to="/dashboard/courses" className="text-xs text-primary hover:underline">View All</Link>
@@ -204,7 +316,7 @@ export default function DashboardOverview() {
         </div>
 
         {/* Recent Results */}
-        <div className="rounded-sm border bg-card p-6 shadow-sm">
+        <div className="rounded-sm border bg-card p-4 sm:p-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-bold">Recent Results</h3>
             <Link to="/dashboard/results" className="text-xs text-primary hover:underline">View All</Link>
@@ -226,9 +338,9 @@ export default function DashboardOverview() {
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
         {/* Bills */}
-        <div className="rounded-sm border bg-card p-6 shadow-sm">
+        <div className="rounded-sm border bg-card p-4 sm:p-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-bold">Bills & Payments</h3>
             <Link to="/dashboard/bills" className="text-xs text-primary hover:underline">View All</Link>
@@ -260,7 +372,7 @@ export default function DashboardOverview() {
         </div>
 
         {/* Notices */}
-        <div className="rounded-sm border bg-card p-6 shadow-sm">
+        <div className="rounded-sm border bg-card p-4 sm:p-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-bold">Latest Notices</h3>
             <Link to="/notices" className="text-xs text-primary hover:underline">View All</Link>

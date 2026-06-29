@@ -119,8 +119,14 @@ export function Header() {
                     className="flex items-center justify-center rounded-full border border-border p-0.5 hover:ring-2 hover:ring-primary/20 transition-all"
                     title="Go to Dashboard"
                   >
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-sm">
-                      {user.name ? user.name.charAt(0).toUpperCase() : <User className="h-4 w-4" />}
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-sm overflow-hidden">
+                      {user.avatar ? (
+                        <img src={user.avatar} alt={user.name} className="h-full w-full object-cover" />
+                      ) : user.name ? (
+                        user.name.charAt(0).toUpperCase()
+                      ) : (
+                        <User className="h-4 w-4" />
+                      )}
                     </div>
                   </Link>
                   <Button

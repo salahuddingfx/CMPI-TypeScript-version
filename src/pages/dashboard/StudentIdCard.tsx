@@ -150,15 +150,64 @@ export function StudentIdCard() {
               flex-direction: column !important;
               justify-content: center !important;
               align-items: center !important;
-              gap: 30px !important;
-              padding: 20px !important;
+              gap: 0.25in !important;
+              padding: 0.25in !important;
               background: white !important;
               width: 100% !important;
               margin: 0 auto !important;
             }
             .print-card-box {
+              width: 3.625in !important;
+              height: 2.375in !important;
               box-shadow: none !important;
               border: 1px solid #064e3b !important;
+              border-radius: 12px !important;
+              page-break-inside: avoid !important;
+            }
+            .print-card-box * {
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
+            }
+            /* Internal layout scaling for print */
+            .print-card-box .id-card-banner {
+              padding: 0.125in 0.15in !important;
+            }
+            .print-card-box .id-card-banner img {
+              height: 32px !important;
+              width: 32px !important;
+            }
+            .print-card-box .id-card-banner h3 {
+              font-size: 10px !important;
+            }
+            .print-card-box .id-card-banner p {
+              font-size: 7px !important;
+            }
+            .print-card-box .id-card-content {
+              padding: 0.125in 0.15in !important;
+            }
+            .print-card-box .h-24 {
+              height: 0.85in !important;
+              width: 0.85in !important;
+            }
+            .print-card-box .student-photo {
+              height: 0.85in !important;
+              width: 0.85in !important;
+            }
+            .print-card-box .badge {
+              font-size: 7px !important;
+              padding: 1px 6px !important;
+            }
+            .print-card-box .detail-label {
+              font-size: 6px !important;
+            }
+            .print-card-box .detail-value {
+              font-size: 9px !important;
+              margin-bottom: 4px !important;
+            }
+            .print-card-box .sig-text {
+              font-family: 'Helvetica', 'Arial', sans-serif !important;
+              font-size: 9px !important;
+              font-weight: bold !important;
             }
           }
         `
@@ -322,7 +371,7 @@ export function StudentIdCard() {
                     {/* Signature */}
                     <div className="flex flex-col items-center">
                       <div className="h-6 w-20 flex items-center justify-center opacity-90">
-                        <span className="font-serif italic text-xs text-yellow-400 tracking-wide">DidarUllah</span>
+                        <span className="font-sans italic text-xs font-bold text-yellow-400 tracking-wide">DidarUllah</span>
                       </div>
                       <div className="w-24 border-t border-emerald-700 mt-1 text-center">
                         <p className="text-[7px] font-black text-white leading-tight">Ln. Md. Didar Ullah</p>
@@ -443,7 +492,7 @@ export function StudentIdCard() {
                 </div>
                 <div className="flex flex-col items-center">
                   <div className="h-6 w-20 flex items-center justify-center opacity-90">
-                    <span className="font-serif italic text-xs text-yellow-400 tracking-wide">DidarUllah</span>
+                    <span className="sig-text font-sans italic text-xs font-bold text-yellow-400 tracking-wide">DidarUllah</span>
                   </div>
                   <div className="w-24 border-t border-emerald-700 mt-1 text-center">
                     <p className="text-[7px] font-black text-white leading-tight">Ln. Md. Didar Ullah</p>

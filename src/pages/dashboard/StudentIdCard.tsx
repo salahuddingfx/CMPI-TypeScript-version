@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { getStudentProfile } from "@/services/api";
 import { LoadingSkeleton } from "@/components/common/LoadingSkeleton";
-import { Printer, RefreshCw, CreditCard, ShieldCheck, User } from "lucide-react";
+import { Printer, RefreshCw, CreditCard, ShieldCheck, User, Download, Loader2 } from "lucide-react";
 import { SEO } from "@/components/common/SEO";
 import { Button } from "@/components/ui/button";
 
@@ -30,6 +30,59 @@ export function StudentIdCard() {
   const [profile, setProfile] = useState<StudentProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [isFlipped, setIsFlipped] = useState(false);
+
+  const [downloadingFront, setDownloadingFront] = useState(false);
+  const [downloadingBack, setDownloadingBack] = useState(false);
+
+  const handleDownloadFront = async () => {
+    const element = document.getElementById("print-card-front");
+    if (!element) return;
+    setDownloadingFront(true);
+    try {
+      const { toPng } = await import("html-to-image");
+      const dataUrl = await toPng(element, { 
+        cacheBust: true, 
+        pixelRatio: 3,
+        style: {
+          transform: "none",
+          boxShadow: "none",
+        }
+      });
+      const link = document.createElement("a");
+      link.download = `student-id-front-${profile?.studentId || "card"}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error("Failed to download front card", err);
+    } finally {
+      setDownloadingFront(false);
+    }
+  };
+
+  const handleDownloadBack = async () => {
+    const element = document.getElementById("print-card-back");
+    if (!element) return;
+    setDownloadingBack(true);
+    try {
+      const { toPng } = await import("html-to-image");
+      const dataUrl = await toPng(element, { 
+        cacheBust: true, 
+        pixelRatio: 3,
+        style: {
+          transform: "none",
+          boxShadow: "none",
+        }
+      });
+      const link = document.createElement("a");
+      link.download = `student-id-back-${profile?.studentId || "card"}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error("Failed to download back card", err);
+    } finally {
+      setDownloadingBack(false);
+    }
+  };
 
   useEffect(() => {
     getStudentProfile()
@@ -126,24 +179,22 @@ export function StudentIdCard() {
             }
             #print-layout-container {
               display: flex !important;
-              flex-direction: row !important;
-              flex-wrap: nowrap !important;
+              flex-direction: column !important;
               justify-content: center !important;
               align-items: center !important;
-              gap: 20px !important;
-              padding: 10px !important;
+              gap: 30px !important;
+              padding: 20px !important;
               background: white !important;
-              position: absolute !important;
-              left: 50% !important;
-              top: 50% !important;
-              transform: translate(-50%, -50%) !important;
               width: 100% !important;
+              margin: 0 auto !important;
+            }
+            #print-layout-container * {
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
             }
             .print-card-box {
               box-shadow: none !important;
               border: 1px solid #064e3b !important;
-              -webkit-print-color-adjust: exact !important;
-              print-color-adjust: exact !important;
             }
           }
         `
@@ -166,6 +217,30 @@ export function StudentIdCard() {
             <Button onClick={handlePrint} className="gap-2 bg-emerald-700 hover:bg-emerald-800 text-white">
               <Printer className="h-4 w-4" />
               Print ID Card
+            </Button>
+            <Button 
+              onClick={handleDownloadFront} 
+              disabled={downloadingFront || downloadingBack}
+              className="gap-2 bg-blue-700 hover:bg-blue-800 text-white"
+            >
+              {downloadingFront ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Download className="h-4 w-4" />
+              )}
+              Download Front (PNG)
+            </Button>
+            <Button 
+              onClick={handleDownloadBack} 
+              disabled={downloadingFront || downloadingBack}
+              className="gap-2 bg-blue-700 hover:bg-blue-800 text-white"
+            >
+              {downloadingBack ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Download className="h-4 w-4" />
+              )}
+              Download Back (PNG)
             </Button>
           </div>
         </div>
@@ -319,10 +394,10 @@ export function StudentIdCard() {
 
       {/* Hidden Print Layout rendered outside #root to avoid parent wrapper page breaks */}
       {typeof window !== "undefined" && createPortal(
-        <div id="print-layout-container" className="hidden print:flex flex-row gap-8 items-center justify-center p-6 bg-white min-h-screen">
+        <div id="print-layout-container" className="hidden print:flex flex-col gap-8 items-center justify-center p-6 bg-white min-h-screen">
           
           {/* Front Card Print */}
-          <div className="print-card-box w-[480px] h-[300px] flex flex-col overflow-hidden rounded-2xl id-card-green-bg text-white relative shadow-none border border-emerald-800">
+          <div id="print-card-front" className="print-card-box w-[480px] h-[300px] flex flex-col overflow-hidden rounded-2xl id-card-green-bg text-white relative shadow-none border border-emerald-800">
             <div className="id-card-banner flex items-center justify-center gap-3">
               <img src="/CMPI.png" alt="CMPI Logo" className="h-9 w-9 object-contain" />
               <div className="text-left">
@@ -390,7 +465,7 @@ export function StudentIdCard() {
           </div>
 
           {/* Back Card Print */}
-          <div className="print-card-box w-[480px] h-[300px] flex flex-col overflow-hidden rounded-2xl id-card-green-bg text-white relative shadow-none border border-emerald-800">
+          <div id="print-card-back" className="print-card-box w-[480px] h-[300px] flex flex-col overflow-hidden rounded-2xl id-card-green-bg text-white relative shadow-none border border-emerald-800">
             <div className="id-card-banner text-center">
               <h4 className="text-[10px] font-extrabold tracking-widest text-yellow-400 uppercase">CMPI CAMPUS</h4>
             </div>

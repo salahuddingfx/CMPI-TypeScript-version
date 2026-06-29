@@ -19,7 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SEM_ORDER, REGULATION_WEIGHTS, gradeColor, semIndex } from "@/components/results/ResultHelpers";
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, BarChart, Bar, Cell } from "recharts";
+import { XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, BarChart, Bar, Cell } from "recharts";
 
 interface Course {
   name: string;
@@ -708,7 +708,7 @@ export function StudentResults() {
             const sortedPassed = passedAll.sort((a: any, b: any) => semIndex(a.semester) - semIndex(b.semester));
             const recentGpas = sortedPassed.slice(-3).map((r: any) => parseFloat(r.gpa));
             const trendDirection = recentGpas.length >= 2
-              ? recentGpas[recentGpas.length - 1] > recentGpas[0] ? "improving" : recentGpas[recentGpas.length - 1] < recentGpas[0] ? "declining" : "stable"
+              ? recentGpas[recentGpas.length - 1]! > recentGpas[0]! ? "improving" : recentGpas[recentGpas.length - 1]! < recentGpas[0]! ? "declining" : "stable"
               : "insufficient";
 
             return (

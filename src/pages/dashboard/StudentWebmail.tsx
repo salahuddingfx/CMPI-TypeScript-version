@@ -350,12 +350,12 @@ export function StudentWebmail() {
       )}
 
       <div className="grid gap-6 lg:grid-cols-[220px_1fr]">
-        <div className="rounded-sm border bg-muted/60 p-4">
+        <div className="rounded-sm border bg-muted/60 p-4 overflow-x-auto lg:overflow-visible">
           <div className="mb-3 rounded-sm bg-primary/10 px-3 py-2">
             <p className="text-xs text-muted-foreground">Logged in as</p>
             <p className="truncate text-sm font-bold text-primary">{userEmail}</p>
           </div>
-          <div className="space-y-1">
+          <div className="flex overflow-x-auto gap-1 lg:flex-col lg:overflow-visible scrollbar-none">
             {folders.map((folder) => {
               const Icon = folderIcons[folder.key];
               const count = folderCounts[folder.key];
@@ -374,7 +374,7 @@ export function StudentWebmail() {
           </div>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-[380px_1fr]">
+        <div className="grid gap-6 grid-cols-1 lg:grid-cols-[380px_1fr]">
           <div className="rounded-sm border bg-muted/60">
             <div className="flex items-center gap-2 border-b px-4 py-2">
               {showSearch ? (

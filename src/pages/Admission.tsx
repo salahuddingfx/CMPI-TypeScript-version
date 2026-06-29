@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { SEO } from "@/components/common/SEO";
 import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
-import { submitAdmission, trackAdmission } from "@/services/api";
+import { submitAdmission, trackAdmission, fetchInstituteData } from "@/services/api";
 
 const departments = [
   "Civil Technology",
@@ -49,6 +49,21 @@ export function Admission() {
   const [trackId, setTrackId] = useState("");
   const [trackResult, setTrackResult] = useState<any>(null);
   const [trackLoading, setTrackLoading] = useState(false);
+
+  const [paymentNumbers, setPaymentNumbers] = useState({ bkash: "", nagad: "" });
+
+  useEffect(() => {
+    fetchInstituteData()
+      .then((data) => {
+        if (data.institute) {
+          setPaymentNumbers({
+            bkash: data.institute.bkash_number || "+880 1888-000000",
+            nagad: data.institute.nagad_number || "+880 1888-111111",
+          });
+        }
+      })
+      .catch((err) => console.error("Failed to load payment settings", err));
+  }, []);
 
   const update = (field: string, value: string) => setForm((prev) => ({ ...prev, [field]: value }));
 
@@ -332,8 +347,8 @@ export function Admission() {
                           Please send BDT 500 to our official Merchant Account using Bkash or Nagad. Enter your payment details below to complete your admission application.
                         </p>
                         <div className="mt-2 grid grid-cols-2 gap-2 text-xs font-mono">
-                          <p>Bkash Personal: <strong>+880 1888-000000</strong></p>
-                          <p>Nagad Personal: <strong>+880 1888-111111</strong></p>
+                          <p>Bkash Personal: <strong>{paymentNumbers.bkash}</strong></p>
+                          <p>Nagad Personal: <strong>{paymentNumbers.nagad}</strong></p>
                         </div>
                       </div>
 

@@ -17,6 +17,8 @@ export function StudentProfile() {
   const [profile, setProfile] = useState({
     name: "",
     studentId: "",
+    boardRoll: "",
+    regNo: "",
     department: "",
     semester: "",
     session: "",
@@ -41,6 +43,8 @@ export function StudentProfile() {
         setProfile({
           name: user.name || "",
           studentId: user.student_id || "",
+          boardRoll: user.board_roll || "",
+          regNo: user.reg_no || "",
           department: user.department || "",
           semester: user.semester || "",
           session: user.session || "",
@@ -59,6 +63,8 @@ export function StudentProfile() {
           setProfile({
             name: storedUser.name || "",
             studentId: storedUser.student_id || "",
+            boardRoll: storedUser.board_roll || "",
+            regNo: storedUser.reg_no || "",
             department: storedUser.department || "",
             semester: storedUser.semester || "",
             session: storedUser.session || "",
@@ -125,6 +131,12 @@ export function StudentProfile() {
         guardian: profile.guardian,
         blood_group: profile.bloodGroup,
         address: profile.address,
+        board_roll: profile.boardRoll,
+        reg_no: profile.regNo,
+        student_id: profile.studentId,
+        department: profile.department,
+        semester: profile.semester,
+        session: profile.session,
       });
       // Update localStorage too
       if (storedUser) {
@@ -136,6 +148,12 @@ export function StudentProfile() {
           blood_group: profile.bloodGroup,
           address: profile.address,
           avatar: profile.avatar,
+          board_roll: profile.boardRoll,
+          reg_no: profile.regNo,
+          student_id: profile.studentId,
+          department: profile.department,
+          semester: profile.semester,
+          session: profile.session,
         };
         localStorage.setItem("cmpi-user", JSON.stringify(updatedUser));
         window.dispatchEvent(new Event("storage"));
@@ -152,6 +170,12 @@ export function StudentProfile() {
           blood_group: profile.bloodGroup,
           address: profile.address,
           avatar: profile.avatar,
+          board_roll: profile.boardRoll,
+          reg_no: profile.regNo,
+          student_id: profile.studentId,
+          department: profile.department,
+          semester: profile.semester,
+          session: profile.session,
         };
         localStorage.setItem("cmpi-user", JSON.stringify(updatedUser));
         window.dispatchEvent(new Event("storage"));
@@ -212,7 +236,25 @@ export function StudentProfile() {
         </div>
         <div className="space-y-2">
           <label htmlFor="studentId" className="text-sm font-semibold">Student ID</label>
-          <Input id="studentId" value={profile.studentId} disabled />
+          <Input id="studentId" value={profile.studentId} onChange={(e) => update("studentId", e.target.value)} placeholder="e.g. CMPI-2023-0456" />
+        </div>
+        <div className="space-y-2">
+          <label htmlFor="boardRoll" className="text-sm font-semibold">BTEB Board Roll</label>
+          <Input
+            id="boardRoll"
+            value={profile.boardRoll}
+            onChange={(e) => update("boardRoll", e.target.value)}
+            placeholder="e.g. 232345"
+          />
+        </div>
+        <div className="space-y-2">
+          <label htmlFor="regNo" className="text-sm font-semibold">BTEB Registration No</label>
+          <Input
+            id="regNo"
+            value={profile.regNo}
+            onChange={(e) => update("regNo", e.target.value)}
+            placeholder="e.g. 1502034956"
+          />
         </div>
         <div className="space-y-2">
           <label htmlFor="email" className="text-sm font-semibold">Email</label>
@@ -224,11 +266,15 @@ export function StudentProfile() {
         </div>
         <div className="space-y-2">
           <label htmlFor="department" className="text-sm font-semibold">Department</label>
-          <Input id="department" value={profile.department} disabled />
+          <Input id="department" value={profile.department} onChange={(e) => update("department", e.target.value)} placeholder="e.g. Civil Technology" />
         </div>
         <div className="space-y-2">
           <label htmlFor="semester" className="text-sm font-semibold">Semester</label>
-          <Input id="semester" value={profile.semester} disabled />
+          <Input id="semester" value={profile.semester} onChange={(e) => update("semester", e.target.value)} placeholder="e.g. 5th" />
+        </div>
+        <div className="space-y-2">
+          <label htmlFor="session" className="text-sm font-semibold">Session</label>
+          <Input id="session" value={profile.session} onChange={(e) => update("session", e.target.value)} placeholder="e.g. 2023-2024" />
         </div>
         <div className="space-y-2">
           <label htmlFor="guardian" className="text-sm font-semibold">Guardian</label>

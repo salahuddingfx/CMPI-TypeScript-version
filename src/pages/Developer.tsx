@@ -100,7 +100,7 @@ export function Developer() {
             <div className="shrink-0 relative group">
               <div className="absolute inset-0 bg-yellow-400 border-[3px] border-black translate-x-2 translate-y-2 group-hover:translate-x-3 group-hover:translate-y-3 transition-transform duration-200"></div>
               <img 
-                src="https://github.com/salahuddingfx.png" 
+                src="https://salahuddin.codes/CV-Images.png" 
                 alt="Salah Uddin Kader" 
                 className="relative h-40 w-40 rounded-none border-[3px] border-black dark:border-white object-cover shadow-none" 
               />

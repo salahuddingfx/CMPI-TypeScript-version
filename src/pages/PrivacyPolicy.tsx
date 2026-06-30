@@ -1,90 +1,135 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { SEO } from "@/components/common/SEO";
 import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
+import { ChevronDown, ShieldCheck } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function PrivacyPolicy() {
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+  const sections = [
+    {
+      title: "1. Comprehensive Scope & Acceptance",
+      content: "Cox's Bazar Model Polytechnic Institute (CMPI), established in 2008 and registered under the Bangladesh Technical Education Board (BTEB), is committed to safeguarding the digital privacy of our students, guardians, applicants, faculty, and website visitors. This policy applies to all portals, student databases, and webmail services hosted under the cmpi.edu.bd domain. By accessing our services, you explicitly consent to the data collection and processing methods described herein."
+    },
+    {
+      title: "2. Compliance with Bangladesh Cyber Laws",
+      content: "All data processing, user logs maintenance, security reviews, and portal logins are maintained in strict compliance with the Cyber Security Act 2023 of the People's Republic of Bangladesh. We actively cooperate with cyber security units and judicial authorities to maintain a safe, secure educational ecosystem."
+    },
+    {
+      title: "3. Personal Identity Information Collected",
+      content: "We collect identifiable student records when you apply for admission or register profiles. This includes your full legal name, national identification number (NID) or birth registration certificate, gender, date of birth, blood group, photographs, guardian credentials, present and permanent addresses, personal email addresses, and active mobile numbers."
+    },
+    {
+      title: "4. Institutional & Academic Record Keeping",
+      content: "For registered students, we archive and process academic data including BTEB student rolls, registration numbers, session technology (e.g., Computer, Civil, Electrical), semester progression, attendance histories, exam grades, GPA transcripts, scholarship allocations, and institutional conduct reports."
+    },
+    {
+      title: "5. Financial Transaction and Billing Logs",
+      content: "When submitting tuition fees or board exam fees, we collect transaction dates, bill numbers, payment amounts, payment channels (such as cash receipts, bank deposits, bKash, Nagad, Rocket), Transaction IDs (TrxID), and sender phone numbers. We do not store mobile banking account PINs or bank passwords."
+    },
+    {
+      title: "6. Student Webmail Usage & Email Integrity",
+      content: "CMPI student webmail accounts (e.g., username.cst@cmpi.edu.bd) are monitored for server storage management and spam prevention. We archive emails sent and received through the server to comply with educational audits and prevent communication abuses."
+    },
+    {
+      title: "7. Technical Metadata & Session Logger",
+      content: "Our servers automatically log access metadata when you browse our portals. This includes your IP address, device hostname, operating system, web browser type, referring URLs, access timestamps, active session tokens, and crash diagnostics to maintain database stability."
+    },
+    {
+      title: "8. Purpose of Processing Personal Data",
+      content: "We process your details strictly for legitimate educational, operational, and regulatory purposes, including managing classroom enrollment, taking class attendance, issuing exam admit cards, compiling results, broadcasting notices, and auditing accounts."
+    },
+    {
+      title: "9. Consent & Guardian Representation for Minors",
+      content: "For students who are minors (under 18 years of age), all admissions registrations, portal accounts, and payment claims must be submitted under the guidance and explicit consent of their legal parent or guardian, who represents them in all administrative processes."
+    },
+    {
+      title: "10. Data Retention Framework",
+      content: "Core academic records (names, roll numbers, registration numbers, final transcripts) are archived permanently to verify student credentials to employers. Temporary session tokens, login history logs, and inactive applicant drafts are purged after two (2) years of absolute inactivity."
+    },
+    {
+      title: "11. Enterprise Security & Hashing Standards",
+      content: "We implement robust security controls including SSL/TLS encryption (HTTPS URLs) for all traffic. All student and admin credentials are encrypted using strong bcrypt hashing in our database layers, making them unreadable to unauthorized parties."
+    },
+    {
+      title: "12. Database Access Controls",
+      content: "Database access is restricted to whitelisted IPs and authorized administrative staff (Principals, Registrars, IT Officers, and Accountants) using multi-factor authentication (MFA). Students and teachers are only granted access to their specific views."
+    },
+    {
+      title: "13. Backup Routines and Disaster Recovery",
+      content: "Our servers execute automated daily database and system backups. These backup archives are encrypted and stored in secondary server configurations to prevent data loss in the event of hardware failures or natural disasters."
+    },
+    {
+      title: "14. Statutory Submissions to BTEB",
+      content: "We submit registration rolls, board exam forms, mid-term marks, and final semester logs directly to the Bangladesh Technical Education Board (BTEB) database as required by national technical education mandates."
+    },
+    {
+      title: "15. Third-Party Hosting and Service Dependencies",
+      content: "We share necessary technical logs with whitelisted hosting partners and SMTP mail providers (such as Brevo) under confidentiality agreements. We do not sell or trade your details to commercial third-party marketing companies."
+    },
+    {
+      title: "16. Right to Access and Review Records",
+      content: "Enrolled students have the right to request a copy of the personal and academic data held in the CMPI databases. This can be viewed directly on the student profile panel or requested formally from the Registrar's Office."
+    },
+    {
+      title: "17. Right to Correction and Rectification",
+      content: "If you notice any inaccuracies in your student records (e.g. name spellings, blood groups, addresses), you must report the errors to the administration immediately. Inaccurate profile entries will be corrected after verification."
+    },
+    {
+      title: "18. IT Helpdesk and Grievance Support",
+      content: "If you have any questions, concerns, or requests regarding this Privacy Policy, your database data, or suspected data vulnerabilities, please contact our IT Division: IT Support Department, Cox's Bazar Model Polytechnic Institute, College Road, Cox's Bazar 4750, Bangladesh. Email: privacy@cmpi.edu.bd."
+    }
+  ];
+
   return (
     <PageTransition className="container section-pad">
-      <SEO title="Privacy Policy" description="Privacy policy for Cox's Bazar Model Polytechnic Institute website." />
+      <SEO title="Privacy Policy" description="Detailed privacy policy for CMPI website and portals." />
       <article className="mx-auto max-w-4xl rounded-sm border bg-card p-6 shadow-sm sm:p-10">
         <SectionHeader title="Privacy Policy" description="Last updated: June 2026" align="left" className="mb-8" />
-        <div className="space-y-5 leading-7 text-muted-foreground">
-
-          <h3 className="text-lg font-bold text-foreground">1. Comprehensive Introduction</h3>
-          <p>Cox's Bazar Model Polytechnic Institute (CMPI), established in 2008 and registered under the Bangladesh Technical Education Board (BTEB), is committed to safeguarding the privacy and digital security of our students, guardians, applicants, faculty, staff, alumni, and website visitors. This Privacy Policy forms a legally binding agreement between you and CMPI. It explains in exhaustive detail how we collect, process, store, protect, and disclose your personal, academic, and technical information when you access our public website, portals, webmail services, online payment verification systems, and associated electronic networks.</p>
-          <p>By accessing or interacting with our services, you explicitly consent to the collection, storage, and processing of your data as described in this policy, which is designed to align with the Cyber Security Act 2023 of the People's Republic of Bangladesh and international data protection practices.</p>
-
-          <h3 className="text-lg font-bold text-foreground">2. Exhaustive Categories of Information We Collect</h3>
-          <p>We collect and manage various categories of data to provide high-quality educational services and administrative functions. These include:</p>
-          <div className="space-y-4 pl-4 border-l-2 border-primary/20">
-            <div>
-              <h4 className="font-semibold text-foreground">A. Personal Identification Information</h4>
-              <p className="text-sm">We collect identifiable details when you submit forms, apply for admission, or create portal accounts. This includes your full legal name, national identification number (NID) or birth registration certificate number, gender, date of birth, blood group, passport-sized photographs, father's and mother's names, legal guardian information, permanent and present addresses, personal email address, and mobile phone numbers.</p>
-            </div>
-            <div>
-              <h4 className="font-semibold text-foreground">B. Academic & Institutional Information</h4>
-              <p className="text-sm">For enrolled students, we generate and store detailed academic records including your BTEB student roll number, registration number, session year, enrolled department/technology (e.g., Computer, Civil, Electrical), semester progression, attendance logs, mid-term and semester final results, CGPA transcripts, scholarship awards, and disciplinary records.</p>
-            </div>
-            <div>
-              <h4 className="font-semibold text-foreground">C. Financial & Billing Transaction Records</h4>
-              <p className="text-sm">When you pay tuition fees or exam fees, we collect payment verification logs. This includes the transaction date, bill references, payment amounts, payment modes (e.g., manual cash receipts, bKash, Nagad, Rocket, bank deposits), transaction IDs (TrxID), sender phone numbers, and digital copies of payment slips. We do not store credit card PINs or mobile banking account passwords.</p>
-            </div>
-            <div>
-              <h4 className="font-semibold text-foreground">D. Technical, Session & Diagnostic Logs</h4>
-              <p className="text-sm">When browsing our public or restricted portals, our servers automatically log technical metadata. This includes your IP address, device hostname, operating system version, web browser user-agent string, page referral URLs, exact timestamps of visits, session states, and diagnostic crash reports to maintain portal integrity.</p>
-            </div>
-          </div>
-
-          <h3 className="text-lg font-bold text-foreground">3. How and Why We Process Your Information</h3>
-          <p>We process your personal and academic data strictly for legitimate educational, regulatory, and administrative purposes, including:</p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li><strong>Educational Administration:</strong> To manage classroom enrollment, generate academic routines, track daily attendance, issue admit cards, compile transcript results, and facilitate graduation clearances.</li>
-            <li><strong>Official Communication:</strong> To broadcast emergency alerts, exam schedule updates, holiday notices, and payment reminders via SMS, WhatsApp, and the webmail system.</li>
-            <li><strong>Identity Verification:</strong> To host the public Student Verification portal, allowing employers, board authorities, and registrars to confirm the authenticity of student credentials.</li>
-            <li><strong>Financial Transparency:</strong> To track outstanding balances, process manual and automated transaction approvals, and maintain accurate institutional accounting audits.</li>
-            <li><strong>System Maintenance:</strong> To debug server errors, secure portal access points against unauthorized login attempts, and optimize page load speeds.</li>
-          </ul>
-
-          <h3 className="text-lg font-bold text-foreground">4. Strict Data Security & Technical Encryption Standards</h3>
-          <p>CMPI implements robust, enterprise-grade physical, administrative, and technical security measures to protect your database entries and uploaded media from unauthorized access, modification, destruction, or disclosure. Our security framework includes:</p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li><strong>Transport Security:</strong> All connections to our portals are encrypted using Transport Layer Security (TLS 1.2 and TLS 1.3) protocols, marked by secure HTTPS URLs.</li>
-            <li><strong>Credential Protection:</strong> All portal user accounts and passwords are encrypted in our databases using strong one-way hashing algorithms (bcrypt) and are never stored in plaintext format.</li>
-            <li><strong>Strict Access Control:</strong> Access to database management systems (DBMS) is restricted to authorized personnel (principals, registrars, and system administrators) through multi-factor authentication (MFA) and IP whitelisting.</li>
-            <li><strong>Database Backup Integrity:</strong> Automated daily backups are securely archived and stored in encrypted offline configurations to prevent data loss in the event of hardware failures.</li>
-          </ul>
-
-          <h3 className="text-lg font-bold text-foreground">5. Data Retention, Archive & Account Deletion Policies</h3>
-          <p>We retain your personal data for as long as you maintain an active enrollment status at CMPI. Upon graduation, withdrawal, or transfer, your core academic record (name, roll number, registration number, technology, and final CGPA transcript) is moved to a permanent digital archive to comply with BTEB archiving policies and verify your credentials to future employers or institutions indefinitely.</p>
-          <p>Non-permanent data, including daily login session records, portal access logs, and draft admission applications, are deleted or anonymized after two (2) years of inactivity. Students who wish to request correction of inaccurate data or deletion of their optional portal profile information can submit a written request to the Registrar's Office at any time.</p>
-
-          <h3 className="text-lg font-bold text-foreground">6. Disclosures & Shared Data Protocols</h3>
-          <p>CMPI does not sell, rent, trade, or distribute your personal data to commercial marketing agencies. We disclose information only under the following strict protocols:</p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li><strong>BTEB Board Compliance:</strong> We submit mandatory registration data, examination roll logs, and course performance metrics directly to the Bangladesh Technical Education Board (BTEB) and Ministry of Education.</li>
-            <li><strong>Legal & Law Enforcement Mandate:</strong> We may disclose user information to judicial authorities, cyber security units, or police investigators if required to comply with court orders, regulatory decrees, or to investigate fraudulent activities.</li>
-            <li><strong>Emergency Situations:</strong> In cases where a student's safety is compromised, critical medical information (such as blood group and emergency guardian contacts) may be shared with healthcare personnel.</li>
-          </ul>
-
-          <h3 className="text-lg font-bold text-foreground">7. Compliance with the Cyber Security Act 2023</h3>
-          <p>In accordance with the Cyber Security Act 2023 of Bangladesh, CMPI maintains a strict policy against unauthorized data mining, hacking, database modification, or session hijacking. Any attempt to exploit, scraping, or breach database systems will result in immediate suspension of student/staff portals and formal prosecution under Bangladesh cyber laws.</p>
-
-          <h3 className="text-lg font-bold text-foreground">8. Changes to this Privacy Policy</h3>
-          <p>CMPI reserves the exclusive right to modify or append sections of this Privacy Policy at any time to reflect updates in BTEB regulations, technological changes, or national legislation. When changes are made, we will update the "Last updated" timestamp at the top of this document. Continued use of the website and portal services after modifications are published constitutes your official agreement to the updated policy terms.</p>
-
-          <h3 className="text-lg font-bold text-foreground">9. Institutional Privacy Contact</h3>
-          <p>For questions, data access requests, corrections of records, or to submit feedback regarding our data handling procedures, please contact the CMPI Administration:</p>
-          <p className="text-foreground font-semibold">
-            Office of the Registrar (IT Division)<br />
-            Cox's Bazar Model Polytechnic Institute<br />
-            College Road, Cox's Bazar 4750, Bangladesh<br />
-            Official Email: privacy@cmpi.edu.bd / info@cmpi.edu.bd<br />
-            Landline: +880 341 62512 | Mobile: +880 1812 000000
-          </p>
-
+        
+        <div className="mb-6 flex items-center gap-3 rounded-2xl bg-primary/10 p-4 text-primary border border-primary/20">
+          <ShieldCheck className="h-5 w-5 shrink-0" />
+          <p className="text-sm font-semibold">Click on any section header to expand and read the details of our Privacy Policy.</p>
         </div>
-        <Link to="/" className="mt-8 inline-flex font-bold text-primary hover:underline">Back to Home</Link>
+
+        <div className="space-y-4">
+          {sections.map((section, index) => (
+            <div key={index} className="rounded-xl border border-border overflow-hidden bg-card">
+              <button
+                type="button"
+                onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                className="w-full flex items-center justify-between p-4 text-left font-bold text-foreground hover:bg-muted/30 transition-all duration-300"
+              >
+                <span className="text-sm sm:text-base">{section.title}</span>
+                <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform duration-300 ${openIndex === index ? "rotate-180 text-primary" : ""}`} />
+              </button>
+              
+              <AnimatePresence initial={false}>
+                {openIndex === index && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    className="overflow-hidden"
+                  >
+                    <div className="p-4 border-t border-border bg-muted/10 text-muted-foreground leading-relaxed text-sm font-medium">
+                      {section.content}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8 flex justify-between items-center border-t pt-6">
+          <Link to="/" className="font-bold text-primary hover:underline">Back to Home</Link>
+          <p className="text-xs text-muted-foreground font-semibold">Cox's Bazar Model Polytechnic Institute © {new Date().getFullYear()}</p>
+        </div>
       </article>
     </PageTransition>
   );

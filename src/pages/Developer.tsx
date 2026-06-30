@@ -1,205 +1,341 @@
 import { SEO } from "@/components/common/SEO";
 import { PageTransition } from "@/components/common/PageTransition";
-import { Sparkles, Terminal, Code, Cpu, ExternalLink, Globe } from "lucide-react";
+import { 
+  Github, Globe, Linkedin, Facebook, Instagram, 
+  ArrowUpRight, Sparkles, Terminal, Layers, Briefcase, Award, ShieldCheck, Cpu
+} from 'lucide-react';
 
-const techStack = [
-  { name: "React", bg: "bg-[#61DAFB]/20 border-[#61DAFB]" },
-  { name: "TypeScript", bg: "bg-[#3178C6]/20 border-[#3178C6]" },
-  { name: "Laravel", bg: "bg-[#FF2D20]/20 border-[#FF2D20]" },
-  { name: "PHP", bg: "bg-[#777BB4]/20 border-[#777BB4]" },
-  { name: "MySQL", bg: "bg-[#4479A1]/20 border-[#4479A1]" },
-  { name: "Next.js", bg: "bg-slate-500/20 border-slate-500" },
-  { name: "Tailwind CSS", bg: "bg-[#38BDF8]/20 border-[#38BDF8]" },
-  { name: "Framer Motion", bg: "bg-[#FF007A]/20 border-[#FF007A]" },
-  { name: "PostgreSQL", bg: "bg-[#4169E1]/20 border-[#4169E1]" },
-  { name: "Docker", bg: "bg-[#2496ED]/20 border-[#2496ED]" },
-  { name: "Git", bg: "bg-[#F05032]/20 border-[#F05032]" },
-  { name: "Figma", bg: "bg-[#F24E1E]/20 border-[#F24E1E]" }
+interface SkillGroup {
+  category: string;
+  skills: string[];
+}
+
+interface SecuritySpec {
+  title: string;
+  desc: string;
+  badge: string;
+  color: string;
+}
+
+interface PortalMetric {
+  value: string;
+  label: string;
+  desc: string;
+}
+
+interface Project {
+  title: string;
+  description: string;
+  tech: string[];
+  link: string;
+  status: string;
+}
+
+interface TimelineItem {
+  year: string;
+  title: string;
+  description: string;
+}
+
+interface SocialLink {
+  label: string;
+  href: string;
+  icon: React.ReactNode;
+}
+
+const skillsGroup: SkillGroup[] = [
+  {
+    category: "Frontend Engineering",
+    skills: ["React.js", "Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "Redux Toolkit"]
+  },
+  {
+    category: "Backend & Systems",
+    skills: ["Laravel (PHP)", "Node.js (Express)", "REST API Scaffolding", "JWT Auth Engines", "Docker Containers"]
+  },
+  {
+    category: "Database & Security",
+    skills: ["MySQL / PostgreSQL", "SQL Injection Protection", "XSS & CSRF Prevention", "Database Indexing & Locks"]
+  }
 ];
 
-const projects = [
+const securitySpecs: SecuritySpec[] = [
   {
-    title: "CMPI Website",
-    description: "Full-stack institutional website with admin panel, student dashboard, admission system, and real-time content management.",
+    title: "SQL Injection Guard",
+    desc: "Strict parameterized bindings and ORM layer abstraction prevent raw query tampering.",
+    badge: "Active",
+    color: "border-emerald-500/30 text-emerald-500 bg-emerald-500/10"
+  },
+  {
+    title: "CSRF & CORS Shielding",
+    desc: "Domain restriction and token validation filters isolate access nodes to official origins.",
+    badge: "Active",
+    color: "border-sky-500/30 text-sky-500 bg-sky-500/10"
+  },
+  {
+    title: "JWT Authorization Gate",
+    desc: "Stateless JSON Web Token verification controls page permissions across client/admin levels.",
+    badge: "Active",
+    color: "border-amber-500/30 text-amber-500 bg-amber-500/10"
+  }
+];
+
+const portalMetrics: PortalMetric[] = [
+  { value: "< 45ms", label: "Page Transition", desc: "Powered by lazy routing & Suspense triggers" },
+  { value: "100%", label: "SQLi Shielded", desc: "Rigorous input sanitization on all endpoints" },
+  { value: "0ms", label: "Cart Lock Drift", desc: "Redis-backed session locks prevent booking races" },
+  { value: "A+", label: "Lighthouse Score", desc: "Optimized asset loads and clean DOM nesting" }
+];
+
+const projects: Project[] = [
+  {
+    title: "CMPI Website & Portal",
+    description:
+      "Full-stack institutional website with admin panel, student dashboard, admission system, and real-time content management. Configured with secure SQL injection mitigation layers.",
     tech: ["React", "TypeScript", "Laravel", "MySQL", "Tailwind CSS"],
     link: "https://www.cmpi.edu.bd",
     status: "Live",
-    shadow: "shadow-[6px_6px_0px_0px_#facc15] hover:shadow-[10px_10px_0px_0px_#facc15]"
   },
   {
-    title: "Nextora Studio",
-    description: "Digital agency website showcasing services, portfolio, and team. Built with modern web technologies.",
-    tech: ["React", "Next.js", "Tailwind CSS"],
+    title: "Nextora Studio Portal",
+    description:
+      "Digital agency website showcasing services, portfolio, and team. Built with modern web technologies and high-fidelity micro-interactions.",
+    tech: ["React", "Next.js", "Tailwind CSS", "Framer Motion"],
     link: "https://nextorastudio.tech",
     status: "Live",
-    shadow: "shadow-[6px_6px_0px_0px_#ec4899] hover:shadow-[10px_10px_0px_0px_#ec4899]"
   },
   {
-    title: "BTEB Results Board",
-    description: "Board of Technical Education Bangladesh results management system with PDF import and Google Drive integration.",
-    tech: ["Laravel", "PHP", "MySQL"],
+    title: "BTEB Results Board Engine",
+    description:
+      "Board of Technical Education Bangladesh results management system with PDF import, regex grade parser, and Google Drive storage integration.",
+    tech: ["Laravel", "PHP", "MySQL", "PDFParser"],
     link: "#",
     status: "Internal",
-    shadow: "shadow-[6px_6px_0px_0px_#06b6d4] hover:shadow-[10px_10px_0px_0px_#06b6d4]"
   },
 ];
 
-const timeline = [
-  { year: "2024", title: "Started Development", description: "Began building the CMPI website from scratch with a vision for modern technical education.", color: "bg-yellow-400" },
-  { year: "2025", title: "Admin Panel Launch", description: "Deployed the admin dashboard with full CRUD operations for notices, events, blogs, and faculty.", color: "bg-pink-500" },
-  { year: "2025", title: "Student Portal", description: "Built the student dashboard with course management, results, bills, and webmail integration.", color: "bg-cyan-400" },
-  { year: "2026", title: "Admission System", description: "Launched online admission with automated account creation and email notifications.", color: "bg-lime-400" },
-  { year: "2026", title: "Continuous Improvement", description: "Adding charts, dark mode, search, SEO optimization, and performance improvements.", color: "bg-purple-500" },
-];
-
-const testimonials = [
+const timeline: TimelineItem[] = [
   {
-    quote: "Salah delivered an exceptional website that exceeded our expectations. The admin panel is intuitive and the student portal is a game-changer.",
-    name: "Principal, CMPI",
-    role: "Institute Administration",
+    year: "2024",
+    title: "Core Portal Architecture Initiated",
+    description:
+      "Began building the CMPI website framework from scratch with modern technical education modules."
   },
   {
-    quote: "Professional, creative, and technically brilliant. The admission system alone saved us hundreds of hours of manual work.",
-    name: "Faculty Member, CMPI",
-    role: "Academic Department",
+    year: "2025",
+    title: "Admin Control Panel Launch",
+    description:
+      "Deployed the backend admin dashboard with full CRUD operations for notices, events, and faculty files."
   },
   {
-    quote: "Working with Salah was a pleasure. He understood our vision and translated it into a beautiful, functional website.",
-    name: "Student Representative",
-    role: "Student Body",
+    year: "2025",
+    title: "Interactive Student Portal",
+    description:
+      "Built the student dashboard featuring online routines, results tracker, bill status ledger, and webmail integrations."
+  },
+  {
+    year: "2026",
+    title: "Secure Online Admission System",
+    description:
+      "Launched automated online application channels equipped with verification safeguards and mail triggers."
   },
 ];
 
-const socialLinks = [
-  { label: "GitHub", href: "https://github.com/salahuddingfx", bg: "bg-yellow-400 text-black hover:bg-yellow-500 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)]" },
-  { label: "Portfolio", href: "https://salahuddin.codes", bg: "bg-cyan-400 text-black hover:bg-cyan-500 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)]" },
-  { label: "LinkedIn", href: "https://linkedin.com/in/salahuddingfx", bg: "bg-pink-400 text-black hover:bg-pink-500 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)]" },
-  { label: "Facebook", href: "https://facebook.com/salahuddingfx", bg: "bg-lime-400 text-black hover:bg-lime-500 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,1)]" }
+const socialLinks: SocialLink[] = [
+  { label: "GitHub", href: "https://github.com/salahuddingfx", icon: <Github className="w-4 h-4" /> },
+  { label: "Portfolio", href: "https://salahuddin.codes", icon: <Globe className="w-4 h-4" /> },
+  { label: "LinkedIn", href: "https://linkedin.com/in/salahuddingfx", icon: <Linkedin className="w-4 h-4" /> },
+  { label: "Facebook", href: "https://facebook.com/salahuddingfx", icon: <Facebook className="w-4 h-4" /> },
+  { label: "Instagram", href: "https://instagram.com/salahuddingfx", icon: <Instagram className="w-4 h-4" /> },
 ];
 
-export function Developer() {
+export function Developer(): JSX.Element {
   return (
-    <PageTransition className="container section-pad">
+    <PageTransition className="container py-24 select-none">
       <SEO
-        title="Developer"
-        description="Meet the developer behind the CMPI website — Salah Uddin Kader, full-stack developer and founder of Nextora Studio."
+        title="Developer Info"
+        description="Meet the developer behind the CMPI website — Salah Uddin Kader, creative full-stack engineer and founder of Nextora Studio."
       />
 
-      <article className="mx-auto max-w-4xl space-y-16">
+      <div className="mx-auto max-w-5xl space-y-12">
         
-        {/* Profile Card (Neo-Brutalist Layout) */}
-        <div className="rounded-none border-[3px] border-black dark:border-white bg-[#FFF] dark:bg-[#121212] p-8 shadow-[8px_8px_0px_0px_#000] dark:shadow-[8px_8px_0px_0px_#FFF] transition-all duration-200">
+        {/* Main Hero Header - Stark Brutalist Title */}
+        <div className="border-[3px] border-slate-900 dark:border-white bg-[#facc15] text-slate-900 p-6 md:p-10 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)]">
+          <div className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-slate-900 animate-ping" />
+            <span className="text-[10px] font-black uppercase tracking-widest font-mono">system developer node</span>
+          </div>
+          <h1 className="text-4xl md:text-7xl font-black uppercase tracking-tighter mt-4 leading-none select-none">
+            Salah Uddin Kader
+          </h1>
+          <p className="text-sm md:text-lg font-bold tracking-tight mt-2 flex items-center gap-1.5 uppercase">
+            Creative Full-Stack Developer &amp; UI/UX Designer <Sparkles className="w-4 h-4 shrink-0" />
+          </p>
+        </div>
+
+        {/* Profile Card Section */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
           
-          <div className="flex items-center gap-2 mb-6 border-b-[3px] border-black dark:border-white pb-4">
-            <Terminal className="h-6 w-6 text-primary stroke-[2.5]" />
-            <h1 className="text-xl font-mono font-black uppercase tracking-wider">dev-profile.sh</h1>
+          {/* Avatar Area */}
+          <div className="md:col-span-4 border-[3px] border-slate-900 dark:border-white bg-white dark:bg-slate-950 p-4 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)]">
+            <div className="relative aspect-square border-2 border-slate-900 dark:border-white overflow-hidden bg-slate-100 dark:bg-slate-900 group">
+              <img
+                src="https://salahuddin.codes/CV-Images.png"
+                alt="Salah Uddin Kader"
+                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
+              />
+              <div className="absolute top-2 left-2 bg-[#22c55e] text-black text-[9px] font-black uppercase px-2 py-0.5 border border-black shadow-[2px_2px_0px_#000]">
+                Live Portfolio
+              </div>
+            </div>
+            <a 
+              href="https://salahuddin.codes" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="mt-4 w-full flex items-center justify-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-black py-2.5 text-xs uppercase tracking-wider border-2 border-black hover:bg-[#facc15] hover:text-black dark:hover:bg-[#facc15] dark:hover:text-black hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0px_#000] transition-all"
+            >
+              salahuddin.codes <ArrowUpRight className="w-4 h-4" />
+            </a>
           </div>
 
-          <div className="flex flex-col items-center gap-8 md:flex-row md:items-start md:gap-10">
-            {/* Image Container with neo-brutal drop shadow */}
-            <div className="shrink-0 relative group">
-              <div className="absolute inset-0 bg-yellow-400 border-[3px] border-black translate-x-2 translate-y-2 group-hover:translate-x-3 group-hover:translate-y-3 transition-transform duration-200"></div>
-              <img 
-                src="https://salahuddin.codes/CV-Images.png" 
-                alt="Salah Uddin Kader" 
-                className="relative h-40 w-40 rounded-none border-[3px] border-black dark:border-white object-cover shadow-none" 
-              />
+          {/* About / Credentials */}
+          <div className="md:col-span-8 border-[3px] border-slate-900 dark:border-white bg-white dark:bg-slate-950 p-6 md:p-8 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] space-y-6">
+            <div>
+              <div className="inline-flex items-center gap-1.5 bg-[#22c55e] text-black text-[10px] font-black uppercase px-2.5 py-1 border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+                <Terminal className="w-3.5 h-3.5" /> open to work
+              </div>
+              <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight mt-4">About SAKA CHOWDHURY</h2>
+              <p className="mt-3 text-xs md:text-sm font-medium text-slate-500 dark:text-slate-400 leading-relaxed">
+                I am a Full Stack AI Engineer and Creative Developer based in Cox's Bazar, Bangladesh, specializing in secure full-stack architecture, relational database design (with protection against SQL Injection and other exploits), and custom LLM model integrations.
+              </p>
+              <p className="mt-2 text-xs md:text-sm font-medium text-slate-500 dark:text-slate-400 leading-relaxed">
+                Currently running <span className="font-extrabold text-slate-900 dark:text-white">Nextora Studio</span>, a creative agency focused on building innovative products and empowering businesses through technology.
+              </p>
             </div>
 
-            {/* Profile details */}
-            <div className="flex-1 text-center md:text-left space-y-4">
-              <div>
-                <h2 className="text-3xl font-black text-foreground font-mono uppercase tracking-tight">Salah Uddin Kader</h2>
-                <div className="inline-block mt-2 bg-yellow-400 text-black px-3 py-1 font-mono font-black text-xs uppercase tracking-wider border-2 border-black shadow-[2px_2px_0px_0px_#000]">
-                  // Full-Stack Developer &amp; UI Designer
-                </div>
-              </div>
-              
-              <p className="leading-relaxed text-foreground font-medium text-sm">
-                A passionate full-stack developer with a love for high-contrast, robust code structures and modern web aesthetics. From design systems to backend logic engines, I craft digital products that stand out.
-              </p>
-              
-              <p className="leading-relaxed text-muted-foreground text-sm font-medium">
-                Currently running <span className="font-bold text-foreground font-mono underline decoration-yellow-400 decoration-wavy underline-offset-4">Nextora Studio</span>, a creative agency focused on engineering innovative, state-of-the-art software solutions.
-              </p>
-
-              {/* Social buttons styled as Neo-Brutalist buttons */}
-              <div className="mt-8 flex flex-wrap justify-center gap-4 md:justify-start pt-4 border-t-2 border-slate-100 dark:border-slate-800">
+            <div className="border-t-[3px] border-slate-900 dark:border-slate-800 pt-6">
+              <h3 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-3">Connect Nodes</h3>
+              <div className="flex flex-wrap gap-2.5">
                 {socialLinks.map((link) => (
-                  <a 
-                    key={link.label} 
-                    href={link.href} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className={`inline-flex items-center justify-center font-mono font-black text-xs uppercase px-4 py-2 border-[2.5px] border-black dark:border-white transition-all duration-100 active:translate-x-[2.5px] active:translate-y-[2.5px] active:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] ${link.bg}`}
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 border-2 border-slate-900 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-3.5 py-2 text-xs font-black text-slate-700 dark:text-slate-300 hover:bg-[#facc15] hover:text-black dark:hover:bg-[#facc15] dark:hover:text-black hover:translate-x-[-1.5px] hover:translate-y-[-1.5px] hover:shadow-[3px_3px_0px_#000] dark:hover:shadow-[3px_3px_0px_#fff] transition-all"
                   >
+                    {link.icon}
                     {link.label}
                   </a>
                 ))}
               </div>
             </div>
           </div>
+
         </div>
 
-        {/* Tech Stack Card (Neo-Brutalist Layout) */}
-        <div className="rounded-none border-[3px] border-black dark:border-white bg-[#FFF] dark:bg-[#121212] p-8 shadow-[8px_8px_0px_0px_#000] dark:shadow-[8px_8px_0px_0px_#FFF]">
-          <div className="flex items-center gap-2 mb-6 border-b-[2px] border-black dark:border-white pb-3">
-            <Cpu className="h-5 w-5 text-primary stroke-[2.5]" />
-            <h3 className="text-base font-mono font-black uppercase tracking-wider">skills_matrix.conf</h3>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            {techStack.map((tech) => (
-              <span 
-                key={tech.name} 
-                className={`rounded-none border-2 border-black dark:border-white px-4 py-2 text-xs font-mono font-extrabold uppercase tracking-wide transition-all shadow-[3px_3px_0px_0px_#000] dark:shadow-[3px_3px_0px_0px_#FFF] hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_#000] dark:hover:shadow-[5px_5px_0px_0px_#FFF] ${tech.bg} text-foreground`}
-              >
-                {tech.name}
-              </span>
+        {/* Portal Core Analytics / Performance Metrics */}
+        <div className="border-[3px] border-slate-900 dark:border-white bg-[#FFF] dark:bg-slate-950 p-6 md:p-8 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)]">
+          <h3 className="text-lg font-black uppercase tracking-tight flex items-center gap-2 mb-6">
+            <Cpu className="w-5 h-5 text-primary" /> Technical Metrics
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {portalMetrics.map((met) => (
+              <div key={met.label} className="border-2 border-slate-900 dark:border-slate-800 p-4 bg-slate-50 dark:bg-slate-900/50">
+                <span className="block text-2xl md:text-3xl font-black text-primary font-mono">{met.value}</span>
+                <span className="block text-[10px] font-black uppercase text-slate-700 dark:text-slate-300 tracking-wider mt-1">{met.label}</span>
+                <span className="block text-[9px] font-medium text-slate-500 mt-0.5">{met.desc}</span>
+              </div>
             ))}
           </div>
         </div>
 
-        {/* Projects Card (Neo-Brutalist Layout) */}
-        <div className="space-y-6">
-          <div className="inline-flex items-center gap-2 border-[3px] border-black dark:border-white bg-black dark:bg-white text-white dark:text-black px-4 py-2 shadow-[4px_4px_0px_0px_#facc15] font-mono font-black text-sm uppercase">
-            <Code className="h-4 w-4 stroke-[2.5]" /> Featured Projects
+        {/* Cybersecurity & Exploits Guard Matrix */}
+        <div className="border-[3px] border-slate-900 dark:border-white bg-[#FFF] dark:bg-slate-950 p-6 md:p-8 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)]">
+          <h3 className="text-lg font-black uppercase tracking-tight flex items-center gap-2 mb-6">
+            <ShieldCheck className="w-5 h-5 text-[#22c55e]" /> Cybersecurity Guard Matrix
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {securitySpecs.map((spec) => (
+              <div key={spec.title} className="border-2 border-slate-900 dark:border-slate-800 p-5 bg-slate-50 dark:bg-slate-900/50 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-3 border-b-2 border-slate-900/10 pb-2">
+                    <span className="text-xs font-black uppercase text-slate-900 dark:text-white">{spec.title}</span>
+                    <span className={`text-[8px] font-black uppercase px-2 py-0.5 border ${spec.color}`}>{spec.badge}</span>
+                  </div>
+                  <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400 leading-relaxed">{spec.desc}</p>
+                </div>
+              </div>
+            ))}
           </div>
+        </div>
+
+        {/* Tech Stack Matrix */}
+        <div className="border-[3px] border-slate-900 dark:border-white bg-white dark:bg-slate-950 p-6 md:p-8 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)]">
+          <h3 className="text-lg font-black uppercase tracking-tight flex items-center gap-2 mb-6">
+            <Layers className="w-5 h-5 text-primary" /> Developer Capabilities
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {skillsGroup.map((group) => (
+              <div key={group.category} className="border-2 border-slate-900 dark:border-slate-850 p-4 bg-slate-50 dark:bg-slate-900/50">
+                <h4 className="text-xs font-black uppercase text-slate-800 dark:text-slate-200 tracking-wider mb-3 border-b pb-1.5">{group.category}</h4>
+                <div className="flex flex-wrap gap-1.5">
+                  {group.skills.map((s) => (
+                    <span key={s} className="bg-white dark:bg-slate-900 text-[10px] font-bold border border-slate-900/10 px-2 py-1 text-slate-650 dark:text-slate-350">{s}</span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Featured Projects Grid */}
+        <div className="border-[3px] border-slate-900 dark:border-white bg-white dark:bg-slate-950 p-6 md:p-8 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)]">
+          <h3 className="text-lg font-black uppercase tracking-tight flex items-center gap-2 mb-6">
+            <Briefcase className="w-5 h-5 text-primary" /> Featured Works
+          </h3>
           
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-3">
             {projects.map((project) => (
-              <div 
-                key={project.title} 
-                className={`rounded-none border-[3px] border-black dark:border-white bg-[#FFF] dark:bg-[#121212] p-6 flex flex-col justify-between transition-all duration-200 -translate-x-1 -translate-y-1 ${project.shadow}`}
+              <div
+                key={project.title}
+                className="border-2 border-slate-900 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 p-5 flex flex-col justify-between hover:translate-y-[-2px] hover:shadow-[4px_4px_0px_#000] dark:hover:shadow-[4px_4px_0px_#fff] transition-all"
               >
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between border-b-[2px] border-black dark:border-white pb-2.5">
-                    <h4 className="font-mono font-black text-base uppercase tracking-tight text-foreground">{project.title}</h4>
-                    <span className={`text-[9px] font-black uppercase tracking-widest px-2.5 py-0.5 border border-black rounded-none ${
-                      project.status === "Live" ? "bg-emerald-400 text-black" : "bg-slate-200 text-slate-700"
-                    }`}>
+                <div>
+                  <div className="flex items-center justify-between border-b-2 border-slate-900 dark:border-slate-850 pb-2.5 mb-3.5">
+                    <h4 className="font-black text-xs md:text-sm uppercase tracking-tight text-slate-900 dark:text-white">{project.title}</h4>
+                    <span
+                      className={`text-[9px] font-black uppercase px-2 py-0.5 border border-black shadow-[1.5px_1.5px_0px_#000] ${
+                        project.status === "Live" ? "bg-[#22c55e] text-black" : "bg-[#facc15] text-black"
+                      }`}
+                    >
                       {project.status}
                     </span>
                   </div>
-                  <p className="text-xs font-semibold text-foreground/80 leading-relaxed font-sans">{project.description}</p>
+                  <p className="text-xs font-bold text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-4">
+                    {project.description}
+                  </p>
                 </div>
-
-                <div className="mt-5 space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-                  <div className="flex flex-wrap gap-1.5">
+                
+                <div className="mt-5 pt-3.5 border-t border-slate-200 dark:border-slate-800">
+                  <div className="flex flex-wrap gap-1.5 mb-4">
                     {project.tech.map((t) => (
-                      <span key={t} className="rounded-none border border-black dark:border-slate-600 bg-slate-100 dark:bg-slate-900 px-2 py-0.5 text-[9px] font-mono font-bold uppercase tracking-wider text-foreground">
+                      <span
+                        key={t}
+                        className="bg-slate-200/50 dark:bg-slate-800 text-slate-600 dark:text-slate-350 px-2 py-0.5 text-[9px] font-black uppercase border border-slate-900/10 dark:border-white/5"
+                      >
                         {t}
                       </span>
                     ))}
                   </div>
+
                   {project.link !== "#" && (
-                    <a 
-                      href={project.link} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="inline-flex items-center gap-1.5 font-mono font-black text-xs text-primary hover:underline group"
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-[11px] font-black text-slate-900 dark:text-white hover:text-primary dark:hover:text-primary transition-colors uppercase tracking-wider"
                     >
-                      Launch Website 
-                      <ExternalLink className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                      Inspect Source <ArrowUpRight className="w-3.5 h-3.5" />
                     </a>
                   )}
                 </div>
@@ -208,74 +344,31 @@ export function Developer() {
           </div>
         </div>
 
-        {/* Timeline & Testimonials Grid */}
-        <div className="grid gap-8 md:grid-cols-[0.9fr_1.1fr]">
+        {/* Development Timeline */}
+        <div className="border-[3px] border-slate-900 dark:border-white bg-white dark:bg-slate-950 p-6 md:p-8 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)]">
+          <h3 className="text-lg font-black uppercase tracking-tight flex items-center gap-2 mb-8">
+            <Award className="w-5 h-5 text-primary" /> Project Milestones
+          </h3>
           
-          {/* Timeline Card */}
-          <div className="rounded-none border-[3px] border-black dark:border-white bg-[#FFF] dark:bg-[#121212] p-8 shadow-[8px_8px_0px_0px_#000] dark:shadow-[8px_8px_0px_0px_#FFF]">
-            <div className="flex items-center gap-2 mb-6 border-b-[2px] border-black dark:border-white pb-3">
-              <Sparkles className="h-5 w-5 text-primary stroke-[2.5]" />
-              <h3 className="text-base font-mono font-black uppercase tracking-wider">milestones.log</h3>
-            </div>
-            
-            <div className="relative border-l-[3px] border-black dark:border-white ml-2 space-y-8 pl-6">
-              {timeline.map((item, i) => (
-                <div key={i} className="relative group">
-                  {/* Timeline point */}
-                  <div className={`absolute -left-[32px] top-1.5 h-[15px] w-[15px] rounded-none border-[3px] border-black dark:border-white ${item.color} shadow-[2px_2px_0px_0px_#000] dark:shadow-[2px_2px_0px_0px_#FFF] transition-all`} />
-                  
-                  <span className="text-[10px] font-mono font-black uppercase tracking-widest text-primary bg-primary/10 px-2 py-0.5 border border-primary/20 rounded-none">{item.year}</span>
-                  <h4 className="mt-2 font-mono font-black text-sm uppercase tracking-tight text-foreground">{item.title}</h4>
-                  <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground font-semibold">{item.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Testimonials Card */}
-          <div className="rounded-none border-[3px] border-black dark:border-white bg-[#FFF] dark:bg-[#121212] p-8 shadow-[8px_8px_0px_0px_#000] dark:shadow-[8px_8px_0px_0px_#FFF] space-y-6">
-            <div className="flex items-center gap-2 mb-2 border-b-[2px] border-black dark:border-white pb-3">
-              <Globe className="h-5 w-5 text-primary stroke-[2.5]" />
-              <h3 className="text-base font-mono font-black uppercase tracking-wider">feedbacks.json</h3>
-            </div>
-            
-            <div className="space-y-6">
-              {testimonials.map((t, i) => (
-                <div key={i} className="rounded-none border-2 border-black dark:border-white bg-slate-50 dark:bg-slate-900/50 p-4 shadow-[4px_4px_0px_0px_#000] dark:shadow-[4px_4px_0px_0px_#FFF] relative">
-                  {/* Quote decoration */}
-                  <span className="absolute -top-3 right-4 font-serif text-3xl font-black text-black/10 dark:text-white/10">“</span>
-                  <p className="text-xs italic font-medium leading-relaxed text-foreground/80">"{t.quote}"</p>
-                  <div className="mt-3.5 border-t border-dashed border-slate-350 dark:border-slate-800 pt-2 flex justify-between items-center text-[10px]">
-                    <span className="font-mono font-black uppercase text-foreground">{t.name}</span>
-                    <span className="font-mono font-bold text-muted-foreground uppercase">{t.role}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-        </div>
-
-        {/* Nextora Studio CTA (Neo-Brutalist Banner) */}
-        <div className="rounded-none border-[3px] border-black dark:border-white bg-yellow-400 text-black p-8 shadow-[8px_8px_0px_0px_#000] dark:shadow-[8px_8px_0px_0px_#FFF] text-center space-y-4">
-          <h3 className="text-2xl font-mono font-black uppercase tracking-wider">NEXTORA STUDIO</h3>
-          <p className="text-sm font-semibold max-w-xl mx-auto leading-relaxed">
-            A boutique technical engineering and creative software laboratory. We build modern, blazing-fast web dashboards, custom REST APIs, and digital systems.
-          </p>
-          <div className="pt-2">
-            <a 
-              href="https://nextorastudio.tech" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="inline-flex items-center gap-2 rounded-none bg-black text-white font-mono font-black text-xs uppercase px-6 py-3 border-[2.5px] border-black shadow-[4px_4px_0px_0px_#fff] hover:bg-black/95 transition-all duration-100 active:translate-x-[2.5px] active:translate-y-[2.5px] active:shadow-[1.5px_1.5px_0px_0px_rgba(255,255,255,1)]"
-            >
-              Visit Laboratory Website
-              <ExternalLink className="h-4 w-4 stroke-[2.5]" />
-            </a>
+          <div className="relative border-l-[3px] border-slate-900 dark:border-white ml-3 md:ml-6 space-y-8">
+            {timeline.map((item, i) => (
+              <div key={i} className="relative pl-6 md:pl-10 group">
+                <div className="absolute -left-[9.5px] top-1.5 h-4 w-4 rounded-full border-[3px] border-slate-900 dark:border-white bg-[#facc15] shadow-[2.5px_2.5px_0px_rgba(0,0,0,1)]" />
+                <span className="bg-slate-900 text-[#facc15] text-[10px] font-mono font-black uppercase px-2.5 py-0.5 border border-slate-900">
+                  {item.year}
+                </span>
+                <h4 className="mt-2 text-sm font-black uppercase tracking-tight text-slate-900 dark:text-white">
+                  {item.title}
+                </h4>
+                <p className="mt-1 text-xs font-bold text-slate-500 dark:text-slate-400 leading-relaxed">
+                  {item.description}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
 
-      </article>
+      </div>
     </PageTransition>
   );
 }

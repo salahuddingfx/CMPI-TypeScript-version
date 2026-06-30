@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { getStudentProfile, updateStudentProfile, uploadFile } from "@/services/api";
 import { ProfileSkeleton } from "@/components/common/LoadingSkeleton";
@@ -35,6 +36,7 @@ export function StudentProfile() {
   const [saved, setSaved] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const isStudent = storedUser?.role === "student";
 
   useEffect(() => {
     getStudentProfile()
@@ -236,7 +238,7 @@ export function StudentProfile() {
         </div>
         <div className="space-y-2">
           <label htmlFor="studentId" className="text-sm font-semibold">Student ID</label>
-          <Input id="studentId" value={profile.studentId} onChange={(e) => update("studentId", e.target.value)} placeholder="e.g. CMPI-2023-0456" />
+          <Input id="studentId" value={profile.studentId} onChange={(e) => update("studentId", e.target.value)} disabled={isStudent} placeholder="e.g. CMPI-2023-0456" />
         </div>
         <div className="space-y-2">
           <label htmlFor="boardRoll" className="text-sm font-semibold">BTEB Board Roll</label>
@@ -244,6 +246,7 @@ export function StudentProfile() {
             id="boardRoll"
             value={profile.boardRoll}
             onChange={(e) => update("boardRoll", e.target.value)}
+            disabled={isStudent}
             placeholder="e.g. 232345"
           />
         </div>
@@ -253,6 +256,7 @@ export function StudentProfile() {
             id="regNo"
             value={profile.regNo}
             onChange={(e) => update("regNo", e.target.value)}
+            disabled={isStudent}
             placeholder="e.g. 1502034956"
           />
         </div>
@@ -266,15 +270,33 @@ export function StudentProfile() {
         </div>
         <div className="space-y-2">
           <label htmlFor="department" className="text-sm font-semibold">Department</label>
-          <Input id="department" value={profile.department} onChange={(e) => update("department", e.target.value)} placeholder="e.g. Civil Technology" />
+          <Input id="department" value={profile.department} onChange={(e) => update("department", e.target.value)} disabled={isStudent} placeholder="e.g. Civil Technology" />
         </div>
         <div className="space-y-2">
           <label htmlFor="semester" className="text-sm font-semibold">Semester</label>
-          <Input id="semester" value={profile.semester} onChange={(e) => update("semester", e.target.value)} placeholder="e.g. 5th" />
+          <Input id="semester" value={profile.semester} onChange={(e) => update("semester", e.target.value)} disabled={isStudent} placeholder="e.g. 5th" />
         </div>
         <div className="space-y-2">
           <label htmlFor="session" className="text-sm font-semibold">Session</label>
-          <Input id="session" value={profile.session} onChange={(e) => update("session", e.target.value)} placeholder="e.g. 2023-2024" />
+          <Input id="session" value={profile.session} onChange={(e) => update("session", e.target.value)} disabled={isStudent} placeholder="e.g. 2023-2024" />
+        </div>
+        <div className="space-y-2">
+          <label htmlFor="bloodGroup" className="text-sm font-semibold">Blood Group</label>
+          <Select
+            id="bloodGroup"
+            value={profile.bloodGroup}
+            onChange={(e) => update("bloodGroup", e.target.value)}
+          >
+            <option value="">Select Blood Group</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+          </Select>
         </div>
         <div className="space-y-2">
           <label htmlFor="guardian" className="text-sm font-semibold">Guardian</label>

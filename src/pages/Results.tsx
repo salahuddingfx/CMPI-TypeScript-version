@@ -67,7 +67,7 @@ export function Results() {
   };
 
   const modes: { id: SearchMode; label: string; shortLabel?: string }[] = [
-    { id: "transcript", label: "Student Transcript (ID)" },
+    { id: "transcript", label: "Student Transcript (ID)", shortLabel: "Transcript" },
     { id: "bteb", label: "BTEB Board Result (Roll / Inst.)", shortLabel: "Board Result" },
     { id: "cgpa", label: "CGPA Calculator" },
   ];
@@ -104,7 +104,7 @@ export function Results() {
               ) : (
                 <>
                   <span className="hidden sm:inline">{label}</span>
-                  {shortLabel && <span className="sm:hidden">{shortLabel}</span>}
+                  <span className="sm:hidden">{shortLabel ?? label}</span>
                 </>
               )}
             </button>

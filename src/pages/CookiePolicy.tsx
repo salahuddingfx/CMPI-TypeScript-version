@@ -5,7 +5,6 @@ import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { ChevronDown, Cookie } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { institute } from "@/utils/constants";
 
 export function CookiePolicy() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);

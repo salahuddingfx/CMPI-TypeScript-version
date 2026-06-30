@@ -95,7 +95,7 @@ export function VerifyStudent() {
           ) : student ? (
             /* Verified Student Card */
             <Card className={`border-emerald-500/30 bg-emerald-500/5 shadow-lg border-2 ${
-              student.status !== "active" ? "border-amber-500/30 bg-amber-500/5" : ""
+              !(student.status === "active" || student.status === "approved") ? "border-amber-500/30 bg-amber-500/5" : ""
             }`}>
               <CardHeader className="text-center relative">
                 {/* Visual indicator of success */}
@@ -106,13 +106,13 @@ export function VerifyStudent() {
                 {/* Profile Pic or default symbol */}
                 <div className="mx-auto relative">
                   <div className={`mx-auto h-20 w-20 overflow-hidden rounded-full border-4 shadow-md ${
-                    student.status === "active" ? "border-emerald-500 bg-emerald-100" : "border-amber-500 bg-amber-100"
+                    (student.status === "active" || student.status === "approved") ? "border-emerald-500 bg-emerald-100" : "border-amber-500 bg-amber-100"
                   }`}>
                     {student.avatar ? (
                       <img src={student.avatar} alt={student.name} className="h-full w-full object-cover" />
                     ) : (
                       <div className={`flex h-full w-full items-center justify-center text-xl font-bold ${
-                        student.status === "active" ? "text-emerald-700" : "text-amber-750"
+                        (student.status === "active" || student.status === "approved") ? "text-emerald-700" : "text-amber-750"
                       }`}>
                         {student.name.charAt(0)}
                       </div>
@@ -121,9 +121,9 @@ export function VerifyStudent() {
                   
                   {/* Verified Icon Badge */}
                   <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/3 flex items-center gap-1 rounded-full px-3 py-0.5 text-[10px] font-black uppercase tracking-wider shadow-sm text-white ${
-                    student.status === "active" ? "bg-emerald-600" : "bg-amber-600"
+                    (student.status === "active" || student.status === "approved") ? "bg-emerald-600" : "bg-amber-600"
                   }`}>
-                    {student.status === "active" ? (
+                    {(student.status === "active" || student.status === "approved") ? (
                       <>
                         <ShieldCheck className="h-3.5 w-3.5" /> Verified
                       </>
@@ -164,7 +164,7 @@ export function VerifyStudent() {
                   <div className="flex justify-between items-center pt-2">
                     <span className="text-muted-foreground font-medium text-xs">Verification Check</span>
                     <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-black uppercase border ${
-                      student.status === "active"
+                      (student.status === "active" || student.status === "approved")
                         ? "bg-green-500/10 text-green-600 border-green-500/20"
                         : "bg-amber-500/10 text-amber-600 border-amber-500/20"
                     }`}>
@@ -173,7 +173,7 @@ export function VerifyStudent() {
                   </div>
                 </div>
 
-                {student.status !== "active" && (
+                {!(student.status === "active" || student.status === "approved") && (
                   <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-700 dark:text-amber-400 font-medium flex items-start gap-2 leading-relaxed">
                     <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
                     <p>

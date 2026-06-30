@@ -1,111 +1,136 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { SEO } from "@/components/common/SEO";
 import { PageTransition } from "@/components/common/PageTransition";
 import { SectionHeader } from "@/components/common/SectionHeader";
+import { ChevronDown, Cookie } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { institute } from "@/utils/constants";
 
 export function CookiePolicy() {
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+  const sections = [
+    {
+      title: "1. Definition of Web Browser Cookies",
+      content: "Cookies are small, secure text documents written by web servers to your internet browsing browser (such as Chrome, Safari, Edge) when loading a page. They store unique tags, login states, and user setup parameters. Cookies cannot read files on your local hard drive, run software, or execute commands."
+    },
+    {
+      title: "2. The Role of First-Party vs. Third-Party Cookies",
+      content: "First-party cookies are set directly by the cmpi.edu.bd server. They are secure and utilized for active sessions. Third-party cookies would be set by external modules. Currently, CMPI does not permit third-party trackers, pixels, or profiling networks on our platforms."
+    },
+    {
+      title: "3. Core Purposes of Cookies on the CMPI Portal",
+      content: "We use cookies to maintain user accounts, protect student data entries, handle browser styling modes, optimize server responses, and log diagnostic failures anonymized. We do not use cookies for targeted marketing or ads."
+    },
+    {
+      title: "4. Strictly Necessary Authentication Tokens",
+      content: "The cookie key `cmpi_session_token` acts as a secure container for your JSON Web Token (JWT). It verifies your active login status when loading private dashboard panels. Without this token, you would have to log in on every single click."
+    },
+    {
+      title: "5. Cross-Site Request Forgery (CSRF) Prevention",
+      content: "To protect forms against CSRF exploits, we use the `cmpi_csrf_secure` token. This cookie validates that form submittals (like payment uploads or routine queries) originate directly from your authenticated browser, blocking external automated bots."
+    },
+    {
+      title: "6. Saving User Preferences and Theme Toggles",
+      content: "The cookie key `cmpi_theme_mode` records your preference for light mode or dark mode styles. This prevents UI flashes on page loads and guarantees your preferred color scheme is preserved persistently."
+    },
+    {
+      title: "7. Remember Me Functional Credentials",
+      content: "If you check 'Remember Me' on the login screen, we write the `cmpi_remember_username` cookie. This stores your encrypted student ID or email on your local browser for up to 7 days, allowing for faster logins."
+    },
+    {
+      title: "8. Anonymized Aggregate Visitor Metrics",
+      content: "We collect minimal performance details (such as total page clicks and load speeds) using local session variables. This information does not contain student names, email IDs, or IP locations and is used strictly to improve server efficiency."
+    },
+    {
+      title: "9. Session Cookies vs. Persistent Storage",
+      content: "Session cookies (like auth tokens) are transient and are purged immediately when you exit the browser or clear active tabs. Persistent cookies (like theme choices) remain on your local disk for a specified duration unless cleared manually."
+    },
+    {
+      title: "10. Comprehensive Catalog of Active Cookies",
+      content: "Our active cookies include: cmpi_session_token (Essential, session-long), cmpi_csrf_secure (Security, session-long), cmpi_remember_username (Functional, 7 days), cmpi_theme_mode (Functional, 1 year), and cmpi_cookie_acceptance (Necessary, 7 days)."
+    },
+    {
+      title: "11. Google Chrome Cookie Preferences Guide",
+      content: "To manage cookies on Google Chrome: Open settings &gt; Privacy and security &gt; Site settings &gt; Cookies and site data. You can delete existing cookies, block specific sites, or disable all cookies entirely."
+    },
+    {
+      title: "12. Mozilla Firefox Cookie Options Guide",
+      content: "To configure Firefox: Select Options &gt; Privacy &amp; Security &gt; Browser Privacy. Choose Standard, Strict, or Custom configurations. You can purge all local site cookies under Cookies and Site Data."
+    },
+    {
+      title: "13. Apple Safari Cookie Settings Guide",
+      content: "To update Safari: Select Preferences &gt; Privacy &gt; Prevent cross-site tracking and Block all cookies. Safari automatically clears unused persistent cookies after a set duration of inactivity."
+    },
+    {
+      title: "14. Microsoft Edge Cookie Controls Guide",
+      content: "To control Edge: Select Settings &gt; Cookies and site permissions &gt; Manage and delete cookies and site data. Edge supports blocking third-party tracking cookies by default."
+    },
+    {
+      title: "15. Cookie Consent Acceptance Banner",
+      content: "When first loading our public pages, you will see a cookie consent banner. Clicking 'Accept' sets the `cmpi_cookie_acceptance` cookie, which hides the notification bar on subsequent pages for 7 days."
+    },
+    {
+      title: "16. Impact of Disabling All Browser Cookies",
+      content: "If you completely block cookies, you can still view public notice boards, routines, and contact info. However, you will not be able to log in to the student dashboard, view bills, or download ID cards."
+    },
+    {
+      title: "17. Secure Hashing of Local Cookies",
+      content: "To prevent cookie hijacking, all first-party session variables written by our backend are encrypted and marked with HTTPOnly and Secure flags when deployed in production, preventing javascript scripts from accessing them."
+    },
+    {
+      title: "18. IT Department Cookie Support Contacts",
+      content: "For questions about website cookies, security hashes, or login errors, please reach out to: Systems Operations Division, Cox's Bazar Model Polytechnic Institute, College Road, Cox's Bazar 4750, Bangladesh. Email: it-support@cmpi.edu.bd."
+    }
+  ];
+
   return (
     <PageTransition className="container section-pad">
-      <SEO title="Cookie Policy" description="Cookie policy for the CMPI website." />
+      <SEO title="Cookie Policy" description="Detailed cookie policy for CMPI website and portals." />
       <article className="mx-auto max-w-4xl rounded-sm border bg-card p-6 shadow-sm sm:p-10">
         <SectionHeader title="Cookie Policy" description="Last updated: June 2026" align="left" className="mb-8" />
-        <div className="space-y-5 leading-7 text-muted-foreground">
-
-          <h3 className="text-lg font-bold text-foreground">1. Comprehensive Definition of Cookies</h3>
-          <p>Cookies are minute, secure text files that contain unique identifiers sent by web servers to your internet browser (e.g., Google Chrome, Mozilla Firefox, Apple Safari, Microsoft Edge) when you load a website. These files are stored on your local hard drive or device memory. Cookies serve critical purposes such as remembering user states, storing authentication tokens, preventing cross-site request forgery (CSRF) security attacks, and facilitating custom system preferences. Cookies are inactive data stores; they cannot execute code, infect your computer with malware, or access files on your device.</p>
-
-          <h3 className="text-lg font-bold text-foreground">2. Classification of Cookies We Utilize</h3>
-          <p>Cox's Bazar Model Polytechnic Institute (CMPI) uses various types of first-party cookies to manage secure sessions, ensure database load balancing, and remember user display configurations. These cookies are categorized as follows:</p>
-          <div className="space-y-4 pl-4 border-l-2 border-primary/20">
-            <div>
-              <h4 className="font-semibold text-foreground">A. Strictly Necessary & Security Cookies</h4>
-              <p className="text-sm">These cookies are essential for the operation of the portals. They manage your login states, prevent unauthorized session duplication, and handle Cross-Site Request Forgery (CSRF) verification. Blocking these cookies via browser configurations will make it impossible to log in to the student dashboard, submit assignments, or verify payment logs.</p>
-            </div>
-            <div>
-              <h4 className="font-semibold text-foreground">B. User Preference & Functional Cookies</h4>
-              <p className="text-sm">Functional cookies permit the website to remember choices you make during your sessions. This includes remembering your selected theme (dark or light mode), your language choice, and saving your email address on the login form if you check "Remember Me". This enhances speed and usability.</p>
-            </div>
-            <div>
-              <h4 className="font-semibold text-foreground">C. Performance & Anonymized Analytics Cookies</h4>
-              <p className="text-sm">We collect aggregate, non-personally identifiable navigation metrics (such as pages clicked, duration spent on notice panels, and browser dimensions) to optimize the design, layout, and device compatibility of our public portals. We do not use advertising or tracking cookies for commercial marketing.</p>
-            </div>
-          </div>
-
-          <h3 className="text-lg font-bold text-foreground">3. Exhaustive Catalog of Active Cookies</h3>
-          <p>The table below lists the details of the first-party cookies that our web servers may write to your browser during your interaction with our platforms:</p>
-          <div className="overflow-x-auto my-4 border rounded-lg">
-            <table className="w-full text-sm border-collapse">
-              <thead>
-                <tr className="bg-muted/40 border-b border-border">
-                  <th className="text-left py-3 px-4 font-bold text-foreground">Cookie Key</th>
-                  <th className="text-left py-3 px-4 font-bold text-foreground">Category</th>
-                  <th className="text-left py-3 px-4 font-bold text-foreground">Detailed Technical Purpose</th>
-                  <th className="text-left py-3 px-4 font-bold text-foreground">Lifespan & Expiry</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                <tr>
-                  <td className="py-3 px-4 font-mono text-xs text-primary">cmpi_session_token</td>
-                  <td className="py-3 px-4 text-xs font-semibold">Strictly Necessary</td>
-                  <td className="py-3 px-4">Stores JWT authentication tokens to permit access to the secure Student and Faculty dashboard views.</td>
-                  <td className="py-3 px-4">Session-based (deleted when browser closes)</td>
-                </tr>
-                <tr>
-                  <td className="py-3 px-4 font-mono text-xs text-primary">cmpi_csrf_secure</td>
-                  <td className="py-3 px-4 text-xs font-semibold">Security (Essential)</td>
-                  <td className="py-3 px-4">Protects forms against CSRF injection attacks by validating secure submission keys.</td>
-                  <td className="py-3 px-4">Session-based</td>
-                </tr>
-                <tr>
-                  <td className="py-3 px-4 font-mono text-xs text-primary">cmpi_remember_username</td>
-                  <td className="py-3 px-4 text-xs font-semibold">Functional Preference</td>
-                  <td className="py-3 px-4">Saves the student ID/email on the login card to save typing time for future logins.</td>
-                  <td className="py-3 px-4">7 Days (Auto-renews on login)</td>
-                </tr>
-                <tr>
-                  <td className="py-3 px-4 font-mono text-xs text-primary">cmpi_theme_mode</td>
-                  <td className="py-3 px-4 text-xs font-semibold">Functional Preference</td>
-                  <td className="py-3 px-4">Saves your preferred UI style toggle (light mode vs. dark mode stylesheet).</td>
-                  <td className="py-3 px-4">Persistent (365 Days)</td>
-                </tr>
-                <tr>
-                  <td className="py-3 px-4 font-mono text-xs text-primary">cmpi_cookie_acceptance</td>
-                  <td className="py-3 px-4 text-xs font-semibold">Strictly Necessary</td>
-                  <td className="py-3 px-4">Saves your decision on the cookie consent notification bar to prevent showing it again.</td>
-                  <td className="py-3 px-4">7 Days</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <h3 className="text-lg font-bold text-foreground">4. Strict Absence of Third-Party Ad Tracking</h3>
-          <p>Unlike commercial portals, CMPI does not permit Google AdSense, DoubleClick, Facebook Pixel, or other third-party programmatic tracking networks to set cookies or tracking pixels on your devices. Your browsing history on the CMPI portal remains private and is never sold, analyzed, or shared with external advertising companies.</p>
-
-          <h3 className="text-lg font-bold text-foreground">5. Detailed User Control & Browser Configuration Guide</h3>
-          <p>You can manage, restrict, block, or purge cookies stored on your computer at any time. All major browsers provide granular settings to control this:</p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li><strong>Google Chrome:</strong> Go to Settings &gt; Privacy and Security &gt; Cookies and other site data. Here, you can block all cookies, third-party cookies, or clear history.</li>
-            <li><strong>Mozilla Firefox:</strong> Go to Options &gt; Privacy &amp; Security &gt; Enhanced Tracking Protection. You can set it to Standard, Strict, or Custom.</li>
-            <li><strong>Apple Safari:</strong> Go to Preferences &gt; Privacy &gt; Block all cookies.</li>
-            <li><strong>Microsoft Edge:</strong> Go to Settings &gt; Cookies and site permissions &gt; Manage and delete cookies and site data.</li>
-          </ul>
-          <p>Note: If you clear or disable strictly necessary cookies, you will be automatically logged out of the CMPI student dashboard, and you will have to re-enter your credentials and preferences on your next visit.</p>
-
-          <h3 className="text-lg font-bold text-foreground">6. Modifications to our Cookie Practices</h3>
-          <p>We may periodically update this Cookie Policy to align with technological advances in web browsers, new web application updates, or cyber security laws. When changes are made, the "Last updated" date at the top of the policy will be updated accordingly.</p>
-
-          <h3 className="text-lg font-bold text-foreground">7. Contact the System Administration</h3>
-          <p>If you have any questions or require support regarding our cookie configurations or security practices, please contact the CMPI System Administrator:</p>
-          <p className="text-foreground font-semibold">
-            System & IT Administration Department<br />
-            Cox's Bazar Model Polytechnic Institute<br />
-            College Road, Cox's Bazar 4750, Bangladesh<br />
-            Official Email: it-support@cmpi.edu.bd / info@cmpi.edu.bd<br />
-            Landline: +880 341 62512 | Phone: +880 1812 000000
-          </p>
-
+        
+        <div className="mb-6 flex items-center gap-3 rounded-2xl bg-primary/10 p-4 text-primary border border-primary/20">
+          <Cookie className="h-5 w-5 shrink-0" />
+          <p className="text-sm font-semibold">Click on any section header to expand and read the details of our Cookie Policy.</p>
         </div>
-        <Link to="/" className="mt-8 inline-flex font-bold text-primary hover:underline">Back to Home</Link>
+
+        <div className="space-y-4">
+          {sections.map((section, index) => (
+            <div key={index} className="rounded-xl border border-border overflow-hidden bg-card">
+              <button
+                type="button"
+                onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                className="w-full flex items-center justify-between p-4 text-left font-bold text-foreground hover:bg-muted/30 transition-all duration-300"
+              >
+                <span className="text-sm sm:text-base">{section.title}</span>
+                <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform duration-300 ${openIndex === index ? "rotate-180 text-primary" : ""}`} />
+              </button>
+              
+              <AnimatePresence initial={false}>
+                {openIndex === index && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    className="overflow-hidden"
+                  >
+                    <div className="p-4 border-t border-border bg-muted/10 text-muted-foreground leading-relaxed text-sm font-medium">
+                      {section.content}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8 flex justify-between items-center border-t pt-6">
+          <Link to="/" className="font-bold text-primary hover:underline">Back to Home</Link>
+          <p className="text-xs text-muted-foreground font-semibold">Cox's Bazar Model Polytechnic Institute © {new Date().getFullYear()}</p>
+        </div>
       </article>
     </PageTransition>
   );

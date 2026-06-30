@@ -11,50 +11,35 @@ export function Disclaimer() {
         <SectionHeader title="Disclaimer" description="Last updated: June 2026" align="left" className="mb-8" />
         <div className="space-y-5 leading-7 text-muted-foreground">
 
-          <h3 className="text-lg font-bold text-foreground">1. General Information</h3>
-          <p>The information provided on the official website of Cox's Bazar Model Polytechnic Institute (CMPI) is for general informational and educational purposes only. While we strive to keep the information accurate and up to date, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability, or availability of the information contained on the website.</p>
+          <h3 className="text-lg font-bold text-foreground">1. General Informational Nature of Digital Data</h3>
+          <p>The information, graphics, notices, lists, routines, and materials hosted on the official web portal of Cox's Bazar Model Polytechnic Institute (CMPI) are compiled and presented exclusively for general educational and institutional guidance. While the administrative and IT teams make every possible effort to maintain accurate, secure, and up-to-date content, CMPI makes no warranties or representations of any kind, whether express, statutory, or implied, regarding the absolute completeness, accuracy, reliability, timeliness, or uninterrupted availability of the information, software, or media assets found on this platform. Any reliance you place on such content is strictly at your own individual risk.</p>
 
-          <h3 className="text-lg font-bold text-foreground">2. Official Communications</h3>
-          <p>Official notices, circulars, and announcements published on physical notice boards, sent via official email, or issued through the academic departments shall take precedence over website content. In the event of any discrepancy between website information and official institute communications, the latter shall be considered final and authoritative.</p>
+          <h3 className="text-lg font-bold text-foreground">2. Precedence of departmental Physical & Written Communications</h3>
+          <p>This digital website functions as a supplementary distribution channel for institutional notices. Official announcements, academic circulars, exam schedule revisions, and fee structures signed, stamped, and issued by the Principal's Office, the academic department heads, or displayed on the physical notice boards of the institute take absolute priority. In the event of any discrepancies, errors, or delays between the digital portal's notice panel and official physical documentation, the physical written communications shall be considered authoritative, final, and legally binding.</p>
 
-          <h3 className="text-lg font-bold text-foreground">3. Academic Information</h3>
-          <p>Information regarding admission requirements, academic programs, examination schedules, fee structures, and results is subject to change based on directives from the Bangladesh Technical Education Board (BTEB), the Ministry of Education, and CMPI academic council decisions. Prospective students and guardians are advised to confirm critical details directly with the admission office.</p>
+          <h3 className="text-lg font-bold text-foreground">3. Academic Progression & BTEB Regulatory Directives</h3>
+          <p>Course outlines, semester syllabi, admission criteria, examination schedules, mark sheets, and CGPA transcript queries are heavily governed by regulations issued by the Bangladesh Technical Education Board (BTEB) and the Ministry of Education. CMPI reserves the right to modify admission quotas, course requirements, grading curves, and fees structures at any time in order to comply with national laws or board updates. Students, parents, and prospective applicants must verify critical academic timelines and financial figures directly with departmental offices.</p>
 
-          <h3 className="text-lg font-bold text-foreground">4. External Links</h3>
-          <p>This website may contain links to external websites and resources including government portals, BTEB, partner organizations, and educational platforms. CMPI does not control the content, privacy practices, or availability of these external sites. Inclusion of any link does not imply endorsement by CMPI. Users access external links at their own discretion and risk.</p>
+          <h3 className="text-lg font-bold text-foreground">4. External Web Link Liability Limits</h3>
+          <p>The CMPI web portal contains links to external websites (including the official BTEB portal, government education boards, bank portals, and student verification portals). These links are provided solely as a helpful resource for users. CMPI does not monitor, control, influence, or accept responsibility for the content, privacy configurations, technical uptime, or data tracking policies of these third-party platforms. The inclusion of any link does not represent an endorsement of the external site's contents, opinions, or operators.</p>
 
-          <h3 className="text-lg font-bold text-foreground">5. Limitation of Liability</h3>
-          <p>CMPI, its governing body, faculty, staff, and representatives shall not be held liable for any loss, damage, or inconvenience arising from:</p>
-          <ul className="list-disc pl-6 space-y-1">
-            <li>Reliance on information published on this website.</li>
-            <li>Technical issues, server downtime, or website unavailability.</li>
-            <li>Unauthorized access to user accounts due to password sharing or security negligence.</li>
-            <li>Use of third-party websites linked from this site.</li>
-            <li>Errors or omissions in content caused by delayed updates or data entry mistakes.</li>
-          </ul>
+          <h3 className="text-lg font-bold text-foreground">5. Technology Outages, Disruptions & System Downtime</h3>
+          <p>While we use modern server hosting configurations to maintain maximum portal availability, CMPI does not guarantee that our databases, student dashboards, or webmail clients will be continuously online or free from technical glitches. We accept no liability for any temporary or permanent inability to access our services, submit forms, or query results due to server hardware failures, national internet routing issues, power grid disruptions, or regular software maintenance cycles.</p>
 
-          <h3 className="text-lg font-bold text-foreground">6. Availability</h3>
-          <p>Every effort is made to keep the website running smoothly. However, CMPI takes no responsibility for, and will not be liable for, the website being temporarily unavailable due to technical issues, maintenance, network problems, or factors beyond our reasonable control.</p>
+          <h3 className="text-lg font-bold text-foreground">6. Strict Cyber Security Disclaimer</h3>
+          <p>CMPI implements robust secure socket layers (SSL/TLS), hashed credentials, and database firewalls. However, due to the nature of public internet environments, we cannot guarantee that files downloaded from the portal are entirely free of security exploits, spyware, or malware. Users are responsible for maintaining updated local anti-virus software on their browsing devices. The institute shall not be liable for any system failures, data corruptions, or hardware damages resulting from digital usage of our platforms.</p>
 
-          <h3 className="text-lg font-bold text-foreground">7. User Responsibility</h3>
-          <p>Users of this website are responsible for verifying important information through official channels before making decisions based on website content. This includes but is not limited to admission deadlines, fee payments, examination schedules, and application procedures.</p>
+          <h3 className="text-lg font-bold text-foreground">7. Copyright & Brand Asset Protection</h3>
+          <p>All source code, graphics, layout designs, and text written on this portal are the copyright-protected intellectual property of Cox's Bazar Model Polytechnic Institute. Users may download academic templates and read notices for private, non-commercial educational purposes. The reproduction, modification, copying, or scraping of any part of this site for commercial purposes or public display without prior written consent from the Principal is strictly prohibited under the Copyright Act 2000 of Bangladesh.</p>
 
-          <h3 className="text-lg font-bold text-foreground">8. Copyright</h3>
-          <p>All content published on this website including text, images, logos, design elements, and documents is the intellectual property of CMPI unless otherwise credited. Reproduction, distribution, or commercial use of any content without prior written permission from CMPI is prohibited.</p>
-
-          <h3 className="text-lg font-bold text-foreground">9. Changes and Updates</h3>
-          <p>CMPI reserves the right to modify, update, or remove any content on this website at any time without prior notice. This disclaimer may be updated periodically. Continued use of the website after changes constitutes acceptance of the updated disclaimer.</p>
-
-          <h3 className="text-lg font-bold text-foreground">10. Governing Law</h3>
-          <p>This disclaimer is governed by the laws of the People's Republic of Bangladesh. Any disputes arising from the use of this website shall be subject to the exclusive jurisdiction of the courts in Cox's Bazar, Bangladesh.</p>
-
-          <h3 className="text-lg font-bold text-foreground">11. Contact Us</h3>
-          <p>If you have any questions or concerns regarding this disclaimer, please contact:</p>
+          <h3 className="text-lg font-bold text-foreground">8. Institutional Contact for Disclaimers</h3>
+          <p>For questions or requests regarding site disclaimers or to report any bugs, errors, or typos, please contact our administrative desk:</p>
           <p className="text-foreground font-semibold">
+            Office of the Principal (IT & Communications Division)<br />
             Cox's Bazar Model Polytechnic Institute<br />
-            Cox's Bazar, Bangladesh<br />
-            Email: info@cmpi.edu.bd<br />
-            Phone: +880 341 000100
+            College Road, Cox's Bazar 4750, Bangladesh<br />
+            Official Email: principal@cmpi.edu.bd / info@cmpi.edu.bd<br />
+            Landline: +880 341 62512 | Phone: +880 1812 000000
           </p>
 
         </div>

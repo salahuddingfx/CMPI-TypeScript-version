@@ -11,62 +11,55 @@ export function TermsAndConditions() {
         <SectionHeader title="Terms & Conditions" description="Last updated: June 2026" align="left" className="mb-8" />
         <div className="space-y-5 leading-7 text-muted-foreground">
 
-          <h3 className="text-lg font-bold text-foreground">1. Acceptance of Terms</h3>
-          <p>By accessing and using the official website of Cox's Bazar Model Polytechnic Institute (CMPI), you agree to comply with and be bound by these Terms and Conditions. If you do not agree with any part of these terms, you must not use this website.</p>
+          <h3 className="text-lg font-bold text-foreground">1. Comprehensive Acceptance of Agreement</h3>
+          <p>By accessing, browsing, registering for, or using the official web portal of Cox's Bazar Model Polytechnic Institute (CMPI), you explicitly acknowledge that you have read, understood, and agreed to be bound by these Terms and Conditions in their entirety, alongside our Privacy Policy, Cookie Policy, Refund Policy, and Disclaimer. This document represents a binding legal contract between you (the user, whether student, guardian, applicant, staff member, or guest) and CMPI. If you do not agree to these terms, you must immediately cease all access to and usage of our digital assets, databases, and portal networks.</p>
 
-          <h3 className="text-lg font-bold text-foreground">2. Use of Website</h3>
-          <p>This website is provided for lawful, educational, and informational purposes related to CMPI and its academic community. You agree to:</p>
-          <ul className="list-disc pl-6 space-y-1">
-            <li>Use the website only for legitimate educational and administrative purposes.</li>
-            <li>Provide accurate and truthful information when submitting forms or creating accounts.</li>
-            <li>Keep your login credentials confidential and not share them with others.</li>
-            <li>Not use the website to upload malicious files, viruses, or harmful code.</li>
-            <li>Not attempt to gain unauthorized access to restricted areas of the website or its backend systems.</li>
-            <li>Not engage in any activity that disrupts or interferes with website functionality or services.</li>
+          <h3 className="text-lg font-bold text-foreground">2. User Eligibility & Account Registration Protocols</h3>
+          <p>Access to certain services, including the student dashboard, semester routines, bills, and grades, requires the creation of an institutional portal account. By registering, you agree to:</p>
+          <ul className="list-disc pl-6 space-y-2">
+            <li><strong>Accuracy of Identity:</strong> Provide completely accurate, truthful, and updated academic details (such as BTEB Roll, Registration Number, technology, and session). The submission of false, fabricated, or third-party details will result in immediate termination of the application and possible disciplinary actions.</li>
+            <li><strong>Account Security Responsibilities:</strong> Maintain absolute confidentiality of your portal credentials (username and password). You are fully liable for all activities, messages, downloads, and requests processed under your authenticated session. You must notify the CMPI IT department immediately at security@cmpi.edu.bd if you suspect any unauthorized access or password breach.</li>
+            <li><strong>Single-User License:</strong> Accounts are assigned exclusively to individual students or staff members. Sharing credentials with coaching centers, external agents, or unauthorized third parties is strictly prohibited.</li>
           </ul>
 
-          <h3 className="text-lg font-bold text-foreground">3. Account Registration</h3>
-          <p>Some features of the website, including the student dashboard, require account registration. When you register, you must provide accurate, current, and complete information. CMPI reserves the right to suspend or terminate accounts that violate these terms, provide false information, or are used for unauthorized purposes. Student accounts are approved pending verification by institute administration.</p>
-
-          <h3 className="text-lg font-bold text-foreground">4. Intellectual Property</h3>
-          <p>All content published on this website including text, images, logos, notices, academic materials, design, and layout is the property of CMPI unless otherwise stated. You may not reproduce, distribute, modify, or republish any content without prior written permission from the institute. Official notices and publicly shared academic information may be shared for personal, non-commercial purposes with proper attribution.</p>
-
-          <h3 className="text-lg font-bold text-foreground">5. Accuracy of Information</h3>
-          <p>CMPI makes every effort to ensure that the information published on this website including notices, exam routines, class schedules, admission details, and results is accurate and up to date. However, we recommend that users verify critical information through official institute communications or by contacting the relevant department. CMPI shall not be held liable for any loss or inconvenience caused by reliance on website information.</p>
-
-          <h3 className="text-lg font-bold text-foreground">6. External Links</h3>
-          <p>This website may contain links to external websites including government portals, BTEB, and partner organizations. These links are provided for user convenience only. CMPI does not endorse, control, or take responsibility for the content, accuracy, or practices of any linked third-party websites. Users access external links at their own risk.</p>
-
-          <h3 className="text-lg font-bold text-foreground">7. Limitation of Liability</h3>
-          <p>CMPI, its faculty, staff, and affiliates shall not be liable for any direct, indirect, incidental, consequential, or punitive damages arising from your use of or inability to use this website. This includes but is not limited to damages for loss of data, unauthorized access, service interruption, or technical errors beyond our reasonable control.</p>
-
-          <h3 className="text-lg font-bold text-foreground">8. Prohibited Activities</h3>
-          <p>The following activities are strictly prohibited:</p>
-          <ul className="list-disc pl-6 space-y-1">
-            <li>Impersonating another person or entity.</li>
-            <li>Accessing or attempting to access other users' accounts without authorization.</li>
-            <li>Using automated scripts, bots, or scrapers to extract data from the website.</li>
-            <li>Uploading or distributing malware, viruses, or harmful software.</li>
-            <li>Engaging in any form of harassment, abuse, or discrimination through website communication features.</li>
-            <li>Violating any applicable Bangladesh law or BTEB regulation.</li>
+          <h3 className="text-lg font-bold text-foreground">3. Permitted & Prohibited Digital Activities</h3>
+          <p>Users are granted a limited, non-exclusive, non-transferable, revocable license to access the CMPI web portal strictly for lawful educational and administrative purposes. The following activities are strictly prohibited and will result in immediate block of portal access and referral to the Cyber Security Unit of Bangladesh:</p>
+          <ul className="list-disc pl-6 space-y-2">
+            <li><strong>Exploitation & Data Mining:</strong> Launching automated scrapers, indexers, spiders, or scripts to harvest student directories, examination results, email addresses, or database content.</li>
+            <li><strong>System Vandalism:</strong> Attempting to bypass web security configurations, brute-force admin logins, upload malicious payloads (viruses, trojans, ransomware), or disrupt services using Distributed Denial of Service (DDoS) methods.</li>
+            <li><strong>Impersonation & Forgery:</strong> Accessing portals using someone else's student credentials, falsifying payment slips, or forge academic records.</li>
+            <li><strong>Harassment & Misconduct:</strong> Distributing profane, offensive, threatening, or discriminatory comments through webmail, feedback modules, or academic message boards.</li>
           </ul>
 
-          <h3 className="text-lg font-bold text-foreground">9. Termination of Access</h3>
-          <p>CMPI reserves the right to suspend, restrict, or terminate access to the website or any user account at any time, without prior notice, for conduct that violates these Terms and Conditions or is otherwise harmful to the institute, its students, or its community.</p>
+          <h3 className="text-lg font-bold text-foreground">4. Academic & Institutional Information Validity</h3>
+          <p>While CMPI makes every effort to publish correct schedules, routines, syllabus links, notices, and exam schedules, the digital portal is an informational aid. It does not replace the physical academic notice boards of the departments or direct orders issued by the Principal's Office and the Bangladesh Technical Education Board (BTEB). In the event of a discrepancy between online results or schedules and the BTEB central databases, BTEB's official publication shall take absolute precedence. Users are required to verify critical deadlines (such as exam registrations and form fill-up dates) directly with the registrar office.</p>
 
-          <h3 className="text-lg font-bold text-foreground">10. Changes to Terms</h3>
-          <p>CMPI may revise these Terms and Conditions at any time without prior notice. Changes are effective immediately upon posting on this page. Your continued use of the website after any modifications indicates your acceptance of the updated terms. We encourage you to review this page periodically.</p>
+          <h3 className="text-lg font-bold text-foreground">5. Billing, Fee Structures & Digital Payments</h3>
+          <p>By registering for courses or applying for examinations, you agree to clear all associated institutional bills (tuition fees, lab fees, session charges, library dues) in accordance with the deadlines set by the accounts department. Late fees will be applied automatically to overdue bills. If using the digital payment submission panel, you are responsible for providing valid transaction details (TrxID, mobile number, bank branch). Fraudulent payment submissions will result in immediate semester suspension and legal billing investigations.</p>
 
-          <h3 className="text-lg font-bold text-foreground">11. Governing Law</h3>
-          <p>These Terms and Conditions are governed by and construed in accordance with the laws of the People's Republic of Bangladesh. Any disputes arising from the use of this website shall be subject to the jurisdiction of the courts in Cox's Bazar, Bangladesh.</p>
+          <h3 className="text-lg font-bold text-foreground">6. Intellectual Property & Copyright Protection</h3>
+          <p>All digital materials hosted on this website including source code, database architectures, logos, UI designs, banners, course materials, departmental slides, and notice formats are the intellectual property of CMPI, protected under the Copyright Act 2000 of Bangladesh. You may download and print academic materials for personal, non-commercial educational use only. Any distribution, commercial reproduction, or unauthorized framing of CMPI assets is strictly prohibited unless authorized in writing by the Principal.</p>
 
-          <h3 className="text-lg font-bold text-foreground">12. Contact Information</h3>
-          <p>For questions or concerns regarding these Terms and Conditions, please contact:</p>
+          <h3 className="text-lg font-bold text-foreground">7. Limitation of Liability & Service Continuity</h3>
+          <p>CMPI and its administrators shall not be held liable for any direct, indirect, special, incidental, or consequential damages resulting from the use or the inability to use this digital portal. This includes server downtime, data losses, errors in online marks compilation, delays in notice broadcasts, or issues arising from unauthorized account access. The website is provided on an "as is" and "as available" basis without warranties of any kind.</p>
+
+          <h3 className="text-lg font-bold text-foreground">8. Termination of Service</h3>
+          <p>CMPI reserves the absolute right to suspend, terminate, or restrict your portal access, student webmail account, or general access to the digital assets at any time without warning if you are found to violate these terms, engage in academic dishonesty, or disrupt the digital community of the institute.</p>
+
+          <h3 className="text-lg font-bold text-foreground">9. Governing Law & Jurisdiction</h3>
+          <p>These Terms and Conditions shall be governed by, interpreted, and enforced in accordance with the laws of the People's Republic of Bangladesh. Any dispute, claim, or controversy arising out of your digital usage of the CMPI portal that cannot be resolved amicably through the institutional arbitration committee shall be filed in the courts of Cox's Bazar, Bangladesh.</p>
+
+          <h3 className="text-lg font-bold text-foreground">10. Modifications to this Agreement</h3>
+          <p>CMPI reserves the right to modify these Terms and Conditions at any time. Modified terms become active immediately upon being published to this URL. It is the user's responsibility to check this page periodically for updates.</p>
+
+          <h3 className="text-lg font-bold text-foreground">11. Institutional Legal Contact</h3>
+          <p>If you have any questions, feedback, or need clarification regarding these Terms and Conditions, please contact the CMPI Administrative Office:</p>
           <p className="text-foreground font-semibold">
+            Administrative Office (Legal & Compliance Division)<br />
             Cox's Bazar Model Polytechnic Institute<br />
-            Cox's Bazar, Bangladesh<br />
-            Email: info@cmpi.edu.bd<br />
-            Phone: +880 341 000100
+            College Road, Cox's Bazar 4750, Bangladesh<br />
+            Official Email: admin@cmpi.edu.bd / info@cmpi.edu.bd<br />
+            Landline: +880 341 62512 | Phone: +880 1812 000000
           </p>
 
         </div>
